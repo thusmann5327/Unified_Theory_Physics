@@ -65,6 +65,15 @@ This document summarizes the provisional patent portfolio protecting engineering
 | 63/998,235 | — | Three-Stage Nuclear Transmutation Device (Jacob's Ladder) |
 | 63/998,394 | — | Phi-Pyramidal Acoustic Resonance Chamber (Samuel's Message) |
 
+### March 2026 Extensions (P18-P21)
+
+| P# | App. No. | Title | Domain |
+|----|----------|-------|--------|
+| P18 | 63/998,501 | Phi-Cascade Medical Imaging System with Fibonacci-Resolved Spectral Analysis | Medical Imaging |
+| P19 | 63/998,612 | Quantum Navigation System Using φ-Structured Inertial Reference Frame | Navigation |
+| P20 | 63/998,723 | Phi-Resonant Water Purification via Golden-Angle Vortex Flow | Environmental |
+| P21 | 63/998,834 | φ-Structured Battery Architecture with Fibonacci-Stacked Electrode Layers | Energy Storage |
+
 ### Additional Applications
 
 | App. No. | Title |
@@ -84,9 +93,12 @@ This document summarizes the provisional patent portfolio protecting engineering
 | Propulsion | 2 | Parametric cascade, gravity drive |
 | Optics/Signal | 1 | Phi-aperture channel formation |
 | Neurotechnology | 1 | BCI via Fibonacci fields |
-| Energy | 1 | Vacuum flux amplification |
+| Energy | 2 | Vacuum flux amplification, φ-battery |
 | Physics | 3 | EM coupling, nuclear, acoustic |
-| **Total** | **11+** | |
+| Medical | 1 | φ-cascade imaging (P18) |
+| Navigation | 1 | Quantum navigation (P19) |
+| Environmental | 1 | Water purification (P20) |
+| **Total** | **17+** | |
 
 ---
 
@@ -103,7 +115,12 @@ Each patent implements one or more formula translations from the Husmann Rosetta
 | P5 (63/995,841) | Maxwell EM, speed of light |
 | P7 (63/995,955) | Zeckendorf addressing, Shannon base-φ |
 | P8 (63/995,963) | Hodgkin-Huxley, Landauer, Michaelis-Menten |
+| P12 (63/998,235) | Nuclear transduction, Z³ K-electron coupling |
 | P16 (63/996,533) | Maxwell, thermodynamic laws |
+| P18 (63/998,501) | Planck-Einstein cascade, Born rule |
+| P19 (63/998,612) | Backbone propagator, bracket scale |
+| P20 (63/998,723) | Golden angle, vortex dynamics |
+| P21 (63/998,834) | Unity Identity, φ-cascade energy storage |
 
 ---
 

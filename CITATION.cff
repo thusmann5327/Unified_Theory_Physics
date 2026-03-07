@@ -1,0 +1,77 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+title: "Unified Theory Physics: The Husmann Decomposition"
+abstract: >-
+  A complete theoretical framework unifying physics through the golden ratio φ.
+  The framework derives fundamental constants (speed of light, fine structure
+  constant, cosmological constant) from two algebraic identities: the Unity
+  Identity (1/φ + 1/φ³ + 1/φ⁴ = 1) and the Boundary Law (2/φ⁴ + 3/φ³ = 1).
+  Based on the Aubry-André-Harper Hamiltonian at criticality (V = 2J, α = 1/φ).
+
+authors:
+  - family-names: "Husmann"
+    given-names: "Thomas A."
+    email: "Thomas.a.husmann@gmail.com"
+    affiliation: "iBuilt LTD"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+
+repository-code: "https://github.com/thusmann5327/Unified_Theory_Physics"
+url: "https://eldon.fun/scientific_research"
+license: CC-BY-NC-SA-4.0
+version: "1.2"
+date-released: "2026-03-07"
+
+keywords:
+  - golden ratio
+  - unified physics
+  - quasicrystal
+  - Aubry-André-Harper
+  - fine structure constant
+  - cosmological constant
+  - dark energy
+  - dark matter
+  - quantum mechanics
+  - theoretical physics
+
+references:
+  - type: article
+    authors:
+      - family-names: "Aubry"
+        given-names: "Serge"
+      - family-names: "André"
+        given-names: "Gilles"
+    title: "Analyticity breaking and Anderson localization in incommensurate lattices"
+    journal: "Annals of the Israel Physical Society"
+    volume: 3
+    pages: 133-164
+    year: 1980
+
+  - type: article
+    authors:
+      - family-names: "Harper"
+        given-names: "P. G."
+    title: "Single band motion of conduction electrons in a uniform magnetic field"
+    journal: "Proceedings of the Physical Society A"
+    volume: 68
+    pages: 874
+    year: 1955
+
+  - type: article
+    authors:
+      - family-names: "Planck Collaboration"
+    title: "Planck 2018 results. VI. Cosmological parameters"
+    journal: "Astronomy & Astrophysics"
+    volume: 641
+    pages: A6
+    year: 2020
+
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Husmann"
+      given-names: "Thomas A."
+  title: "The Husmann Decomposition: A φ-Structured Framework for Unified Physics"
+  year: 2026
+  journal: "Preprint"
+  url: "https://github.com/thusmann5327/Unified_Theory_Physics"
