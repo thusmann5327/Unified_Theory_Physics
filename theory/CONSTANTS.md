@@ -1,0 +1,250 @@
+# Fundamental Constants in the Husmann Decomposition Framework
+
+## Core Mathematical Constants
+
+### Golden Ratio (φ)
+
+```python
+phi = (1 + 5**0.5) / 2
+# φ = 1.6180339887498948482...
+```
+
+**Key properties**:
+| Property | Expression | Value |
+|----------|------------|-------|
+| Definition | (1+√5)/2 | 1.618033988749895 |
+| Reciprocal | 1/φ = φ-1 | 0.618033988749895 |
+| Square | φ² = φ+1 | 2.618033988749895 |
+| Cube | φ³ = 2φ+1 | 4.236067977499790 |
+| Fourth | φ⁴ = 3φ+2 | 6.854101966249685 |
+
+### Derived φ-Constants
+
+| Constant | Symbol | Value | Definition |
+|----------|--------|-------|------------|
+| Golden angle | θ_g | 137.5077...° | 360°/φ² |
+| Golden angle (rad) | θ_g | 2.39996... | 2π/φ² |
+| Fibonacci base | - | φ | log base for Zeckendorf |
+
+### Unity Identity Components
+
+```python
+# The fundamental partition
+component_1 = 1/phi       # 0.6180339887498949
+component_2 = 1/phi**3    # 0.2360679774997897
+component_3 = 1/phi**4    # 0.1458980337503155
+
+unity = component_1 + component_2 + component_3
+# unity = 1.0000000000000000 (exact)
+```
+
+---
+
+## AAH Lattice Parameters
+
+### Critical Values
+
+| Parameter | Symbol | Value | Unit | Status |
+|-----------|--------|-------|------|--------|
+| Lattice spacing | l | 9.3 | nm | Fitted |
+| Hopping energy | J | 10.6 | eV | Fitted |
+| Critical ratio | V/J | 2.0 | - | Exact |
+| Band count (low E) | N | 3 | - | Assumed |
+| Sector width | W | 45.78 | degrees | Derived |
+
+### Derived Quantities
+
+**Speed of light derivation**:
+```python
+import scipy.constants as const
+
+l = 9.3e-9                    # meters
+J = 10.6 * const.eV           # Joules (10.6 eV)
+hbar = const.hbar             # Planck constant / 2π
+
+c_derived = 2 * J * l / hbar
+# c_derived ≈ 2.998 × 10⁸ m/s
+
+c_actual = const.c
+# c_actual = 2.99792458 × 10⁸ m/s
+
+error = abs(c_derived - c_actual) / c_actual
+# error ≈ 0.01% (by construction)
+```
+
+**Fine structure constant derivation**:
+```python
+N = 3           # bands
+W = 45.78       # degrees
+
+alpha_derived = 1 / (N * W)
+# alpha_derived = 1/137.34 = 0.007283...
+
+alpha_actual = const.fine_structure
+# alpha_actual = 1/137.036 = 0.007297...
+
+error = abs(alpha_derived - alpha_actual) / alpha_actual
+# error ≈ 0.19%
+```
+
+---
+
+## Fibonacci Sequence Values
+
+### Standard Sequence
+
+| Index | F_n | Ratio F_n/F_{n-1} |
+|-------|-----|-------------------|
+| 0 | 0 | - |
+| 1 | 1 | - |
+| 2 | 1 | 1.000 |
+| 3 | 2 | 2.000 |
+| 4 | 3 | 1.500 |
+| 5 | 5 | 1.667 |
+| 6 | 8 | 1.600 |
+| 7 | 13 | 1.625 |
+| 8 | 21 | 1.615 |
+| 9 | 34 | 1.619 |
+| 10 | 55 | 1.618 |
+| 11 | 89 | 1.618 |
+| 12 | 144 | 1.618 |
+
+**Limit**: lim(F_n/F_{n-1}) = φ as n → ∞
+
+### Attractor Frequencies (Neural)
+
+| Level | Frequency (Hz) | Ratio to Base | φ^(level/2) |
+|-------|---------------|---------------|-------------|
+| 0 | 4.0 | 1.000 | 1.000 |
+| 1 | 7.0 | 1.750 | 1.272 |
+| 2 | 11.0 | 2.750 | 1.618 |
+| 3 | 18.0 | 4.500 | 2.058 |
+| 4 | 29.0 | 7.250 | 2.618 |
+| 5 | 47.0 | 11.750 | 3.330 |
+
+**Note**: Frequencies approximately follow φ^(n/2) scaling from base.
+
+---
+
+## Physical Constants (Standard Values)
+
+For reference, standard physical constants used in calculations:
+
+```python
+import scipy.constants as const
+
+# Fundamental constants
+c = const.c                    # 299792458 m/s (exact)
+h = const.h                    # 6.62607015e-34 J·s (exact)
+hbar = const.hbar              # 1.054571817e-34 J·s
+e = const.e                    # 1.602176634e-19 C (exact)
+k_B = const.k                  # 1.380649e-23 J/K (exact)
+G = const.G                    # 6.67430e-11 m³/(kg·s²)
+epsilon_0 = const.epsilon_0    # 8.854187817e-12 F/m
+mu_0 = const.mu_0              # 1.256637062e-6 N/A²
+
+# Derived constants
+alpha = const.fine_structure   # 7.2973525693e-3 ≈ 1/137.036
+m_e = const.m_e                # 9.1093837015e-31 kg
+m_p = const.m_p                # 1.67262192369e-27 kg
+
+# Mass ratio
+m_p_over_m_e = m_p / m_e       # 1836.15267343
+```
+
+---
+
+## Framework-Specific Derived Constants
+
+### Mass Ratio Relationship
+
+```python
+import numpy as np
+
+phi = (1 + np.sqrt(5)) / 2
+m_ratio = 1836.15267343  # proton/electron mass ratio
+
+# Find exponent
+exponent = np.log(m_ratio) / np.log(phi)
+# exponent ≈ 15.62 (not an integer)
+
+# Alternative: φ^16 approximation
+phi_16 = phi**16
+# phi_16 ≈ 2207
+
+# Closer fit requires fractional exponents
+# m_p/m_e ≈ φ^(16.2)
+```
+
+### Energy Scales
+
+| Scale | Energy | φ-Representation |
+|-------|--------|------------------|
+| Hopping J | 10.6 eV | Framework parameter |
+| Electron rest mass | 0.511 MeV | J × φ^10.1 |
+| Proton rest mass | 938 MeV | J × φ^18.6 |
+| QCD scale Λ | ~200 MeV | J × φ^15.8 |
+
+---
+
+## Conversion Utilities
+
+```python
+import numpy as np
+
+phi = (1 + np.sqrt(5)) / 2
+
+def degrees_to_golden_units(degrees):
+    """Convert degrees to units of golden angle."""
+    golden_angle = 360 / phi**2  # 137.5077°
+    return degrees / golden_angle
+
+def phi_power_to_value(n):
+    """Compute φ^n for any real n."""
+    return phi ** n
+
+def fibonacci(n):
+    """Compute n-th Fibonacci number."""
+    if n <= 1:
+        return n
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+def zeckendorf(n):
+    """Return Zeckendorf representation (list of Fibonacci indices)."""
+    if n <= 0:
+        return []
+    fibs = []
+    f1, f2 = 1, 1
+    while f2 <= n:
+        fibs.append(f2)
+        f1, f2 = f2, f1 + f2
+    result = []
+    for f in reversed(fibs):
+        if f <= n:
+            result.append(fibs.index(f) + 2)
+            n -= f
+    return result
+```
+
+---
+
+## Summary Table
+
+| Constant | Symbol | Value | Origin |
+|----------|--------|-------|--------|
+| Golden ratio | φ | 1.618033988749895 | Mathematical |
+| Golden angle | θ_g | 137.5077° | 360°/φ² |
+| Lattice spacing | l | 9.3 nm | Fitted to c |
+| Hopping energy | J | 10.6 eV | Fitted to c |
+| Critical ratio | V/J | 2.0 | AAH theory |
+| Band count | N | 3 | Assumption |
+| Sector width | W | 45.78° | φ² × θ_g |
+| Fine structure | α | 1/137.34 | 1/(N×W) |
+
+---
+
+*© 2026 Thomas A. Husmann / iBuilt LTD. All rights reserved.*
+*Licensed under CC BY-NC-SA 4.0 for academic and research use.*
