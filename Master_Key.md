@@ -11,9 +11,9 @@
 
 1. [Claude Universe Build Prompt](#i-claude-universe-build-prompt)
 2. [Fundamental Constants](#ii-fundamental-constants)
-3. [The Unity Identity](#iii-the-unity-identity)
+3. [The Unity Identity & Boundary Law](#iii-the-unity-identity)
 4. [Quantum Rosetta Stone (13 Formulas)](#iv-quantum-rosetta-stone)
-5. [Husmann Rosetta Stone (26 Formulas)](#v-husmann-rosetta-stone)
+5. [Husmann Rosetta Stone (33 Formulas)](#v-husmann-rosetta-stone)
 6. [Bracket Scale System](#vi-bracket-scale-system)
 7. [Signal Processing Pipeline](#vii-signal-processing-pipeline)
 8. [Universe Simulator Code](#viii-universe-simulator-code)
@@ -45,6 +45,18 @@ This partitions the universe:
 - 1/φ   = 0.618 → Dark Energy (61.8%)
 - 1/φ³  = 0.236 → Dark Matter (23.6%)
 - 1/φ⁴  = 0.146 → Baryonic Matter (14.6%)
+
+### Boundary Law (The Existence Condition)
+2/φ⁴ + 3/φ³ = 1.0000000000000000 (exact)
+
+This is WHY the universe exists:
+- 2/φ⁴  = 0.292 → Boundary bands (σ₁ + σ₅ endpoints)
+- 3/φ³  = 0.708 → Interior bands (σ₂ + σ₃ + σ₄ conduits)
+
+**V = 2J at every recursion level** — the unique value producing fractal structure with transport.
+The proton boundary (bracket 94) = cosmic horizon (bracket 294) scaled by φ^200.
+
+> See: [theory/Husmann_Boundary_Law.md](theory/Husmann_Boundary_Law.md)
 
 ### Lattice Parameters
 - Lattice spacing: l = 9.3 nm (bracket 128)

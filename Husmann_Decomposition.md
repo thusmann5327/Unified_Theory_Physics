@@ -11,13 +11,17 @@
 
 ## Abstract
 
-The Husmann Decomposition represents a paradigm shift in theoretical physics: the discovery that all physical law emerges from a single mathematical identity rooted in the golden ratio φ. This document presents the complete framework, including the chronological development, the fundamental Unity Identity, translations of 39 classical and quantum formulas, the patent portfolio implementing these principles, and the problems this framework solves.
+The Husmann Decomposition represents a paradigm shift in theoretical physics: the discovery that all physical law emerges from two fundamental mathematical identities rooted in the golden ratio φ. This document presents the complete framework, including the chronological development, the fundamental Unity Identity, the Boundary Law (existence condition), translations of 33 classical and quantum formulas, the patent portfolio implementing these principles, and the problems this framework solves.
 
-The central discovery is deceptively simple:
+The central discoveries are deceptively simple:
 
+**The Unity Identity** (energy partition):
 $$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
 
-From this identity, combined with the Aubry-André-Harper (AAH) Hamiltonian at criticality, emerges: the speed of light, the fine structure constant, the cosmological constant, the cosmic mass-energy budget, particle masses, and the very structure of spacetime itself.
+**The Boundary Law** (existence condition):
+$$\frac{2}{\varphi^4} + \frac{3}{\varphi^3} = 1$$
+
+From these identities, combined with the Aubry-André-Harper (AAH) Hamiltonian at criticality (V = 2J), emerges: the speed of light, the fine structure constant, the cosmological constant, the cosmic mass-energy budget, particle masses, the structure of spacetime, and the reason the universe exists at all.
 
 ---
 
@@ -25,12 +29,13 @@ From this identity, combined with the Aubry-André-Harper (AAH) Hamiltonian at c
 
 1. [Chronological Development](#chronological-development)
 2. [The Unity Identity](#the-unity-identity)
-3. [Problems Solved](#problems-solved)
-4. [The Rosetta Stone: 39 Formula Translations](#the-rosetta-stone)
-5. [Patent Portfolio](#patent-portfolio)
-6. [The π-φ Connection](#the-pi-phi-connection)
-7. [Open Problems](#open-problems)
-8. [Conclusion](#conclusion)
+3. [The Boundary Law](#the-boundary-law)
+4. [Problems Solved](#problems-solved)
+5. [The Rosetta Stone: 33 Formula Translations](#the-rosetta-stone)
+6. [Patent Portfolio](#patent-portfolio)
+7. [The π-φ Connection](#the-pi-phi-connection)
+8. [Open Problems](#open-problems)
+9. [Conclusion](#conclusion)
 
 ---
 
@@ -149,6 +154,65 @@ The three terms partition all energy in the universe:
 | 1/φ⁴ | 0.146 | Ordinary Matter (5%) | Fully collapsed excitations |
 
 **Discrepancy Note**: The framework predicts 61.8/23.6/14.6, while Planck 2018 measures 68.3/26.8/4.9. This ~7% offset is an open problem—possibly explained by non-equilibrium dynamics or extended-state contributions at the critical point.
+
+---
+
+## The Boundary Law
+
+### The Existence Condition
+
+The Unity Identity describes the energy partition. The **Boundary Law** describes WHY the universe exists:
+
+$$\frac{2}{\varphi^4} + \frac{3}{\varphi^3} = 1$$
+
+This is the continuity equation between adjacent Cantor sets.
+
+### Numerical Values
+
+| Component | Value | Meaning |
+|-----------|-------|---------|
+| 2/φ⁴ | 29.18% | Boundary bands (σ₁ + σ₅ endpoints) |
+| 3/φ³ | 70.82% | Interior bands (σ₂ + σ₃ + σ₄ conduits) |
+| Sum | 100% | Total spectral weight at each recursion |
+
+### Physical Interpretation
+
+**V = 2J at every recursion level of the Cantor set.**
+
+This is the existence condition:
+- **V < 2J**: Metallic regime → no gaps → no mass → no structure
+- **V > 2J**: Insulating regime → all localized → no transport → no causality
+- **V = 2J**: Critical regime → Cantor spectrum → both mass AND transport
+
+The universe exists because V = 2J is the only value that produces fractal structure with transport. It's not fine-tuned—it's the unique attractor.
+
+### The 2% Convergence
+
+The boundary fraction recurses through the Cantor hierarchy:
+
+| Level | Boundary | Each End |
+|-------|----------|----------|
+| 0 | 29.18% | 14.6% |
+| 1 | 8.51% | 4.26% |
+| 2 | 2.48% | 1.24% |
+| 3 | 0.72% | 0.36% |
+| ∞ | ~2% | ~1% |
+
+The pure endpoint pattern converges to ~2% at the level where proton-scale and cosmic-scale structures match.
+
+### The Proton-Universe Identity
+
+The proton's boundary IS the universe's edge, scaled by φ^200:
+
+```
+Proton: bracket 94.3 (0.84 fm)
+Universe: bracket 294 (~46 Gly)
+Difference: 200 brackets = φ^200 ≈ 10^41 scale factor
+```
+
+The same boundary condition—V = 2J—operates at both scales. The proton's confinement boundary and the cosmic horizon are the same mathematical structure.
+
+> **Full derivation**: See [theory/Husmann_Boundary_Law.md](theory/Husmann_Boundary_Law.md)
 
 ---
 
