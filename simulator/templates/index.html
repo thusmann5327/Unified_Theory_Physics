@@ -774,6 +774,7 @@
     let milkyWayGroup = null;
     let galaxySpirals = [];
     let nearbyGalaxies = [];
+    let cosmicWebFilaments = [];  // FEATURE 1: Cosmic web connections
 
     function buildMilkyWayGalaxy() {
       milkyWayGroup = new THREE.Group();
@@ -831,12 +832,15 @@
 
       // Spiral arms using GOLDEN ANGLE - the key φ connection
       // Arms represent 1/φ backbone threads flowing toward gravity
+      // FIX BUG 3: Use GOLDEN ANGLE (137.5°) for arm spacing, not 90°
       for (let arm = 0; arm < numArms; arm++) {
         const armGeometry = new THREE.BufferGeometry();
         const armPositions = new Float32Array(starsPerArm * 3);
         const armColors = new Float32Array(starsPerArm * 3);
 
-        const armOffset = (arm * Math.PI * 2 / numArms);  // Start angle for each arm
+        // GOLDEN ANGLE spacing between arms - this is the φ-based distribution
+        // 137.5° = 360° / φ² = 360° × (1 - 1/φ)
+        const armOffset = arm * goldenAngleRad;  // Golden angle spacing!
 
         for (let i = 0; i < starsPerArm; i++) {
           const t = i / starsPerArm;  // 0 to 1 along the arm
@@ -931,17 +935,42 @@
 
       // Build nearby galaxies
       buildNearbyGalaxies();
+      buildCosmicWeb();  // FEATURE 1: Cosmic web filaments
     }
 
     function buildNearbyGalaxies() {
-      // Nearby galaxies at their bracket positions
-      // Bracket 270 ≈ 2.5 million light years (Andromeda)
+      // FEATURE 2: Golden-angle galaxy placement
+      // Nearby galaxies positioned using golden angle spacing
+      // Each galaxy's angular position determined by φ-based distribution
+      const goldenAngleRad = GOLDEN_ANGLE * Math.PI / 180;
+
+      // Galaxy data with bracket-based distances
+      // Position calculated from bracket using golden-angle distribution
       const GALAXY_DATA = [
-        { name: 'Andromeda (M31)', distance_Mly: 2.5, bracket: 270, x: 600, y: 50, z: 200, size: 80, color: 0xFFEECC },
-        { name: 'Triangulum (M33)', distance_Mly: 2.7, bracket: 271, x: -400, y: -30, z: 500, size: 40, color: 0xCCDDFF },
-        { name: 'LMC', distance_Mly: 0.16, bracket: 264, x: 300, y: -100, z: -200, size: 25, color: 0xFFCCAA },
-        { name: 'SMC', distance_Mly: 0.20, bracket: 265, x: 280, y: -120, z: -180, size: 15, color: 0xDDCCFF },
+        { name: 'Andromeda (M31)', distance_Mly: 2.5, bracket: 270, index: 1, size: 80, color: 0xFFEECC },
+        { name: 'Triangulum (M33)', distance_Mly: 2.7, bracket: 271, index: 2, size: 40, color: 0xCCDDFF },
+        { name: 'LMC', distance_Mly: 0.16, bracket: 264, index: 3, size: 25, color: 0xFFCCAA },
+        { name: 'SMC', distance_Mly: 0.20, bracket: 265, index: 4, size: 15, color: 0xDDCCFF },
+        { name: 'NGC 6822', distance_Mly: 1.63, bracket: 268, index: 5, size: 20, color: 0xAABBFF },
+        { name: 'IC 1613', distance_Mly: 2.38, bracket: 269, index: 6, size: 15, color: 0xFFAACC },
+        { name: 'Leo I', distance_Mly: 0.82, bracket: 267, index: 7, size: 10, color: 0xCCFFAA },
+        { name: 'Fornax Dwarf', distance_Mly: 0.46, bracket: 266, index: 8, size: 12, color: 0xAAFFCC },
       ];
+
+      // Calculate positions using golden-angle distribution
+      GALAXY_DATA.forEach((gal, i) => {
+        // Distance based on bracket
+        const r = (gal.bracket / BRACKET_COUNT) * MAX_VISUAL_RADIUS * 0.85;
+
+        // GOLDEN ANGLE positioning - the φ-based placement
+        const theta = gal.index * goldenAngleRad;  // Golden angle spacing
+        const phi = Math.acos(1 - 2 * (gal.index + 0.5) / (GALAXY_DATA.length * 2));  // Fibonacci sphere distribution
+
+        // Convert to Cartesian coordinates
+        gal.x = r * Math.sin(phi) * Math.cos(theta);
+        gal.y = r * Math.cos(phi);
+        gal.z = r * Math.sin(phi) * Math.sin(theta);
+      });
 
       GALAXY_DATA.forEach(gal => {
         const galaxyGroup = new THREE.Group();
@@ -1022,6 +1051,104 @@
       nearbyGalaxies.forEach(g => g.visible = show);
     }
 
+    // FEATURE 1: Cosmic Web Filaments
+    // These represent the 1/φ backbone threads stretching between galaxies
+    // Like dark matter filaments in large-scale structure
+    function buildCosmicWeb() {
+      const goldenAngleRad = GOLDEN_ANGLE * Math.PI / 180;
+
+      // Major cluster positions in the local universe (at cosmic scale)
+      // Placed using golden-angle spacing from center
+      const clusters = [];
+      const NUM_CLUSTERS = 34;  // Fibonacci number for aesthetic clustering
+      const CLUSTER_RADIUS = MAX_VISUAL_RADIUS * 0.9;
+
+      for (let i = 0; i < NUM_CLUSTERS; i++) {
+        // Golden angle distribution for cluster placement
+        const angle = i * goldenAngleRad;
+        const heightAngle = Math.asin(1 - 2 * (i + 0.5) / NUM_CLUSTERS);  // Fibonacci sphere
+
+        const r = CLUSTER_RADIUS * (0.3 + Math.random() * 0.7);
+        clusters.push({
+          x: r * Math.cos(angle) * Math.cos(heightAngle),
+          y: r * Math.sin(heightAngle),
+          z: r * Math.sin(angle) * Math.cos(heightAngle),
+          size: 10 + Math.random() * 20
+        });
+      }
+
+      // Connect clusters with filaments using golden-angle spacing
+      // Each cluster connects to its nearest φ-related neighbors
+      const connectionPairs = [];
+      for (let i = 0; i < clusters.length; i++) {
+        // Connect to clusters that are i + Fibonacci steps away
+        const fibSteps = [1, 2, 3, 5, 8, 13];
+        fibSteps.forEach(step => {
+          const j = (i + step) % clusters.length;
+          if (i < j) connectionPairs.push([i, j]);
+        });
+      }
+
+      // Build filaments as curved lines (backbone threads)
+      connectionPairs.forEach(([i, j]) => {
+        const c1 = clusters[i];
+        const c2 = clusters[j];
+
+        // Create curved filament using golden spiral interpolation
+        const filamentPoints = [];
+        const numPoints = 20;
+
+        for (let t = 0; t <= 1; t += 1/numPoints) {
+          // Curved path with golden-angle deviation
+          const x = c1.x + (c2.x - c1.x) * t;
+          const y = c1.y + (c2.y - c1.y) * t;
+          const z = c1.z + (c2.z - c1.z) * t;
+
+          // Add golden-spiral wavering to simulate backbone thread flow
+          const waveAmp = 20 * Math.sin(t * Math.PI);  // Peak deviation at midpoint
+          const wavePhase = t * 3 * goldenAngleRad;
+          const waveDx = waveAmp * Math.cos(wavePhase);
+          const waveDy = waveAmp * Math.sin(wavePhase) * 0.5;
+
+          filamentPoints.push(new THREE.Vector3(x + waveDx, y + waveDy, z));
+        }
+
+        const curve = new THREE.CatmullRomCurve3(filamentPoints);
+        const filamentGeometry = new THREE.TubeGeometry(curve, 12, 1.5, 6, false);
+
+        // Filaments are blue-violet (representing the 1/φ dark matter backbone)
+        const filamentMaterial = new THREE.MeshBasicMaterial({
+          color: 0x4433aa,
+          transparent: true,
+          opacity: 0.25,
+        });
+
+        const filament = new THREE.Mesh(filamentGeometry, filamentMaterial);
+        filament.visible = false;  // Hidden until Universe zoom
+        cosmicWebFilaments.push(filament);
+        scene.add(filament);
+      });
+
+      // Add cluster nodes (galaxy clusters at filament intersections)
+      clusters.forEach((c, i) => {
+        const nodeGeometry = new THREE.SphereGeometry(c.size, 12, 12);
+        const nodeMaterial = new THREE.MeshBasicMaterial({
+          color: 0x6644cc,
+          transparent: true,
+          opacity: 0.2,
+        });
+        const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+        node.position.set(c.x, c.y, c.z);
+        node.visible = false;
+        cosmicWebFilaments.push(node);
+        scene.add(node);
+      });
+    }
+
+    function toggleCosmicWeb(show) {
+      cosmicWebFilaments.forEach(f => f.visible = show);
+    }
+
     function getBandForBracket(n) {
       const N = BRACKET_COUNT;
       const w1 = N / PHI4;
@@ -1057,46 +1184,71 @@
     }
 
     function buildDoubleHelix() {
-      const wallEnd = BRACKET_COUNT * WALL_FRACTION;
+      // FIX BUG 1 & 2: Helix must be CYLINDER passing through galactic CENTER
+      // The helix represents the double-stranded backbone threads (1/φ portion)
+      // These threads flow toward gravity sources along the z-axis
+
       const points1 = [], points2 = [];
-      const goldenAngleRad = GOLDEN_ANGLE * Math.PI / 180;
+      const goldenAngleRad = GOLDEN_ANGLE * Math.PI / 180;  // 137.5° = 2.399 rad
 
-      for (let n = 1; n <= wallEnd; n += 0.5) {
-        const r = (n / BRACKET_COUNT) * MAX_VISUAL_RADIUS;
-        const theta1 = n * goldenAngleRad;
-        const theta2 = theta1 + Math.PI;
+      // CONSTANT radius - determined by observation window, NOT bracket position
+      // This creates a CYLINDER, not a cone
+      const HELIX_RADIUS = 80;  // Constant radius for cylindrical helix
 
+      // Helix extends symmetrically above and below the galactic disk
+      // Total height spans the observable structure
+      const HELIX_HEIGHT = MAX_VISUAL_RADIUS * 1.2;
+      const NUM_TURNS = 8;  // Number of complete helical turns
+      const POINTS_PER_TURN = 50;
+      const totalPoints = NUM_TURNS * POINTS_PER_TURN;
+
+      for (let i = 0; i <= totalPoints; i++) {
+        const t = i / totalPoints;  // 0 to 1 along helix axis
+
+        // z-position: symmetric about galactic plane (y=0 in our coordinate system)
+        // Helix axis passes through EXACT center (x=0, z=0 for the axis)
+        const zPos = (t - 0.5) * HELIX_HEIGHT;  // -HELIX_HEIGHT/2 to +HELIX_HEIGHT/2
+
+        // Angular position uses golden angle spacing
+        // Each full turn advances by 2π, with golden angle twist
+        const theta1 = t * NUM_TURNS * 2 * Math.PI;
+        const theta2 = theta1 + Math.PI;  // Second strand offset by 180°
+
+        // CONSTANT radius creates cylinder shape
+        // x-z plane is the galactic disk plane, y is perpendicular
         points1.push(new THREE.Vector3(
-          r * Math.cos(theta1) * 0.3,
-          r * Math.sin(theta1) * 0.3,
-          (n / wallEnd - 0.5) * MAX_VISUAL_RADIUS
+          HELIX_RADIUS * Math.cos(theta1),
+          zPos,  // y-axis is vertical (perpendicular to disk)
+          HELIX_RADIUS * Math.sin(theta1)
         ));
         points2.push(new THREE.Vector3(
-          r * Math.cos(theta2) * 0.3,
-          r * Math.sin(theta2) * 0.3,
-          (n / wallEnd - 0.5) * MAX_VISUAL_RADIUS
+          HELIX_RADIUS * Math.cos(theta2),
+          zPos,
+          HELIX_RADIUS * Math.sin(theta2)
         ));
       }
 
       const curve1 = new THREE.CatmullRomCurve3(points1);
       const curve2 = new THREE.CatmullRomCurve3(points2);
 
-      const tubeGeo1 = new THREE.TubeGeometry(curve1, 200, 1.5, 8, false);
-      const tubeGeo2 = new THREE.TubeGeometry(curve2, 200, 1.5, 8, false);
+      const tubeGeo1 = new THREE.TubeGeometry(curve1, 400, 3, 8, false);
+      const tubeGeo2 = new THREE.TubeGeometry(curve2, 400, 3, 8, false);
 
+      // Green strand: represents one backbone thread
       const mat1 = new THREE.MeshPhongMaterial({
         color: 0x00ff88,
         emissive: 0x00ff88,
-        emissiveIntensity: 0.3,
+        emissiveIntensity: 0.4,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.6,
       });
+      // Orange strand: represents complementary backbone thread
       const mat2 = new THREE.MeshPhongMaterial({
         color: 0xffaa00,
         emissive: 0xffaa00,
-        emissiveIntensity: 0.3,
+        emissiveIntensity: 0.4,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.6,
       });
 
       const strand1 = new THREE.Mesh(tubeGeo1, mat1);
@@ -1105,6 +1257,18 @@
       helixStrands.push(strand1, strand2);
       scene.add(strand1);
       scene.add(strand2);
+
+      // Add central axis indicator - showing the helix passes through center
+      const axisGeometry = new THREE.CylinderGeometry(2, 2, HELIX_HEIGHT * 1.1, 8);
+      const axisMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.15,
+      });
+      const centralAxis = new THREE.Mesh(axisGeometry, axisMaterial);
+      centralAxis.visible = false;  // Can toggle with helix
+      helixStrands.push(centralAxis);
+      scene.add(centralAxis);
     }
 
     function buildWallVisualization() {
@@ -1194,23 +1358,41 @@
     }
 
     function buildSectorRings() {
-      const ringPositions = [
-        { bracket: BOUNDARIES.sigma1_end, color: 0x00ff88, name: 'σ₁/σ₂' },
-        { bracket: BOUNDARIES.sigma2_end, color: 0x0088ff, name: 'σ₂/σ₃' },
-        { bracket: BOUNDARIES.sigma3_end, color: 0xaa44ff, name: 'σ₃/σ₄' },
-        { bracket: BOUNDARIES.sigma4_end, color: 0xff4488, name: 'σ₄/σ₅' },
+      // ENHANCED: 3D spherical sector boundary shells at cosmic scale
+      // These are φ-based boundaries where existence conditions change
+      const shellPositions = [
+        { bracket: BOUNDARIES.sigma1_end, color: 0x00ff88, name: 'σ₁/σ₂', opacity: 0.08 },
+        { bracket: BOUNDARIES.sigma2_end, color: 0x0088ff, name: 'σ₂/σ₃', opacity: 0.06 },
+        { bracket: BOUNDARIES.sigma3_end, color: 0xaa44ff, name: 'σ₃/σ₄', opacity: 0.05 },
+        { bracket: BOUNDARIES.sigma4_end, color: 0xff4488, name: 'σ₄/σ₅', opacity: 0.04 },
+        { bracket: BRACKET_COUNT * WALL_FRACTION, color: 0xff0044, name: 'WALL', opacity: 0.03 },
       ];
 
-      ringPositions.forEach(pos => {
+      shellPositions.forEach(pos => {
         const radius = (pos.bracket / BRACKET_COUNT) * MAX_VISUAL_RADIUS;
-        const geometry = new THREE.RingGeometry(radius - 1, radius + 1, 64);
-        const material = new THREE.MeshBasicMaterial({
+
+        // Create spherical shell (wireframe for visibility)
+        const shellGeometry = new THREE.SphereGeometry(radius, 48, 48);
+        const shellMaterial = new THREE.MeshBasicMaterial({
           color: pos.color,
           transparent: true,
-          opacity: 0.3,
+          opacity: pos.opacity,
+          wireframe: true,
           side: THREE.DoubleSide,
         });
-        const ring = new THREE.Mesh(geometry, material);
+        const shell = new THREE.Mesh(shellGeometry, shellMaterial);
+        sectorRings.push(shell);
+        scene.add(shell);
+
+        // Also add equatorial ring for reference
+        const ringGeometry = new THREE.RingGeometry(radius - 2, radius + 2, 64);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: pos.color,
+          transparent: true,
+          opacity: pos.opacity * 3,
+          side: THREE.DoubleSide,
+        });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
         ring.rotation.x = Math.PI / 2;
         sectorRings.push(ring);
         scene.add(ring);
@@ -1669,6 +1851,10 @@
       // Toggle galaxy visualization (φ-spiral arms visible at Galaxy zoom)
       const shouldShowGalaxies = showGalaxyLevels.includes(level);
       toggleGalaxies(shouldShowGalaxies);
+
+      // FEATURE 1: Toggle cosmic web (visible at Universe and Galaxy views)
+      const shouldShowCosmicWeb = (level === 0 || level === 1);
+      toggleCosmicWeb(shouldShowCosmicWeb);
 
       // Toggle orbits
       const shouldShowOrbits = showOrbitsLevels.includes(level);
