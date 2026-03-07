@@ -684,8 +684,102 @@
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.maxDistance = 1500;
-      controls.minDistance = 10;
+      controls.maxDistance = 2000;
+      controls.minDistance = 5;
+
+      // NAVIGATION FIX: Fly forward on scroll instead of zoom to center
+      // Disable default OrbitControls zoom
+      controls.enableZoom = false;
+
+      // Custom scroll handler - fly forward/backward in view direction
+      renderer.domElement.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        const flySpeed = 20;  // Adjust speed as needed
+
+        // Get camera's forward direction
+        const forward = new THREE.Vector3();
+        camera.getWorldDirection(forward);
+
+        // Move camera forward/backward based on scroll direction
+        const delta = event.deltaY > 0 ? -flySpeed : flySpeed;
+        camera.position.addScaledVector(forward, delta);
+
+        // Also move the controls target forward to maintain view
+        controls.target.addScaledVector(forward, delta * 0.8);
+      }, { passive: false });
+
+      // CLICK-TO-FOCUS: Click on objects to fly to them
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      let focusTarget = null;
+      let isFocusing = false;
+
+      renderer.domElement.addEventListener('click', (event) => {
+        // Calculate mouse position in normalized device coordinates
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        // Check intersections with clickable objects
+        const clickableObjects = [
+          ...nearbyGalaxies,
+          ...planetMeshes,
+          milkyWayGroup,
+        ].filter(obj => obj && obj.visible);
+
+        const intersects = raycaster.intersectObjects(clickableObjects, true);
+
+        if (intersects.length > 0) {
+          const target = intersects[0].object;
+          let targetPosition = new THREE.Vector3();
+
+          // Find the parent group if we clicked on a child
+          let obj = target;
+          while (obj.parent && !obj.userData.name && obj.parent !== scene) {
+            obj = obj.parent;
+          }
+
+          if (obj.userData && obj.userData.name) {
+            // Clicked on a named object (galaxy, planet)
+            obj.getWorldPosition(targetPosition);
+
+            // Calculate view distance based on object size
+            const size = obj.userData.size || 50;
+            const viewDistance = size * 3;
+
+            // Animate camera to focus on object
+            focusTarget = {
+              position: targetPosition,
+              distance: viewDistance,
+              name: obj.userData.name
+            };
+            isFocusing = true;
+
+            console.log(`Focusing on: ${obj.userData.name}`);
+          }
+        }
+      });
+
+      // Focus animation (called in render loop)
+      window.updateFocus = function() {
+        if (isFocusing && focusTarget) {
+          const targetPos = focusTarget.position.clone();
+          const viewDir = targetPos.clone().sub(camera.position).normalize();
+          const desiredPos = targetPos.clone().sub(viewDir.multiplyScalar(focusTarget.distance));
+
+          // Smooth interpolation
+          camera.position.lerp(desiredPos, 0.05);
+          controls.target.lerp(targetPos, 0.05);
+
+          // Check if close enough to stop
+          if (camera.position.distanceTo(desiredPos) < 1) {
+            isFocusing = false;
+            focusTarget = null;
+          }
+        }
+      };
 
       // Lighting
       const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
@@ -1034,11 +1128,12 @@
         const texture = new THREE.CanvasTexture(canvas);
         const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
         const sprite = new THREE.Sprite(spriteMat);
-        sprite.position.set(0, gal.size * 0.5, 0);
-        sprite.scale.set(50, 12, 1);
+        sprite.position.set(0, gal.size * 1.5, 0);  // Position label above galaxy
+        sprite.scale.set(150, 40, 1);  // LARGER labels for visibility at Universe zoom
         galaxyGroup.add(sprite);
 
-        galaxyGroup.position.set(gal.x, gal.y, gal.z);
+        // Scale position for Universe view - multiply by 1.5 for better separation
+        galaxyGroup.position.set(gal.x * 1.5, gal.y * 1.5, gal.z * 1.5);
         galaxyGroup.userData = gal;
 
         nearbyGalaxies.push(galaxyGroup);
@@ -1414,6 +1509,7 @@
 
     let planetMeshes = [];
     let orbitLines = [];
+    let planetLabels = [];  // Track planet labels for visibility control
     let eclipticPlane;
 
     function buildSolarSystem() {
@@ -1523,6 +1619,9 @@
         const sprite = new THREE.Sprite(spriteMat);
         sprite.position.set(x, y + planet.size + 5, z);
         sprite.scale.set(20, 5, 1);
+        sprite.visible = false;  // Hidden until Solar System zoom
+        sprite.userData = { planetIndex: planetMeshes.length - 1 };
+        planetLabels.push(sprite);
         scene.add(sprite);
       });
 
@@ -1538,6 +1637,8 @@
       });
       const kuiperBelt = new THREE.Mesh(kuiperGeo, kuiperMat);
       kuiperBelt.rotation.x = -Math.PI / 2;
+      kuiperBelt.visible = false;  // Hidden until Solar System zoom
+      orbitLines.push(kuiperBelt);  // Track with orbits
       scene.add(kuiperBelt);
 
       // Add asteroid belt (between Mars and Jupiter)
@@ -1552,7 +1653,12 @@
       });
       const asteroidBelt = new THREE.Mesh(asteroidGeo, asteroidMat);
       asteroidBelt.rotation.x = -Math.PI / 2;
+      asteroidBelt.visible = false;  // Hidden until Solar System zoom
+      orbitLines.push(asteroidBelt);  // Track with orbits
       scene.add(asteroidBelt);
+
+      // Set initial visibility for all planets to false
+      planetMeshes.forEach(p => p.visible = false);
     }
 
     // Animate planet orbits
@@ -1856,10 +1962,11 @@
       const shouldShowCosmicWeb = (level === 0 || level === 1);
       toggleCosmicWeb(shouldShowCosmicWeb);
 
-      // Toggle orbits
+      // Toggle orbits and solar system elements
       const shouldShowOrbits = showOrbitsLevels.includes(level);
       orbitLines.forEach(o => o.visible = shouldShowOrbits);
       planetMeshes.forEach(p => p.visible = shouldShowOrbits);
+      planetLabels.forEach(l => l.visible = shouldShowOrbits);  // FIX: Hide planet labels too
       if (eclipticPlane) eclipticPlane.visible = shouldShowOrbits;
 
       // Toggle minerals
@@ -2201,6 +2308,7 @@
       sectorRings.forEach(r => r.visible = false);
       orbitLines.forEach(o => o.visible = false);
       planetMeshes.forEach(p => p.visible = false);
+      planetLabels.forEach(l => l.visible = false);  // FIX: Hide planet labels too
       mineralMarkers.forEach(m => m.visible = false);
       condensationZones.forEach(c => c.visible = false);
       if (eclipticPlane) eclipticPlane.visible = false;
@@ -2421,6 +2529,7 @@
       showOrbits = !showOrbits;
       orbitLines.forEach(o => o.visible = showOrbits);
       planetMeshes.forEach(p => p.visible = showOrbits);
+      planetLabels.forEach(l => l.visible = showOrbits);  // FIX: Toggle planet labels too
       if (eclipticPlane) eclipticPlane.visible = showOrbits;
       document.getElementById('btn-orbits').classList.toggle('active', showOrbits);
     }
@@ -2941,6 +3050,9 @@
 
     function animate() {
       requestAnimationFrame(animate);
+
+      // Update focus animation (click-to-fly)
+      if (window.updateFocus) window.updateFocus();
 
       // Cosmic time animation
       if (isPlaying) {
