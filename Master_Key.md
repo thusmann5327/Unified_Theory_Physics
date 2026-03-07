@@ -19,6 +19,10 @@
 8. [Universe Simulator Code](#viii-universe-simulator-code)
 9. [Planetary Data Tables](#ix-planetary-data-tables)
 10. [Master Verification Suite](#x-master-verification-suite)
+11. [Husmann Framework Periodic Table](#xi-husmann-framework-periodic-table)
+12. [Mineral Targeting Signatures](#xii-mineral-targeting-signatures)
+13. [Habitable Zone Detection](#xiii-habitable-zone-detection)
+14. [Stargate Tunneling Targets](#xiv-stargate-tunneling-targets)
 
 ---
 
@@ -1057,40 +1061,831 @@ ALL VERIFICATIONS COMPLETE
 
 ---
 
+# XI. HUSMANN FRAMEWORK PERIODIC TABLE
+
+## Element Condensation by Bracket
+
+In the Husmann framework, elements condense at specific brackets in the σ₃ sector (brackets 140-151). This determines where minerals form in protoplanetary disks, asteroids, and planetary mantles.
+
+### Condensation Sequence Map
+
+```
+BRACKET    TEMP(K)   ZONE               ELEMENTS                ZECKENDORF
+──────────────────────────────────────────────────────────────────────────
+140.0      2500K     Pre-condensation   (Nothing solid yet)     {89, 34, 13, 3, 1}
+141.5-142.2  1700K   PGM Refractory     Os, W, Re, Ir, Ru       {89, 55}
+                                        Zr, Hf, Mo, Ta, Nb
+142.21     1659K  ★ HREE PEAK          Lu, Sc, Y, Tb, Gd       {89, 34, 13, 5, 1}
+                   (950× solar!)       Er, Ho, Tm, Dy
+142.2-142.4  1600K   Refractory Hosts   Al, Ti, Ca, Mg (hosts)  {89, 34, 13, 5, 2}
+142.3-142.6  1500K   LREE Zone          La, Ce, Pr, Nd, Sm      {89, 34, 13, 8}
+                                        Eu, Yb (50× solar)
+142.65     1340K  ★ SILICATE CLIFF     Si, O, Fe, Mg, Ni       {89, 55}
+                   (REE drops 600×)    (Mass flood begins)
+143.0-143.5  1300K   Iron-Nickel Zone   Fe, Ni, Co              {89, 55, 1}
+143.5-144.0  1100K   Sulfide Zone       S, Cu, Zn, Pb           {89, 55, 2}
+145.0-146.0   700K   Moderate Volatile  Cr, Mn, K, Na, P        {89, 55, 5}
+146.80       182K  ★ ICE LINE          H₂O (water)             {89, 55, 3, 1}
+147.5-149.0  130K    Ammonia/CO₂ Ice    NH₃, CO₂               {89, 55, 8}
+149.0-150.5   40K    Methane Ice        CH₄, N₂, CO            {89, 55, 8, 3}
+```
+
+### Element-by-Element Bracket Positions
+
+```python
+# Complete periodic table with bracket positions
+HUSMANN_PERIODIC_TABLE = {
+    # Group 1: Alkali Metals
+    'H':  {'Z': 1,  'bracket': 146.80, 'zone': 'ice_line', 'condensation_K': 182},
+    'Li': {'Z': 3,  'bracket': 143.5,  'zone': 'silicate', 'condensation_K': 1200},
+    'Na': {'Z': 11, 'bracket': 145.5,  'zone': 'volatile', 'condensation_K': 600},
+    'K':  {'Z': 19, 'bracket': 145.2,  'zone': 'volatile', 'condensation_K': 700},
+    'Rb': {'Z': 37, 'bracket': 145.8,  'zone': 'volatile', 'condensation_K': 500},
+    'Cs': {'Z': 55, 'bracket': 146.0,  'zone': 'volatile', 'condensation_K': 400},
+
+    # Group 2: Alkaline Earth Metals
+    'Be': {'Z': 4,  'bracket': 142.3,  'zone': 'refractory', 'condensation_K': 1600},
+    'Mg': {'Z': 12, 'bracket': 142.67, 'zone': 'silicate_cliff', 'condensation_K': 1336},
+    'Ca': {'Z': 20, 'bracket': 142.3,  'zone': 'refractory_host', 'condensation_K': 1600},
+    'Sr': {'Z': 38, 'bracket': 143.0,  'zone': 'silicate', 'condensation_K': 1300},
+    'Ba': {'Z': 56, 'bracket': 143.2,  'zone': 'silicate', 'condensation_K': 1250},
+
+    # Transition Metals (Groups 3-12)
+    'Sc': {'Z': 21, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659},
+    'Y':  {'Z': 39, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659},
+    'Ti': {'Z': 22, 'bracket': 142.25, 'zone': 'refractory_host', 'condensation_K': 1582},
+    'Zr': {'Z': 40, 'bracket': 141.8,  'zone': 'pgm_refractory', 'condensation_K': 1750},
+    'Hf': {'Z': 72, 'bracket': 141.7,  'zone': 'pgm_refractory', 'condensation_K': 1800},
+
+    'V':  {'Z': 23, 'bracket': 142.8,  'zone': 'silicate', 'condensation_K': 1370},
+    'Nb': {'Z': 41, 'bracket': 141.9,  'zone': 'pgm_refractory', 'condensation_K': 1700},
+    'Ta': {'Z': 73, 'bracket': 141.6,  'zone': 'pgm_refractory', 'condensation_K': 1900},
+
+    'Cr': {'Z': 24, 'bracket': 144.5,  'zone': 'moderate_volatile', 'condensation_K': 850},
+    'Mo': {'Z': 42, 'bracket': 141.9,  'zone': 'pgm_refractory', 'condensation_K': 1700},
+    'W':  {'Z': 74, 'bracket': 141.5,  'zone': 'pgm_refractory', 'condensation_K': 1900},
+
+    'Mn': {'Z': 25, 'bracket': 144.8,  'zone': 'moderate_volatile', 'condensation_K': 750},
+    'Re': {'Z': 75, 'bracket': 141.4,  'zone': 'pgm_refractory', 'condensation_K': 1950},
+
+    'Fe': {'Z': 26, 'bracket': 143.0,  'zone': 'iron_nickel', 'condensation_K': 1334},
+    'Ni': {'Z': 28, 'bracket': 143.0,  'zone': 'iron_nickel', 'condensation_K': 1350},
+    'Co': {'Z': 27, 'bracket': 143.1,  'zone': 'iron_nickel', 'condensation_K': 1340},
+
+    'Cu': {'Z': 29, 'bracket': 143.8,  'zone': 'sulfide', 'condensation_K': 1100},
+    'Zn': {'Z': 30, 'bracket': 144.5,  'zone': 'moderate_volatile', 'condensation_K': 800},
+
+    'Ru': {'Z': 44, 'bracket': 141.6,  'zone': 'pgm_refractory', 'condensation_K': 1850},
+    'Rh': {'Z': 45, 'bracket': 141.7,  'zone': 'pgm_refractory', 'condensation_K': 1820},
+    'Pd': {'Z': 46, 'bracket': 142.0,  'zone': 'pgm', 'condensation_K': 1680},
+    'Ag': {'Z': 47, 'bracket': 144.0,  'zone': 'sulfide', 'condensation_K': 1000},
+
+    'Os': {'Z': 76, 'bracket': 141.3,  'zone': 'ultra_refractory', 'condensation_K': 2000},
+    'Ir': {'Z': 77, 'bracket': 141.4,  'zone': 'ultra_refractory', 'condensation_K': 1950},
+    'Pt': {'Z': 78, 'bracket': 141.8,  'zone': 'pgm', 'condensation_K': 1750},
+    'Au': {'Z': 79, 'bracket': 143.5,  'zone': 'sulfide', 'condensation_K': 1150},
+
+    # Lanthanides (REE - Rare Earth Elements)
+    'La': {'Z': 57, 'bracket': 142.4,  'zone': 'lree', 'condensation_K': 1520, 'ree': True},
+    'Ce': {'Z': 58, 'bracket': 142.35, 'zone': 'lree', 'condensation_K': 1550, 'ree': True},
+    'Pr': {'Z': 59, 'bracket': 142.38, 'zone': 'lree', 'condensation_K': 1540, 'ree': True},
+    'Nd': {'Z': 60, 'bracket': 142.42, 'zone': 'lree', 'condensation_K': 1500, 'ree': True},
+    'Pm': {'Z': 61, 'bracket': 142.45, 'zone': 'lree', 'condensation_K': 1480, 'ree': True},
+    'Sm': {'Z': 62, 'bracket': 142.48, 'zone': 'lree', 'condensation_K': 1460, 'ree': True},
+    'Eu': {'Z': 63, 'bracket': 142.5,  'zone': 'lree', 'condensation_K': 1450, 'ree': True},
+    'Gd': {'Z': 64, 'bracket': 142.22, 'zone': 'hree_peak', 'condensation_K': 1655, 'ree': True},
+    'Tb': {'Z': 65, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659, 'ree': True},
+    'Dy': {'Z': 66, 'bracket': 142.23, 'zone': 'hree_peak', 'condensation_K': 1650, 'ree': True},
+    'Ho': {'Z': 67, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659, 'ree': True},
+    'Er': {'Z': 68, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659, 'ree': True},
+    'Tm': {'Z': 69, 'bracket': 142.22, 'zone': 'hree_peak', 'condensation_K': 1655, 'ree': True},
+    'Yb': {'Z': 70, 'bracket': 142.5,  'zone': 'lree', 'condensation_K': 1450, 'ree': True},
+    'Lu': {'Z': 71, 'bracket': 142.21, 'zone': 'hree_peak', 'condensation_K': 1659, 'ree': True},
+
+    # Actinides (Radioactive elements - heat sources)
+    'Th': {'Z': 90, 'bracket': 142.25, 'zone': 'refractory', 'condensation_K': 1580, 'radioactive': True},
+    'U':  {'Z': 92, 'bracket': 142.5,  'zone': 'lree', 'condensation_K': 1450, 'radioactive': True},
+
+    # Non-metals
+    'C':  {'Z': 6,  'bracket': 149.5,  'zone': 'volatile_ice', 'condensation_K': 50},
+    'N':  {'Z': 7,  'bracket': 150.0,  'zone': 'volatile_ice', 'condensation_K': 40},
+    'O':  {'Z': 8,  'bracket': 142.65, 'zone': 'silicate_cliff', 'condensation_K': 1340},
+    'S':  {'Z': 16, 'bracket': 143.8,  'zone': 'sulfide', 'condensation_K': 1100},
+    'P':  {'Z': 15, 'bracket': 145.0,  'zone': 'moderate_volatile', 'condensation_K': 700},
+
+    # Metalloids
+    'Si': {'Z': 14, 'bracket': 142.65, 'zone': 'silicate_cliff', 'condensation_K': 1340},
+}
+```
+
+### Zeckendorf Signatures for Element Groups
+
+```python
+# Key signatures for mineral targeting
+ELEMENT_GROUP_SIGNATURES = {
+    # Ultra-refractory PGM group
+    'pgm_group': {
+        'zeckendorf': [89, 55],        # = 144, near bracket 141-142
+        'elements': ['Os', 'Ir', 'Ru', 'Re', 'W', 'Pt', 'Pd', 'Rh'],
+        'targeting_priority': 'highest',
+        'description': 'Platinum Group Metals + tungsten, rhenium',
+    },
+
+    # HREE Peak (★ KEY TARGET)
+    'hree_peak': {
+        'zeckendorf': [89, 34, 13, 5, 1],  # = 142, exact bracket
+        'elements': ['Lu', 'Sc', 'Y', 'Tb', 'Gd', 'Er', 'Ho', 'Tm', 'Dy'],
+        'enrichment': '950× solar',
+        'targeting_priority': 'highest',
+        'description': 'Heavy REE peak - maximum enrichment point',
+    },
+
+    # LREE Group
+    'lree_zone': {
+        'zeckendorf': [89, 34, 13, 8],     # = 144
+        'elements': ['La', 'Ce', 'Pr', 'Nd', 'Sm', 'Eu', 'Yb'],
+        'enrichment': '50× solar',
+        'targeting_priority': 'high',
+    },
+
+    # Iron-Nickel Core
+    'iron_nickel': {
+        'zeckendorf': [89, 55, 1],         # = 145
+        'elements': ['Fe', 'Ni', 'Co'],
+        'targeting_priority': 'medium',
+        'description': 'Metallic asteroid cores',
+    },
+
+    # Gold-Copper Sulfides
+    'sulfide_ores': {
+        'zeckendorf': [89, 55, 3],         # = 147
+        'elements': ['Au', 'Cu', 'Ag', 'Pb', 'Zn', 'S'],
+        'targeting_priority': 'high',
+        'description': 'Precious metal sulfide deposits',
+    },
+
+    # Water Ice
+    'ice_line': {
+        'zeckendorf': [89, 55, 3, 1],      # = 148
+        'elements': ['H2O'],
+        'targeting_priority': 'critical',  # For life/propellant
+        'description': 'Water ice boundary',
+    },
+}
+```
+
+---
+
+# XII. MINERAL TARGETING SIGNATURES
+
+## Earth Mineral Deposits with Golden Angle Correlations
+
+Major mineral deposits on Earth show remarkable golden angle (137.5°) correlations, suggesting deep connection to planetary formation patterns.
+
+### REE Deposit Network
+
+```python
+EARTH_MINERAL_DEPOSITS = {
+    # Origin deposit: Bayan Obo (World's largest REE)
+    'bayan_obo': {
+        'name': 'Bayan Obo, China',
+        'location': {'lat': 41.80, 'lon': 109.97},
+        'primary_elements': ['La', 'Ce', 'Nd', 'Fe', 'Nb'],
+        'golden_angle_ref': 'origin',
+        'zeckendorf_signature': [89, 34, 13, 5, 1],  # = 142
+        'estimated_reserves': '48 Mt REE',
+        'description': 'World\'s largest REE deposit',
+    },
+
+    # Mountain Pass (USA) - 134.5° from Bayan Obo ≈ golden angle!
+    'mountain_pass': {
+        'name': 'Mountain Pass, California',
+        'location': {'lat': 35.47, 'lon': -115.53},
+        'primary_elements': ['Ce', 'La', 'Nd', 'Eu'],
+        'golden_angle_from_bayan': 134.5,  # ≈ 137.5° - 3°
+        'zeckendorf_signature': [89, 34, 13, 3],     # = 139
+        'estimated_reserves': '1.5 Mt REE',
+    },
+
+    # Mount Weld (Australia) - 89.2° spiral step
+    'mount_weld': {
+        'name': 'Mount Weld, Australia',
+        'location': {'lat': -28.86, 'lon': 122.55},
+        'primary_elements': ['La', 'Ce', 'Nd', 'Pr'],
+        'golden_angle_from_bayan': 89.2,  # ≈ 89 (Fibonacci!)
+        'zeckendorf_signature': [89, 34, 13, 8],     # = 144
+        'estimated_reserves': '2.4 Mt REE',
+    },
+
+    # Ilimaussaq (Greenland)
+    'ilimaussaq': {
+        'name': 'Kvanefjeld, Greenland',
+        'location': {'lat': 60.97, 'lon': -45.93},
+        'primary_elements': ['Y', 'Dy', 'Er', 'Yb'],
+        'zeckendorf_signature': [89, 34, 13, 5, 1],  # HREE rich
+        'estimated_reserves': '0.6 Mt REE',
+        'notes': 'HREE-enriched alkaline complex',
+    },
+}
+
+PGM_DEPOSITS = {
+    # Bushveld Complex (Origin for PGM network)
+    'bushveld': {
+        'name': 'Bushveld Complex, South Africa',
+        'location': {'lat': -25.38, 'lon': 29.13},
+        'primary_elements': ['Pt', 'Pd', 'Rh', 'Cr', 'V'],
+        'golden_angle_ref': 'pgm_origin',
+        'zeckendorf_signature': [55, 34, 13],        # = 102 (pre-HREE)
+        'estimated_reserves': '70,000 t PGM',
+    },
+
+    # Norilsk (Russia) - 136.8° from Bushveld!
+    'norilsk': {
+        'name': 'Norilsk-Talnakh, Russia',
+        'location': {'lat': 69.35, 'lon': 88.20},
+        'primary_elements': ['Pt', 'Pd', 'Ni', 'Cu'],
+        'golden_angle_from_bushveld': 136.8,  # ≈ golden angle!
+        'zeckendorf_signature': [55, 34, 13, 3],     # = 105
+        'estimated_reserves': '5,000 t PGM',
+    },
+}
+
+GOLD_DEPOSITS = {
+    # Witwatersrand (Origin for gold network)
+    'witwatersrand': {
+        'name': 'Witwatersrand Basin, South Africa',
+        'location': {'lat': -26.17, 'lon': 28.03},
+        'primary_elements': ['Au', 'U'],
+        'golden_angle_ref': 'gold_origin',
+        'zeckendorf_signature': [34, 21, 8, 3],      # = 66
+        'estimated_reserves': '40,000 t Au',
+        'age_ga': 2.7,  # Archean
+    },
+
+    # Carlin Trend (Nevada)
+    'carlin_trend': {
+        'name': 'Carlin Trend, Nevada',
+        'location': {'lat': 40.77, 'lon': -116.17},
+        'primary_elements': ['Au', 'As', 'Sb'],
+        'zeckendorf_signature': [34, 21, 8],         # = 63
+        'estimated_reserves': '4,500 t Au',
+    },
+}
+```
+
+### Master Targeting Signature
+
+```python
+# THE UNIVERSAL REE TARGETING SIGNATURE
+REE_TARGETING_SIGNATURE = [89, 34, 13]  # = 136, close to golden angle!
+
+def target_ree_deposits(world_formation_bracket, world_radius_km=6371):
+    """
+    Predict REE deposit probability based on formation bracket.
+
+    Key insight: REE-rich material condenses between brackets 142.0-142.65
+    (before the silicate cliff). Worlds that formed in this narrow window
+    concentrate REE in their crusts.
+    """
+    # Check if world formed in REE enrichment zone
+    if 142.0 <= world_formation_bracket < 142.65:
+        ree_enrichment = 950 * (1 - (world_formation_bracket - 142.21) / 0.44)
+        ree_enrichment = max(1.6, ree_enrichment)  # Minimum after cliff
+    elif world_formation_bracket < 142.0:
+        ree_enrichment = 0  # Too hot, nothing condensed
+    else:
+        ree_enrichment = 1.6  # Post-cliff dilution
+
+    # Calculate targeting priority
+    if ree_enrichment > 100:
+        priority = 'HIGHEST'
+        signature = [89, 34, 13, 5, 1]  # Full HREE signature
+    elif ree_enrichment > 10:
+        priority = 'HIGH'
+        signature = [89, 34, 13, 5]     # Strong REE
+    elif ree_enrichment > 2:
+        priority = 'MEDIUM'
+        signature = [89, 34, 13]        # Standard REE
+    else:
+        priority = 'LOW'
+        signature = [89, 34]            # REE-depleted
+
+    return {
+        'ree_enrichment_x_solar': ree_enrichment,
+        'targeting_priority': priority,
+        'zeckendorf_signature': signature,
+        'formation_bracket': world_formation_bracket,
+    }
+```
+
+---
+
+# XIII. HABITABLE ZONE DETECTION
+
+## Framework-Based Habitability Criteria
+
+The Husmann framework provides geometric criteria for identifying potentially habitable worlds.
+
+### Habitable Zone Brackets
+
+```python
+# Habitable zone defined by bracket ranges
+HABITABLE_ZONE = {
+    'inner_edge': {
+        'bracket': 142.5,       # Just after silicate cliff
+        'temperature_K': 1200,  # Too hot for water
+        'description': 'Rocky, but too close to star',
+    },
+    'conservative_inner': {
+        'bracket': 144.0,
+        'temperature_K': 350,   # Venus-like
+        'description': 'Runaway greenhouse risk',
+    },
+    'optimal_inner': {
+        'bracket': 144.5,
+        'temperature_K': 290,   # Earth-like
+        'description': 'Optimal for liquid water',
+    },
+    'optimal_outer': {
+        'bracket': 146.0,
+        'temperature_K': 230,   # Mars-like
+        'description': 'Needs greenhouse warming',
+    },
+    'conservative_outer': {
+        'bracket': 146.8,       # Ice line
+        'temperature_K': 182,   # Water ice forms
+        'description': 'Ice line boundary',
+    },
+    'outer_edge': {
+        'bracket': 147.5,
+        'temperature_K': 130,   # Too cold
+        'description': 'Water always frozen',
+    },
+}
+```
+
+### Habitability Score Algorithm
+
+```python
+def calculate_habitability_score(world):
+    """
+    Calculate 0-100 habitability score based on Husmann framework.
+
+    Factors:
+    1. Formation bracket (composition)
+    2. Brain hinge proximity (consciousness potential)
+    3. REE availability (technology potential)
+    4. Water availability
+    5. Tectonic vigor (carbon cycle)
+    """
+    score = 50  # Base score
+
+    # 1. Formation bracket (25 points max)
+    fb = world.get('formation_bracket', 145)
+    if 144.5 <= fb <= 146.0:
+        score += 25  # Optimal zone
+    elif 144.0 <= fb <= 146.8:
+        score += 15  # Conservative zone
+    elif 143.0 <= fb <= 147.5:
+        score += 5   # Extended zone
+    else:
+        score -= 20  # Outside habitable zone
+
+    # 2. Brain hinge proximity (15 points max)
+    # Earth radius bracket ≈ 199, brain hinge ≈ 163.8
+    # The ratio matters: larger worlds have better gravity for atmosphere
+    BRAIN_HINGE = 163.8
+    EARTH_BRACKET = 199
+    radius_km = world.get('radius_km', 6371)
+    radius_bracket = bracket_from_scale(radius_km * 1000)
+
+    # Ideal: 0.5-1.5 Earth radii (brackets 197-201)
+    if 197 <= radius_bracket <= 201:
+        score += 15
+    elif 195 <= radius_bracket <= 203:
+        score += 10
+    elif 190 <= radius_bracket <= 208:
+        score += 5
+    else:
+        score -= 10  # Too small or too large
+
+    # 3. REE availability (10 points max)
+    ree = world.get('ree_enrichment', 1.6)
+    if ree > 10:
+        score += 10  # High technology potential
+    elif ree > 3:
+        score += 5
+    elif ree < 1:
+        score -= 5   # REE-depleted
+
+    # 4. Water availability (20 points max)
+    water_fraction = world.get('water_mass_fraction', 0)
+    if 0.0001 <= water_fraction <= 0.01:
+        score += 20  # Earth-like water content
+    elif 0.00001 <= water_fraction <= 0.05:
+        score += 10
+    elif water_fraction > 0:
+        score += 5
+    else:
+        score -= 10  # No water
+
+    # 5. Tectonic vigor (10 points max)
+    tectonic = world.get('tectonic_vigor', 0)
+    if 0.5 <= tectonic <= 1.0:
+        score += 10  # Active plate tectonics
+    elif 0.2 <= tectonic < 0.5:
+        score += 5   # Some activity
+    # Dead worlds get no bonus
+
+    return max(0, min(100, score))
+
+def find_habitable_worlds(worlds_database):
+    """
+    Filter database for potentially habitable worlds.
+    """
+    habitable = []
+    for world_id, world in worlds_database.items():
+        score = calculate_habitability_score(world)
+        if score >= 50:
+            habitable.append({
+                'id': world_id,
+                'name': world.get('name', world_id),
+                'score': score,
+                'formation_bracket': world.get('formation_bracket'),
+                'ree_enrichment': world.get('ree_enrichment'),
+                'water_fraction': world.get('water_mass_fraction'),
+            })
+
+    return sorted(habitable, key=lambda x: x['score'], reverse=True)
+```
+
+### Resonance Signatures for Habitable Planets
+
+```python
+# Orbital resonance signatures that indicate habitable zone stability
+HABITABLE_RESONANCE_PATTERNS = {
+    # Fibonacci orbital ratios indicate stable configurations
+    'fib_3_2': {
+        'ratio': 1.5,           # 3:2 resonance
+        'stability': 'high',
+        'examples': ['Pluto-Neptune', 'Mercury (3:2 spin-orbit)'],
+    },
+    'fib_5_3': {
+        'ratio': 1.667,         # 5:3 resonance ≈ φ
+        'stability': 'highest',
+        'examples': ['Earth-Venus near-resonance'],
+    },
+    'fib_8_5': {
+        'ratio': 1.6,           # 8:5 resonance → φ
+        'stability': 'very high',
+    },
+    'golden_ratio': {
+        'ratio': PHI,           # 1.618...
+        'stability': 'maximum',
+        'description': 'Orbital spacing at golden angle minimizes gravitational disruption',
+    },
+}
+
+def orbital_stability_score(period_ratio_to_neighbor):
+    """
+    Calculate orbital stability based on proximity to Fibonacci ratios.
+    Closer to φ = more stable orbit.
+    """
+    # Fibonacci ratios: 1, 1, 2/1, 3/2, 5/3, 8/5, 13/8...
+    fib_ratios = [1.0, 2.0, 1.5, 1.667, 1.6, 1.625, 1.615, PHI]
+
+    min_distance = min(abs(period_ratio_to_neighbor - r) for r in fib_ratios)
+
+    # Stability: 1.0 for exact Fibonacci, decreasing with distance
+    stability = max(0, 1.0 - min_distance * 2)
+    return stability
+```
+
+---
+
+# XIV. STARGATE TUNNELING TARGETS
+
+## Framework-Based Mining Targets
+
+The Husmann framework identifies specific targets for resource extraction across the solar system and beyond, with Zeckendorf addressing for navigation.
+
+### Asteroid Classification and Targeting
+
+```python
+# Asteroid types mapped to formation brackets
+ASTEROID_CLASSIFICATION = {
+    'M-type': {
+        'bracket_range': [142.5, 143.5],
+        'composition': 'Iron-nickel metallic',
+        'primary_resources': ['Fe', 'Ni', 'Co', 'PGM'],
+        'zeckendorf': [89, 55, 1],
+        'value_per_km': 'HIGHEST',
+        'targeting_priority': 1,
+        'example': '16 Psyche',
+    },
+    'E-type': {
+        'bracket_range': [142.0, 142.3],
+        'composition': 'Enstatite, high-temperature refractories',
+        'primary_resources': ['REE', 'Ti', 'Al', 'Ca'],
+        'zeckendorf': [89, 34, 13, 5, 1],  # REE signature!
+        'value_per_km': 'EXTREME',
+        'targeting_priority': 1,
+        'example': 'Hungaria family asteroids',
+    },
+    'S-type': {
+        'bracket_range': [142.65, 145.0],
+        'composition': 'Silicate, stony-iron',
+        'primary_resources': ['Ni', 'Fe', 'Au', 'Cu'],
+        'zeckendorf': [89, 55, 3],
+        'value_per_km': 'HIGH',
+        'targeting_priority': 2,
+        'example': 'Eros, Itokawa',
+    },
+    'C-type': {
+        'bracket_range': [145.0, 147.0],
+        'composition': 'Carbonaceous, hydrated minerals',
+        'primary_resources': ['H2O', 'C', 'organics'],
+        'zeckendorf': [89, 55, 5],
+        'value_per_km': 'CRITICAL',  # Water for propellant!
+        'targeting_priority': 1,
+        'example': 'Ryugu, Bennu',
+    },
+    'P-type': {
+        'bracket_range': [147.0, 150.0],
+        'composition': 'Organic-rich, low albedo',
+        'primary_resources': ['C', 'H2O', 'N'],
+        'zeckendorf': [89, 55, 8],
+        'value_per_km': 'MEDIUM',
+        'targeting_priority': 3,
+    },
+}
+```
+
+### Solar System Mining Targets
+
+```python
+MINING_TARGETS = {
+    # HIGHEST PRIORITY: REE-rich targets
+    'moon_south_pole': {
+        'body': 'Moon',
+        'region': 'South Pole-Aitken Basin',
+        'bracket': 143.0,
+        'resources': ['H2O', 'He3', 'REE'],
+        'zeckendorf_address': [89, 55, 1],
+        'priority': 'HIGHEST',
+        'notes': 'Permanently shadowed craters contain water ice',
+    },
+
+    'psyche_16': {
+        'body': '16 Psyche',
+        'type': 'M-type asteroid',
+        'bracket': 143.2,
+        'diameter_km': 226,
+        'composition': 'Ni-Fe metallic core remnant',
+        'resources': ['Fe', 'Ni', 'Co', 'Au', 'Pt'],
+        'zeckendorf_address': [89, 55, 2],
+        'estimated_value': '$10,000 quadrillion',
+        'priority': 'HIGHEST',
+    },
+
+    'hungaria_asteroids': {
+        'body': 'Hungaria family',
+        'type': 'E-type asteroids',
+        'bracket': 142.2,
+        'resources': ['REE', 'Ti', 'Al'],
+        'zeckendorf_address': [89, 34, 13, 5, 1],  # HREE signature!
+        'priority': 'HIGHEST',
+        'notes': 'Formed before silicate cliff - REE enriched',
+    },
+
+    # CRITICAL: Water/propellant sources
+    'ceres': {
+        'body': '1 Ceres',
+        'type': 'C-type dwarf planet',
+        'bracket': 146.5,
+        'diameter_km': 940,
+        'resources': ['H2O', 'NH3', 'organics'],
+        'zeckendorf_address': [89, 55, 3],
+        'water_content': '25% by mass',
+        'priority': 'CRITICAL',
+        'notes': 'Largest body in asteroid belt, excellent water source',
+    },
+
+    'bennu': {
+        'body': '101955 Bennu',
+        'type': 'C-type NEA',
+        'bracket': 146.0,
+        'diameter_km': 0.49,
+        'resources': ['H2O', 'organics', 'volatiles'],
+        'zeckendorf_address': [89, 55, 3, 1],
+        'priority': 'HIGH',
+        'notes': 'OSIRIS-REx sampled; accessible orbit',
+    },
+
+    # PGM targets
+    'vesta': {
+        'body': '4 Vesta',
+        'type': 'V-type (differentiated)',
+        'bracket': 143.5,
+        'diameter_km': 525,
+        'resources': ['Fe', 'Ni', 'PGM'],
+        'zeckendorf_address': [89, 55, 2],
+        'priority': 'HIGH',
+        'notes': 'Differentiated body with metallic core',
+    },
+
+    # Outer system
+    'titan': {
+        'body': 'Titan (Saturn)',
+        'type': 'Ice moon',
+        'bracket': 148.5,
+        'diameter_km': 5150,
+        'resources': ['CH4', 'C2H6', 'H2O', 'N2'],
+        'zeckendorf_address': [89, 55, 5, 1],
+        'priority': 'MEDIUM',
+        'notes': 'Hydrocarbon lakes, thick atmosphere',
+    },
+
+    'europa': {
+        'body': 'Europa (Jupiter)',
+        'type': 'Ice moon with subsurface ocean',
+        'bracket': 147.0,
+        'diameter_km': 3122,
+        'resources': ['H2O', 'salts', 'possible organics'],
+        'zeckendorf_address': [89, 55, 3, 1],
+        'priority': 'HIGH',
+        'notes': 'Subsurface ocean, potential life',
+    },
+}
+```
+
+### Stargate Navigation: Zeckendorf Addressing
+
+```python
+def zeckendorf_representation(n):
+    """
+    Convert integer to Zeckendorf (Fibonacci) representation.
+    No two consecutive Fibonacci numbers - optimal for quantum tunneling.
+    """
+    if n <= 0:
+        return []
+
+    # Generate Fibonacci sequence up to n
+    fibs = [1, 2]
+    while fibs[-1] < n:
+        fibs.append(fibs[-1] + fibs[-2])
+
+    result = []
+    for f in reversed(fibs):
+        if f <= n:
+            result.append(f)
+            n -= f
+
+    return result
+
+def stargate_address(target_bracket, target_zone='default'):
+    """
+    Generate stargate navigation address from bracket and zone.
+
+    The Zeckendorf representation provides optimal addressing for
+    quantum tunneling navigation (no consecutive states = lower energy).
+    """
+    # Convert bracket to Zeckendorf
+    bracket_int = int(target_bracket)
+    zeck = zeckendorf_representation(bracket_int)
+
+    # Add zone modifier
+    ZONE_MODIFIERS = {
+        'ree_peak': [5, 1],      # Add HREE signature
+        'pgm_zone': [3],         # Add PGM signature
+        'ice_line': [3, 1],      # Add water signature
+        'habitable': [8],        # Add life signature
+        'default': [],
+    }
+
+    modifier = ZONE_MODIFIERS.get(target_zone, [])
+
+    return {
+        'primary_address': zeck,
+        'zone_modifier': modifier,
+        'full_address': sorted(set(zeck + modifier), reverse=True),
+        'target_bracket': target_bracket,
+        'target_zone': target_zone,
+    }
+
+# Example addresses for key targets
+STARGATE_ADDRESSES = {
+    'psyche_16':       stargate_address(143.2, 'pgm_zone'),    # {89, 55, 3}
+    'hungaria_ree':    stargate_address(142.21, 'ree_peak'),   # {89, 34, 13, 5, 1}
+    'ceres_water':     stargate_address(146.5, 'ice_line'),    # {89, 55, 3, 1}
+    'earth_analog':    stargate_address(145.0, 'habitable'),   # {89, 55, 8}
+    'hree_asteroids':  stargate_address(142.2, 'ree_peak'),    # {89, 34, 13, 5, 1}
+}
+```
+
+### Tunneling Energy Calculations
+
+```python
+def tunneling_energy_estimate(source_bracket, target_bracket):
+    """
+    Estimate tunneling energy based on bracket separation.
+
+    At AAH criticality (V = 2J), tunneling probability scales as
+    T ~ L^(-1/2) rather than exponential, making long-range
+    tunneling 10^9× more efficient than classical prediction.
+    """
+    J = 10.6  # eV (hopping energy)
+    PHI = 1.618033988749895
+
+    # Bracket separation
+    delta_n = abs(target_bracket - source_bracket)
+
+    # Classical tunneling would be exponential
+    classical_energy = J * 2 ** delta_n  # Exponential scaling
+
+    # At criticality, power-law scaling
+    critical_energy = J * (delta_n ** 0.5)  # Power-law scaling
+
+    # Enhancement factor
+    enhancement = classical_energy / critical_energy
+
+    return {
+        'source_bracket': source_bracket,
+        'target_bracket': target_bracket,
+        'delta_brackets': delta_n,
+        'critical_energy_eV': critical_energy,
+        'classical_energy_eV': classical_energy,
+        'enhancement_factor': enhancement,
+        'practical_notes': f"Tunneling {delta_n} brackets requires ~{critical_energy:.1f} eV at criticality",
+    }
+```
+
+---
+
 # APPENDIX: Quick Reference Card
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│              HUSMANN DECOMPOSITION QUICK REFERENCE          │
-├────────────────────────────────────────────────────────────┤
-│ φ = 1.618033988749895                                       │
-│ φ² = φ + 1 = 2.618...                                       │
-│ 1/φ + 1/φ³ + 1/φ⁴ = 1 (exact)                              │
-├────────────────────────────────────────────────────────────┤
-│ PHYSICAL CONSTANTS                                          │
-│ l = 9.3 nm (lattice spacing)                                │
-│ J = 10.6 eV (hopping energy)                                │
-│ c = 2Jl/ℏ = 3.0×10⁸ m/s                                    │
-│ α = 1/(N×W) = 1/137.34                                      │
-├────────────────────────────────────────────────────────────┤
-│ COSMIC PARTITION                                            │
-│ Dark Energy:  1/φ   = 61.8%                                 │
-│ Dark Matter:  1/φ³  = 23.6%                                 │
-│ Matter:       1/φ⁴  = 14.6%                                 │
-├────────────────────────────────────────────────────────────┤
-│ KEY BRACKETS                                                │
-│ n=0:   Planck (1.6×10⁻³⁵ m)                                │
-│ n=94:  Proton (0.84 fm)                                     │
-│ n=128: Lattice (9.3 nm)                                     │
-│ n=164: Brain (0.28 m)                                       │
-│ n=199: Earth (6,371 km)                                     │
-│ n=294: Horizon (4.4×10²⁶ m)                                │
-├────────────────────────────────────────────────────────────┤
-│ FIBONACCI FREQUENCIES (Hz)                                  │
-│ 4.0 → 7.0 → 11.0 → 18.0 → 29.0 → 47.0                      │
-├────────────────────────────────────────────────────────────┤
-│ GOLDEN ANGLE: 137.5077°                                     │
-└────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                 HUSMANN DECOMPOSITION QUICK REFERENCE                   │
+├────────────────────────────────────────────────────────────────────────┤
+│ φ = 1.618033988749895                                                   │
+│ φ² = φ + 1 = 2.618...                                                   │
+│ 1/φ + 1/φ³ + 1/φ⁴ = 1 (exact)                                          │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHYSICAL CONSTANTS                                                      │
+│ l = 9.3 nm (lattice spacing)     J = 10.6 eV (hopping energy)          │
+│ c = 2Jl/ℏ = 3.0×10⁸ m/s         α = 1/(N×W) = 1/137.34                 │
+├────────────────────────────────────────────────────────────────────────┤
+│ COSMIC PARTITION                                                        │
+│ Dark Energy: 1/φ = 61.8%  │  Dark Matter: 1/φ³ = 23.6%  │  Matter: 14.6%│
+├────────────────────────────────────────────────────────────────────────┤
+│ KEY BRACKETS                          │  CONDENSATION SEQUENCE          │
+│ n=0:   Planck (1.6×10⁻³⁵ m)          │  142.21: ★ HREE Peak (950×)     │
+│ n=94:  Proton (0.84 fm)              │  142.65: ★ Silicate Cliff       │
+│ n=128: Lattice (9.3 nm)              │  143.0:  Iron-Nickel Zone       │
+│ n=142: REE Peak (1659K)              │  143.8:  Sulfide Ores           │
+│ n=147: Ice Line (182K)               │  146.80: ★ Ice Line (H₂O)       │
+│ n=164: Brain (0.28 m)                │  150.0:  Volatile Ices          │
+│ n=199: Earth (6,371 km)              │                                  │
+│ n=294: Horizon (4.4×10²⁶ m)          │                                  │
+├────────────────────────────────────────────────────────────────────────┤
+│ MINERAL TARGETING SIGNATURES (Zeckendorf)                               │
+│ REE_PEAK:    {89, 34, 13, 5, 1} = 142  │  PGM_ZONE: {89, 55} = 144     │
+│ LREE_ZONE:   {89, 34, 13, 8} = 144     │  ICE_LINE: {89, 55, 3, 1} = 148│
+│ IRON_NICKEL: {89, 55, 1} = 145         │  SULFIDES: {89, 55, 3} = 147   │
+├────────────────────────────────────────────────────────────────────────┤
+│ HABITABLE ZONE BRACKETS                                                 │
+│ Inner Edge: 142.5  │  Optimal: 144.5-146.0  │  Ice Line: 146.8         │
+│ Habitability = f(formation_bracket, radius, REE, water, tectonics)      │
+├────────────────────────────────────────────────────────────────────────┤
+│ FIBONACCI FREQUENCIES (Hz): 4 → 7 → 11 → 18 → 29 → 47                  │
+│ GOLDEN ANGLE: 137.5077° (deposit spacing, orbital geometry)            │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+## Mineral Targeting Quick Reference
+
+```python
+# Universal REE Targeting Signature
+REE_TARGETING_SIGNATURE = [89, 34, 13]  # = 136
+
+# Formation bracket → REE enrichment
+def ree_enrichment(bracket):
+    if bracket < 142.0: return 0        # Nothing condensed
+    if bracket < 142.65: return 950     # Before silicate cliff
+    return 1.6                          # After cliff (diluted)
+
+# Habitability score
+def habitable(bracket, radius_km, water_fraction):
+    if 144.5 <= bracket <= 146.0 and \
+       4000 <= radius_km <= 10000 and \
+       water_fraction > 0.0001:
+        return "HABITABLE"
+    return "CHECK_DETAILS"
+
+# Stargate address
+def stargate_address(bracket):
+    return zeckendorf(int(bracket))  # Non-consecutive Fib representation
 ```
 
 ---
