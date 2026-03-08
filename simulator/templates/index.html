@@ -396,6 +396,15 @@
       <div>Brain: bracket <span class="value">{{ "%.2f"|format(data.hinges.brain_hinge) }}</span></div>
       <div>Oort: bracket <span class="value">{{ "%.2f"|format(data.hinges.oort_hinge) }}</span></div>
 
+      <h2>⟲ BREATHING UNIVERSE</h2>
+      <div style="font-size: 9px;">
+        <span class="highlight">INHALE</span>: Proton @ n≈94.3<br>
+        <span class="value">EXHALE</span>: BH Halo @ n≈272<br>
+        <span class="gematria">Sgr A*</span>: horizon <span class="value">214.62</span><br>
+        ISCO gap: <span class="highlight">ln(3)/ln(φ) ≈ φ²</span><br>
+        Photon sphere: <span class="value">THE WALL</span>
+      </div>
+
       <h2>GEMATRIA</h2>
       <div class="gematria">sulam (סולם) = 136 = 1/α − 1</div>
       <div class="gematria">qabalah (קבלה) = 137 = 1/α</div>
@@ -650,6 +659,36 @@
     const CALIB_FACTOR = 1.0224065900385806;
     const AU_METERS = 1.496e11;
     const LY_METERS = 9.461e15;
+
+    // ═══════════════════════════════════════════════
+    // BREATHING UNIVERSE: Black Hole Bracket Constants
+    // ═══════════════════════════════════════════════
+    // Universal BH gaps (mass-independent)
+    const BH_GAPS = {
+      ISCO: Math.log(3) / Math.log(PHI),         // 2.283 ≈ φ² mediator
+      PHOTON_SPHERE: Math.log(1.5) / Math.log(PHI), // 0.843 = THE WALL
+      ISCO_TO_PHOTON: Math.log(2) / Math.log(PHI),  // 1.440 = doubling
+      GW_WAVELENGTH: Math.log(2 * Math.PI) / Math.log(PHI), // 3.819 = π bracket
+      HAWKING_PEAK: 5.26,                        // photon strand length
+      HORIZON_TO_HALO: 56.92                     // universal breathing zone
+    };
+
+    // Black hole bracket positions (log_φ(R_s / L_Planck))
+    const BLACK_HOLES = {
+      STELLAR:  { name: 'Stellar BH (10 M☉)', mass_solar: 10, horizon_bracket: 187.82 },
+      IMBH:     { name: 'IMBH (1000 M☉)', mass_solar: 1000, horizon_bracket: 197.38 },
+      SGR_A:    { name: 'Sgr A* (4M M☉)', mass_solar: 4e6, horizon_bracket: 214.62 },
+      M87:      { name: 'M87* (6.5B M☉)', mass_solar: 6.5e9, horizon_bracket: 230.38 },
+      TON618:   { name: 'TON 618 (66B M☉)', mass_solar: 6.6e10, horizon_bracket: 234.80 }
+    };
+
+    // Proton bracket (INHALE point)
+    const PROTON_BRACKET = 94.3;
+
+    // Breathing cycle state
+    let breathingPhase = 0;  // 0 to 2π
+    let breathingEnabled = true;
+    let blackHoleObjects = [];
 
     // Pre-rendered server data
     const SOLAR_SYSTEM = {{ data.solar_system | tojson }};
@@ -1099,6 +1138,7 @@
       // Build nearby galaxies
       buildNearbyGalaxies();
       buildCosmicWeb();  // FEATURE 1: Cosmic web filaments
+      buildBlackHoleVisualization();  // BREATHING UNIVERSE: Black hole at center
     }
 
     function buildNearbyGalaxies() {
@@ -1445,6 +1485,182 @@
 
     function toggleCosmicWeb(show) {
       cosmicWebFilaments.forEach(f => f.visible = show);
+    }
+
+    // ═══════════════════════════════════════════════
+    // BREATHING UNIVERSE: Black Hole Visualization
+    // ═══════════════════════════════════════════════
+    // Visualizes the outer bracket where matter → energy (EXHALE)
+    // ISCO gap = ln(3)/ln(φ) ≈ φ² (the mediator)
+
+    function buildBlackHoleVisualization() {
+      // Create Sgr A* black hole at center of Milky Way
+      const sgrA = BLACK_HOLES.SGR_A;
+
+      // Black hole group
+      const bhGroup = new THREE.Group();
+      bhGroup.userData = { name: 'Sgr A*', type: 'black_hole' };
+
+      // Event horizon (black sphere)
+      const horizonRadius = 15;
+      const horizonGeometry = new THREE.SphereGeometry(horizonRadius, 32, 32);
+      const horizonMaterial = new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0.95
+      });
+      const horizon = new THREE.Mesh(horizonGeometry, horizonMaterial);
+      bhGroup.add(horizon);
+
+      // Photon sphere (THE WALL) - glowing ring at 1.5 R_s
+      const photonRadius = horizonRadius * 1.5;
+      const photonGeometry = new THREE.TorusGeometry(photonRadius, 0.5, 16, 100);
+      const photonMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        transparent: true,
+        opacity: 0.8
+      });
+      const photonSphere = new THREE.Mesh(photonGeometry, photonMaterial);
+      photonSphere.rotation.x = Math.PI / 2;
+      bhGroup.add(photonSphere);
+
+      // ISCO ring (innermost stable circular orbit) at 3 R_s
+      // Gap = ln(3)/ln(φ) = 2.283 ≈ φ² (the mediator!)
+      const iscoRadius = horizonRadius * 3;
+      const iscoGeometry = new THREE.TorusGeometry(iscoRadius, 1.0, 16, 100);
+      const iscoMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff4488,  // Matter color (σ₁)
+        transparent: true,
+        opacity: 0.7
+      });
+      const iscoRing = new THREE.Mesh(iscoGeometry, iscoMaterial);
+      iscoRing.rotation.x = Math.PI / 2;
+      bhGroup.add(iscoRing);
+
+      // ISCO whirlpool spiral (matter spiraling in)
+      const whirlpoolPoints = [];
+      const WHIRL_TURNS = 3;
+      const WHIRL_POINTS = 200;
+      for (let i = 0; i < WHIRL_POINTS; i++) {
+        const t = i / WHIRL_POINTS;
+        const angle = t * WHIRL_TURNS * 2 * Math.PI;
+        const r = iscoRadius * (1 - t * 0.7);  // Spiral inward
+        const x = r * Math.cos(angle);
+        const y = r * Math.sin(angle);
+        const z = t * 5 - 2.5;  // Slight z variation
+        whirlpoolPoints.push(new THREE.Vector3(x, y, z));
+      }
+      const whirlpoolCurve = new THREE.CatmullRomCurve3(whirlpoolPoints);
+      const whirlpoolGeometry = new THREE.TubeGeometry(whirlpoolCurve, 100, 0.3, 8, false);
+      const whirlpoolMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff6644,
+        transparent: true,
+        opacity: 0.6
+      });
+      const whirlpool = new THREE.Mesh(whirlpoolGeometry, whirlpoolMaterial);
+      bhGroup.add(whirlpool);
+
+      // Dark matter halo funnel (guides matter inward)
+      const haloOuterRadius = horizonRadius * Math.pow(PHI, BH_GAPS.HORIZON_TO_HALO / 10);
+      const haloGeometry = new THREE.ConeGeometry(haloOuterRadius, horizonRadius * 3, 32, 1, true);
+      const haloMaterial = new THREE.MeshBasicMaterial({
+        color: WAVE_SOURCES.DM.color,
+        transparent: true,
+        opacity: 0.15,
+        wireframe: true,
+        side: THREE.DoubleSide
+      });
+      const haloFunnel = new THREE.Mesh(haloGeometry, haloMaterial);
+      haloFunnel.rotation.x = Math.PI;
+      haloFunnel.position.y = -horizonRadius * 1.5;
+      bhGroup.add(haloFunnel);
+
+      // JETS: Single-mode gravitational fiber optics
+      // DE backbone (Source 1) broadcasts energy OUT
+      const jetLength = horizonRadius * 8;
+      const jetRadius = horizonRadius * 0.5;
+
+      // Create jet geometry (cylinder tapering outward)
+      const jetTopGeometry = new THREE.CylinderGeometry(jetRadius * 0.3, jetRadius, jetLength, 16, 1, true);
+      const jetMaterial = new THREE.MeshBasicMaterial({
+        color: WAVE_SOURCES.DE.color,  // Blue (DE backbone)
+        transparent: true,
+        opacity: 0.5,
+        side: THREE.DoubleSide
+      });
+
+      // Top jet
+      const jetTop = new THREE.Mesh(jetTopGeometry, jetMaterial);
+      jetTop.position.y = horizonRadius + jetLength / 2;
+      bhGroup.add(jetTop);
+
+      // Bottom jet
+      const jetBottom = new THREE.Mesh(jetTopGeometry, jetMaterial.clone());
+      jetBottom.rotation.x = Math.PI;
+      jetBottom.position.y = -(horizonRadius + jetLength / 2);
+      bhGroup.add(jetBottom);
+
+      // Jet glow particles
+      const jetParticleCount = 100;
+      const jetParticlePositions = new Float32Array(jetParticleCount * 3);
+      for (let i = 0; i < jetParticleCount; i++) {
+        const direction = i < jetParticleCount / 2 ? 1 : -1;
+        const t = Math.random();
+        const r = jetRadius * 0.3 * (1 - t * 0.5) * Math.random();
+        const theta = Math.random() * Math.PI * 2;
+        jetParticlePositions[i * 3] = r * Math.cos(theta);
+        jetParticlePositions[i * 3 + 1] = direction * (horizonRadius + t * jetLength);
+        jetParticlePositions[i * 3 + 2] = r * Math.sin(theta);
+      }
+      const jetParticleGeometry = new THREE.BufferGeometry();
+      jetParticleGeometry.setAttribute('position', new THREE.BufferAttribute(jetParticlePositions, 3));
+      const jetParticleMaterial = new THREE.PointsMaterial({
+        color: 0x00ffff,
+        size: 0.5,
+        transparent: true,
+        opacity: 0.8
+      });
+      const jetParticles = new THREE.Points(jetParticleGeometry, jetParticleMaterial);
+      jetParticles.userData.isJetParticle = true;
+      bhGroup.add(jetParticles);
+
+      // Position at center initially, visible at Galaxy zoom
+      bhGroup.position.set(0, 0, 0);
+      bhGroup.visible = false;
+      blackHoleObjects.push(bhGroup);
+      scene.add(bhGroup);
+    }
+
+    function toggleBlackHole(show) {
+      blackHoleObjects.forEach(bh => bh.visible = show);
+    }
+
+    // Animate breathing cycle (proton INHALE, BH EXHALE)
+    function animateBreathing(time) {
+      if (!breathingEnabled) return;
+
+      breathingPhase = (time * 0.0005) % (Math.PI * 2);
+      const breathScale = 1 + 0.05 * Math.sin(breathingPhase);
+
+      // Animate black hole jets (pulsing outward during EXHALE)
+      blackHoleObjects.forEach(bh => {
+        bh.children.forEach(child => {
+          if (child.userData && child.userData.isJetParticle) {
+            // Move jet particles outward
+            const positions = child.geometry.attributes.position.array;
+            for (let i = 0; i < positions.length; i += 3) {
+              const y = positions[i + 1];
+              const direction = y > 0 ? 1 : -1;
+              positions[i + 1] += direction * 0.1 * (1 + Math.sin(breathingPhase));
+              // Reset if too far
+              if (Math.abs(y) > 120) {
+                positions[i + 1] = direction * 15;
+              }
+            }
+            child.geometry.attributes.position.needsUpdate = true;
+          }
+        });
+      });
     }
 
     function getBandForBracket(n) {
@@ -2164,6 +2380,10 @@
       // FEATURE 1: Toggle cosmic web (visible at Universe and Galaxy views)
       const shouldShowCosmicWeb = (level === 0 || level === 1);
       toggleCosmicWeb(shouldShowCosmicWeb);
+
+      // BREATHING UNIVERSE: Toggle black hole (visible at Galaxy zoom)
+      const shouldShowBlackHole = (level === 1);
+      toggleBlackHole(shouldShowBlackHole);
 
       // Toggle orbits and solar system elements
       const shouldShowOrbits = showOrbitsLevels.includes(level);
@@ -3289,6 +3509,9 @@
 
       // Animate planet orbits in ecliptic plane
       updatePlanetOrbits();
+
+      // BREATHING UNIVERSE: Animate black hole jets and breathing cycle
+      animateBreathing(Date.now());
 
       // Earth history animation
       if (isPlayingEarth) {
