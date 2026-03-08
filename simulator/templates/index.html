@@ -371,6 +371,16 @@
         α = 1/(294 × W) = 1/<span class="value">{{ "%.2f"|format(1/data.alpha_universe) }}</span>
       </div>
 
+      <h2>④ TRIANGULATION (D = 3)</h2>
+      <div style="font-size: 9px;">
+        <span class="highlight">3 wave sources → 3D space</span><br>
+        <span class="value">S₁</span>: 1/φ, ω=φ (DE backbone)<br>
+        <span class="value">S₂</span>: 1/φ³, ω=φ³ (DM web)<br>
+        <span class="value">S₃</span>: 1/φ⁴, ω=φ⁴ (Matter)<br>
+        <span class="gematria">φ² = V = 2J (mediator)</span><br>
+        det(S₁,S₂,S₃) ≠ 0 → D = 3
+      </div>
+
       <h2>THREE-LAYER WALL</h2>
       <div>Layer 1 (entry): <span class="value">{{ "%.4f"|format(data.wall.layer1 * 100) }}%</span></div>
       <div>Layer 2 (core): <span class="value">{{ "%.4f"|format(data.wall.layer2 * 100) }}%</span></div>
@@ -576,6 +586,65 @@
     const GOLDEN_ANGLE = {{ data.golden_angle }};
     const HINGE_CONST = {{ data.hinge_const }};
     const WALL_FRACTION = {{ data.wall_fraction }};
+
+    // ═══════════════════════════════════════════════
+    // UNITY TRIANGULATION: 3 Wave Sources → 3D Space
+    // ═══════════════════════════════════════════════
+    // The three terms of 1/φ + 1/φ³ + 1/φ⁴ = 1 are wave sources
+    // φ² (= V = 2J) is the mediator, NOT a source
+    const WAVE_SOURCES = {
+      DE: { amplitude: INV_PHI, frequency: PHI, color: 0x4444ff },      // S₁: Dark Energy backbone
+      DM: { amplitude: INV_PHI3, frequency: PHI3, color: 0x8844ff },    // S₂: Dark Matter conduit
+      M:  { amplitude: INV_PHI4, frequency: PHI4, color: 0xff4488 }     // S₃: Matter endpoints
+    };
+
+    // Source positions at golden-angle separation on Fibonacci sphere
+    const GOLDEN_ANGLE_RAD = 2 * Math.PI / PHI2;  // 137.5° in radians
+    const SOURCE_POSITIONS = [
+      { x: 1, y: 0, z: 0 },  // S₁ reference
+      {   // S₂ at golden angle
+        x: Math.sin(GOLDEN_ANGLE_RAD),
+        y: Math.cos(GOLDEN_ANGLE_RAD),
+        z: 0
+      },
+      {   // S₃ at 2× golden angle with π/φ elevation
+        x: Math.sin(2*GOLDEN_ANGLE_RAD) * Math.cos(Math.PI/PHI),
+        y: Math.sin(2*GOLDEN_ANGLE_RAD) * Math.sin(Math.PI/PHI),
+        z: Math.cos(2*GOLDEN_ANGLE_RAD)
+      }
+    ];
+
+    // Compute wave field intensity at a point (returns 0-1 normalized)
+    function computeWaveIntensity(x, y, z, k = 0.05) {
+      const r = Math.sqrt(x*x + y*y + z*z) || 1;
+      const amps = [WAVE_SOURCES.DE.amplitude, WAVE_SOURCES.DM.amplitude, WAVE_SOURCES.M.amplitude];
+      const omegas = [WAVE_SOURCES.DE.frequency, WAVE_SOURCES.DM.frequency, WAVE_SOURCES.M.frequency];
+
+      let psi = 0;
+      for (let i = 0; i < 3; i++) {
+        const s = SOURCE_POSITIONS[i];
+        const ri = Math.sqrt((x-s.x*r*0.5)**2 + (y-s.y*r*0.5)**2 + (z-s.z*r*0.5)**2) || 1;
+        psi += amps[i] * Math.sin(k * omegas[i] * ri) / ri;
+      }
+      return psi * psi;  // |ψ|² intensity
+    }
+
+    // Compute pairwise interference (DE+DM for filaments, all three for clusters)
+    function computePairwiseIntensity(x, y, z, k = 0.05, pairs = ['DE', 'DM']) {
+      const r = Math.sqrt(x*x + y*y + z*z) || 1;
+      const sourceMap = { DE: 0, DM: 1, M: 2 };
+      const amps = [WAVE_SOURCES.DE.amplitude, WAVE_SOURCES.DM.amplitude, WAVE_SOURCES.M.amplitude];
+      const omegas = [WAVE_SOURCES.DE.frequency, WAVE_SOURCES.DM.frequency, WAVE_SOURCES.M.frequency];
+
+      let psi = 0;
+      pairs.forEach(name => {
+        const i = sourceMap[name];
+        const s = SOURCE_POSITIONS[i];
+        const ri = Math.sqrt((x-s.x*r*0.5)**2 + (y-s.y*r*0.5)**2 + (z-s.z*r*0.5)**2) || 1;
+        psi += amps[i] * Math.sin(k * omegas[i] * ri) / ri;
+      });
+      return psi * psi;
+    }
 
     const L_PLANCK = 1.616255e-35;
     const CALIB_FACTOR = 1.0224065900385806;
@@ -1146,46 +1215,88 @@
       nearbyGalaxies.forEach(g => g.visible = show);
     }
 
-    // FEATURE 1: Cosmic Web Filaments
-    // These represent the 1/φ backbone threads stretching between galaxies
-    // Like dark matter filaments in large-scale structure
+    // FEATURE 1: Cosmic Web Filaments (Unity Triangulation Implementation)
+    // Clusters form at interference peaks of three φ-wave sources
+    // Filaments trace high DE+DM pairwise correlation (0.99) paths
     function buildCosmicWeb() {
       const goldenAngleRad = GOLDEN_ANGLE * Math.PI / 180;
-
-      // Major cluster positions in the local universe (at cosmic scale)
-      // Placed using golden-angle spacing from center
-      const clusters = [];
-      const NUM_CLUSTERS = 34;  // Fibonacci number for aesthetic clustering
       const CLUSTER_RADIUS = MAX_VISUAL_RADIUS * 0.9;
 
-      for (let i = 0; i < NUM_CLUSTERS; i++) {
-        // Golden angle distribution for cluster placement
-        const angle = i * goldenAngleRad;
-        const heightAngle = Math.asin(1 - 2 * (i + 0.5) / NUM_CLUSTERS);  // Fibonacci sphere
+      // UNITY TRIANGULATION: Find clusters at 3-source interference peaks
+      // Sample a grid and find local maxima of wave intensity
+      const clusters = [];
+      const NUM_SAMPLES = 20;  // Grid resolution per axis
+      const intensityGrid = [];
 
-        const r = CLUSTER_RADIUS * (0.3 + Math.random() * 0.7);
-        clusters.push({
-          x: r * Math.cos(angle) * Math.cos(heightAngle),
-          y: r * Math.sin(heightAngle),
-          z: r * Math.sin(angle) * Math.cos(heightAngle),
-          size: 10 + Math.random() * 20
-        });
+      // Sample the wave field intensity on a 3D grid
+      for (let ix = 0; ix < NUM_SAMPLES; ix++) {
+        for (let iy = 0; iy < NUM_SAMPLES; iy++) {
+          for (let iz = 0; iz < NUM_SAMPLES; iz++) {
+            const x = (ix / (NUM_SAMPLES - 1) - 0.5) * 2 * CLUSTER_RADIUS;
+            const y = (iy / (NUM_SAMPLES - 1) - 0.5) * 2 * CLUSTER_RADIUS;
+            const z = (iz / (NUM_SAMPLES - 1) - 0.5) * 2 * CLUSTER_RADIUS;
+            const r = Math.sqrt(x*x + y*y + z*z);
+
+            if (r > 0.1 * CLUSTER_RADIUS && r < 0.95 * CLUSTER_RADIUS) {
+              const intensity = computeWaveIntensity(x, y, z, 0.008);
+              intensityGrid.push({ x, y, z, intensity, r });
+            }
+          }
+        }
       }
 
-      // Connect clusters with filaments using golden-angle spacing
-      // Each cluster connects to its nearest φ-related neighbors
+      // Sort by intensity and select top peaks (avoiding close neighbors)
+      intensityGrid.sort((a, b) => b.intensity - a.intensity);
+      const MIN_CLUSTER_SEPARATION = CLUSTER_RADIUS * 0.15;
+
+      for (const point of intensityGrid) {
+        if (clusters.length >= 34) break;  // Fibonacci number of clusters
+
+        // Check if far enough from existing clusters
+        const tooClose = clusters.some(c => {
+          const dx = c.x - point.x, dy = c.y - point.y, dz = c.z - point.z;
+          return Math.sqrt(dx*dx + dy*dy + dz*dz) < MIN_CLUSTER_SEPARATION;
+        });
+
+        if (!tooClose) {
+          // Cluster size proportional to intensity (normalized)
+          const sizeScale = 10 + 20 * (point.intensity / (intensityGrid[0].intensity || 1));
+          clusters.push({
+            x: point.x,
+            y: point.y,
+            z: point.z,
+            size: sizeScale,
+            intensity: point.intensity
+          });
+        }
+      }
+
+      // UNITY TRIANGULATION: Connect clusters using DE+DM pairwise correlation
+      // DE+DM correlation = 0.99 (highest) → these form the cosmic web filaments
       const connectionPairs = [];
+      const MAX_CONNECTION_DIST = CLUSTER_RADIUS * 0.5;
+
       for (let i = 0; i < clusters.length; i++) {
-        // Connect to clusters that are i + Fibonacci steps away
-        const fibSteps = [1, 2, 3, 5, 8, 13];
-        fibSteps.forEach(step => {
-          const j = (i + step) % clusters.length;
-          if (i < j) connectionPairs.push([i, j]);
-        });
+        for (let j = i + 1; j < clusters.length; j++) {
+          const c1 = clusters[i], c2 = clusters[j];
+          const dx = c2.x - c1.x, dy = c2.y - c1.y, dz = c2.z - c1.z;
+          const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+          if (dist < MAX_CONNECTION_DIST) {
+            // Sample DE+DM intensity along path to weight connection
+            const midX = (c1.x + c2.x) / 2, midY = (c1.y + c2.y) / 2, midZ = (c1.z + c2.z) / 2;
+            const pairIntensity = computePairwiseIntensity(midX, midY, midZ, 0.008, ['DE', 'DM']);
+            connectionPairs.push({ i, j, dist, pairIntensity });
+          }
+        }
       }
 
-      // Build filaments as curved lines (backbone threads)
-      connectionPairs.forEach(([i, j]) => {
+      // Sort by pairwise intensity (strongest DE+DM correlations first)
+      connectionPairs.sort((a, b) => b.pairIntensity - a.pairIntensity);
+
+      // Build filaments for top connections (limit to prevent clutter)
+      const MAX_FILAMENTS = 89;  // Fibonacci number
+      connectionPairs.slice(0, MAX_FILAMENTS).forEach(({ i, j, pairIntensity }) => {
         const c1 = clusters[i];
         const c2 = clusters[j];
 
@@ -1194,13 +1305,13 @@
         const numPoints = 20;
 
         for (let t = 0; t <= 1; t += 1/numPoints) {
-          // Curved path with golden-angle deviation
           const x = c1.x + (c2.x - c1.x) * t;
           const y = c1.y + (c2.y - c1.y) * t;
           const z = c1.z + (c2.z - c1.z) * t;
 
-          // Add golden-spiral wavering to simulate backbone thread flow
-          const waveAmp = 20 * Math.sin(t * Math.PI);  // Peak deviation at midpoint
+          // Add golden-spiral wavering weighted by local DE+DM intensity
+          const localIntensity = computePairwiseIntensity(x, y, z, 0.008, ['DE', 'DM']);
+          const waveAmp = 15 * Math.sin(t * Math.PI) * (localIntensity / (pairIntensity || 1));
           const wavePhase = t * 3 * goldenAngleRad;
           const waveDx = waveAmp * Math.cos(wavePhase);
           const waveDy = waveAmp * Math.sin(wavePhase) * 0.5;
@@ -1209,28 +1320,34 @@
         }
 
         const curve = new THREE.CatmullRomCurve3(filamentPoints);
-        const filamentGeometry = new THREE.TubeGeometry(curve, 12, 1.5, 6, false);
+        // Filament thickness proportional to DE+DM intensity
+        const tubeRadius = 1 + 2 * (pairIntensity / (connectionPairs[0].pairIntensity || 1));
+        const filamentGeometry = new THREE.TubeGeometry(curve, 12, tubeRadius, 6, false);
 
-        // Filaments are blue-violet (representing the 1/φ dark matter backbone)
+        // Filaments colored by DE+DM blend (blue-violet backbone)
         const filamentMaterial = new THREE.MeshBasicMaterial({
-          color: 0x4433aa,
+          color: 0x5544bb,  // DE blue + DM purple blend
           transparent: true,
-          opacity: 0.25,
+          opacity: 0.2 + 0.15 * (pairIntensity / (connectionPairs[0].pairIntensity || 1)),
         });
 
         const filament = new THREE.Mesh(filamentGeometry, filamentMaterial);
-        filament.visible = false;  // Hidden until Universe zoom
+        filament.visible = false;
         cosmicWebFilaments.push(filament);
         scene.add(filament);
       });
 
-      // Add cluster nodes (galaxy clusters at filament intersections)
+      // Add cluster nodes (galaxy clusters at interference peaks)
+      // Color by intensity: brighter = stronger 3-source constructive interference
+      const maxClusterIntensity = clusters[0]?.intensity || 1;
       clusters.forEach((c, i) => {
         const nodeGeometry = new THREE.SphereGeometry(c.size, 12, 12);
+        const intensityFactor = c.intensity / maxClusterIntensity;
+        const nodeColor = new THREE.Color().setHSL(0.75 - intensityFactor * 0.2, 0.7, 0.3 + intensityFactor * 0.3);
         const nodeMaterial = new THREE.MeshBasicMaterial({
-          color: 0x6644cc,
+          color: nodeColor,
           transparent: true,
-          opacity: 0.2,
+          opacity: 0.15 + 0.2 * intensityFactor,
         });
         const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
         node.position.set(c.x, c.y, c.z);
@@ -1238,6 +1355,92 @@
         cosmicWebFilaments.push(node);
         scene.add(node);
       });
+
+      // UNITY TRIANGULATION: Add source markers showing the three wave origins
+      // These represent the abstract source positions (scaled for visualization)
+      const sourceScale = CLUSTER_RADIUS * 0.8;
+      const sourceColors = [0x4444ff, 0x8844ff, 0xff4488];  // DE, DM, M
+      const sourceLabels = ['S₁ (DE)', 'S₂ (DM)', 'S₃ (M)'];
+
+      SOURCE_POSITIONS.forEach((sp, idx) => {
+        // Source marker sphere
+        const markerGeometry = new THREE.SphereGeometry(12, 16, 16);
+        const markerMaterial = new THREE.MeshBasicMaterial({
+          color: sourceColors[idx],
+          transparent: true,
+          opacity: 0.6,
+        });
+        const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        marker.position.set(sp.x * sourceScale, sp.y * sourceScale, sp.z * sourceScale);
+        marker.visible = false;
+        cosmicWebFilaments.push(marker);
+        scene.add(marker);
+
+        // Outer glow ring
+        const ringGeometry = new THREE.RingGeometry(15, 20, 32);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: sourceColors[idx],
+          transparent: true,
+          opacity: 0.3,
+          side: THREE.DoubleSide,
+        });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.copy(marker.position);
+        ring.lookAt(0, 0, 0);  // Face center
+        ring.visible = false;
+        cosmicWebFilaments.push(ring);
+        scene.add(ring);
+
+        // Source label
+        const labelCanvas = document.createElement('canvas');
+        const labelCtx = labelCanvas.getContext('2d');
+        labelCanvas.width = 256;
+        labelCanvas.height = 64;
+        labelCtx.fillStyle = '#' + sourceColors[idx].toString(16).padStart(6, '0');
+        labelCtx.font = 'bold 20px Courier New';
+        labelCtx.textAlign = 'center';
+        labelCtx.fillText(sourceLabels[idx], 128, 35);
+
+        const labelTexture = new THREE.CanvasTexture(labelCanvas);
+        const labelSprite = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
+        const label = new THREE.Sprite(labelSprite);
+        label.position.set(sp.x * sourceScale, sp.y * sourceScale + 30, sp.z * sourceScale);
+        label.scale.set(80, 20, 1);
+        label.visible = false;
+        cosmicWebFilaments.push(label);
+        scene.add(label);
+      });
+
+      // Draw triangulation triangle connecting the three sources
+      const trianglePoints = SOURCE_POSITIONS.map(sp =>
+        new THREE.Vector3(sp.x * sourceScale, sp.y * sourceScale, sp.z * sourceScale)
+      );
+      trianglePoints.push(trianglePoints[0].clone());  // Close the triangle
+
+      const triangleGeometry = new THREE.BufferGeometry().setFromPoints(trianglePoints);
+      const triangleMaterial = new THREE.LineBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.4,
+        linewidth: 2,
+      });
+      const triangleLine = new THREE.Line(triangleGeometry, triangleMaterial);
+      triangleLine.visible = false;
+      cosmicWebFilaments.push(triangleLine);
+      scene.add(triangleLine);
+
+      // Central interference marker at origin (where all three converge)
+      const centerGeometry = new THREE.SphereGeometry(8, 16, 16);
+      const centerMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.5,
+      });
+      const centerMarker = new THREE.Mesh(centerGeometry, centerMaterial);
+      centerMarker.position.set(0, 0, 0);
+      centerMarker.visible = false;
+      cosmicWebFilaments.push(centerMarker);
+      scene.add(centerMarker);
     }
 
     function toggleCosmicWeb(show) {
