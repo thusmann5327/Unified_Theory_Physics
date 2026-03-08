@@ -469,6 +469,12 @@
       <button id="btn-minerals">Minerals</button>
       <button id="btn-condensation">Condensation</button>
 
+      <label style="color: #ffaa00;">Real Universe (Observational)</label>
+      <button id="btn-real-universe" class="active" style="background: #ff8800;">Real Cosmos</button>
+      <button id="btn-cosmic-web">Cosmic Web</button>
+      <button id="btn-black-hole">Black Hole</button>
+      <button id="btn-breathing">Breathing</button>
+
       <label>World Finder</label>
       <button id="btn-world-finder">🔭 Find Worlds</button>
       <button id="btn-compare-worlds">⚖️ Compare</button>
@@ -689,6 +695,95 @@
     let breathingPhase = 0;  // 0 to 2π
     let breathingEnabled = true;
     let blackHoleObjects = [];
+
+    // ═══════════════════════════════════════════════
+    // REAL UNIVERSE DATA (from astronomical surveys)
+    // ═══════════════════════════════════════════════
+
+    // Real superclusters and their approximate positions (in Mly from Earth)
+    // Data from 2MASS Redshift Survey, SDSS, and literature
+    const REAL_SUPERCLUSTERS = [
+      // Local structures
+      { name: 'Virgo Cluster', x: 0, y: 0, z: 54, mass: 1.2e15, galaxies: 1300, color: 0xffaa00 },
+      { name: 'Local Group', x: 0, y: 0, z: 0, mass: 2e12, galaxies: 80, color: 0x00ff88 },
+      { name: 'Fornax Cluster', x: -40, y: -55, z: 62, mass: 7e13, galaxies: 350, color: 0xff8800 },
+      { name: 'Coma Cluster', x: 0, y: 280, z: 90, mass: 7e14, galaxies: 1000, color: 0xffcc00 },
+
+      // Great Attractor region (Laniakea center)
+      { name: 'Great Attractor', x: 150, y: -60, z: 200, mass: 5e16, galaxies: 100000, color: 0xff4488 },
+      { name: 'Norma Cluster', x: 140, y: -50, z: 220, mass: 1e15, galaxies: 1500, color: 0xff6644 },
+      { name: 'Centaurus Cluster', x: 80, y: -20, z: 170, mass: 3e14, galaxies: 500, color: 0xffaa44 },
+
+      // Major superclusters
+      { name: 'Perseus-Pisces', x: -180, y: 50, z: 240, mass: 3e15, galaxies: 5000, color: 0x4488ff },
+      { name: 'Shapley Supercluster', x: 200, y: -100, z: 650, mass: 1e16, galaxies: 8000, color: 0xff0088 },
+      { name: 'Hercules Supercluster', x: 50, y: 380, z: 150, mass: 2e15, galaxies: 3000, color: 0x88ff00 },
+      { name: 'Corona Borealis', x: 30, y: 300, z: 70, mass: 5e15, galaxies: 400, color: 0x00ffaa },
+      { name: 'Bootes Supercluster', x: -20, y: 560, z: 50, mass: 8e14, galaxies: 2000, color: 0x8844ff },
+
+      // Distant structures
+      { name: 'Horologium-Reticulum', x: -300, y: -180, z: 700, mass: 3e15, galaxies: 5000, color: 0xff44aa },
+      { name: 'Sculptor Wall', x: -120, y: -200, z: 500, mass: 2e15, galaxies: 4000, color: 0x44ffaa },
+      { name: 'Sloan Great Wall', x: 100, y: 800, z: 200, mass: 1.2e17, galaxies: 10000, color: 0xffffff },
+      { name: 'CfA2 Great Wall', x: -50, y: 400, z: 250, mass: 2e16, galaxies: 15000, color: 0xffffaa },
+
+      // Very distant structures (showing φ-structure at scale)
+      { name: 'Hercules-Corona Wall', x: 300, y: 1500, z: 400, mass: 3e17, galaxies: 50000, color: 0xff88ff },
+      { name: 'BOSS Great Wall', x: -200, y: 2500, z: 100, mass: 4e17, galaxies: 80000, color: 0x88ffff },
+    ];
+
+    // Local Group galaxies (distances in kly = 1000 light years)
+    const LOCAL_GROUP_GALAXIES = [
+      // Milky Way subgroup
+      { name: 'Milky Way', x: 0, y: 0, z: 0, type: 'SBbc', mag: -20.9, diameter: 100 },
+      { name: 'LMC', x: 0, y: -40, z: 160, type: 'SBm', mag: -18.5, diameter: 30 },
+      { name: 'SMC', x: -30, y: -30, z: 200, type: 'SBm', mag: -17.1, diameter: 15 },
+      { name: 'Sagittarius Dwarf', x: 50, y: 0, z: 70, type: 'dSph', mag: -13.5, diameter: 10 },
+      { name: 'Ursa Minor Dwarf', x: 0, y: 60, z: 200, type: 'dSph', mag: -8.8, diameter: 2 },
+      { name: 'Draco Dwarf', x: 30, y: 70, z: 260, type: 'dSph', mag: -8.8, diameter: 2 },
+
+      // Andromeda subgroup
+      { name: 'Andromeda (M31)', x: 400, y: 500, z: 2540, type: 'SA(s)b', mag: -21.5, diameter: 220 },
+      { name: 'M32', x: 390, y: 490, z: 2490, type: 'cE2', mag: -16.5, diameter: 8 },
+      { name: 'M110', x: 410, y: 510, z: 2690, type: 'dE5', mag: -16.5, diameter: 17 },
+      { name: 'NGC 185', x: 350, y: 550, z: 2010, type: 'dE3', mag: -15.6, diameter: 8 },
+      { name: 'NGC 147', x: 340, y: 540, z: 2200, type: 'dE5', mag: -15.1, diameter: 10 },
+
+      // Triangulum subgroup
+      { name: 'Triangulum (M33)', x: 600, y: 200, z: 2730, type: 'SA(s)cd', mag: -18.9, diameter: 60 },
+    ];
+
+    // Cosmic voids (underdense regions)
+    const COSMIC_VOIDS = [
+      { name: 'Local Void', x: -100, y: 50, z: -75, radius: 150, color: 0x000033 },
+      { name: 'Bootes Void', x: 50, y: 500, z: 100, radius: 250, color: 0x000044 },
+      { name: 'CMB Cold Spot', x: -400, y: -300, z: 1500, radius: 500, color: 0x000055 },
+      { name: 'Giant Void', x: 200, y: 600, z: 800, radius: 400, color: 0x000044 },
+    ];
+
+    // Major cosmic filaments connecting superclusters
+    const COSMIC_FILAMENTS = [
+      { from: 'Virgo Cluster', to: 'Coma Cluster', width: 15 },
+      { from: 'Virgo Cluster', to: 'Great Attractor', width: 20 },
+      { from: 'Great Attractor', to: 'Shapley Supercluster', width: 25 },
+      { from: 'Perseus-Pisces', to: 'Coma Cluster', width: 18 },
+      { from: 'Coma Cluster', to: 'Hercules Supercluster', width: 15 },
+      { from: 'Hercules Supercluster', to: 'Corona Borealis', width: 12 },
+      { from: 'Local Group', to: 'Virgo Cluster', width: 8 },
+      { from: 'Fornax Cluster', to: 'Great Attractor', width: 10 },
+      { from: 'Centaurus Cluster', to: 'Norma Cluster', width: 15 },
+      { from: 'Horologium-Reticulum', to: 'Shapley Supercluster', width: 20 },
+      { from: 'Sculptor Wall', to: 'Perseus-Pisces', width: 18 },
+      { from: 'Sloan Great Wall', to: 'CfA2 Great Wall', width: 25 },
+    ];
+
+    // Observable universe scale constants
+    const OBSERVABLE_RADIUS_MLY = 46000;  // 46 billion light-years
+    const SCALE_FACTOR = 400 / 3000;  // Map 3000 Mly to visual radius (MAX_VISUAL_RADIUS=400)
+
+    // Render state for real universe
+    let realUniverseObjects = [];
+    let showRealUniverse = true;
 
     // Pre-rendered server data
     const SOLAR_SYSTEM = {{ data.solar_system | tojson }};
@@ -1139,6 +1234,7 @@
       buildNearbyGalaxies();
       buildCosmicWeb();  // FEATURE 1: Cosmic web filaments
       buildBlackHoleVisualization();  // BREATHING UNIVERSE: Black hole at center
+      buildRealUniverse();  // REAL UNIVERSE: Actual superclusters and filaments
     }
 
     function buildNearbyGalaxies() {
@@ -1661,6 +1757,239 @@
           }
         });
       });
+    }
+
+    // ═══════════════════════════════════════════════
+    // REAL UNIVERSE RENDERER
+    // ═══════════════════════════════════════════════
+    function buildRealUniverse() {
+      const universeGroup = new THREE.Group();
+      universeGroup.name = 'realUniverse';
+
+      // === RENDER SUPERCLUSTERS ===
+      REAL_SUPERCLUSTERS.forEach(cluster => {
+        // Scale positions to visual space
+        const x = cluster.x * SCALE_FACTOR;
+        const y = cluster.z * SCALE_FACTOR;  // z in data becomes y in 3D
+        const z = cluster.y * SCALE_FACTOR;
+
+        // Size based on galaxy count (log scale)
+        const size = 2 + Math.log10(cluster.galaxies) * 3;
+
+        // Create glowing cluster sphere
+        const clusterGeo = new THREE.SphereGeometry(size, 16, 16);
+        const clusterMat = new THREE.MeshBasicMaterial({
+          color: cluster.color,
+          transparent: true,
+          opacity: 0.7
+        });
+        const clusterMesh = new THREE.Mesh(clusterGeo, clusterMat);
+        clusterMesh.position.set(x, y, z);
+        clusterMesh.userData = { name: cluster.name, type: 'supercluster', data: cluster };
+        universeGroup.add(clusterMesh);
+
+        // Add glow effect
+        const glowGeo = new THREE.SphereGeometry(size * 2, 16, 16);
+        const glowMat = new THREE.MeshBasicMaterial({
+          color: cluster.color,
+          transparent: true,
+          opacity: 0.15,
+          side: THREE.BackSide
+        });
+        const glow = new THREE.Mesh(glowGeo, glowMat);
+        glow.position.copy(clusterMesh.position);
+        universeGroup.add(glow);
+
+        // Add galaxy particles around cluster
+        const particleCount = Math.min(cluster.galaxies / 10, 500);
+        const particleGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const color = new THREE.Color(cluster.color);
+
+        for (let i = 0; i < particleCount; i++) {
+          // Distribute in φ-spiral pattern
+          const theta = i * GOLDEN_ANGLE * Math.PI / 180;
+          const r = size * (0.5 + Math.random() * 2);
+          const phi = Math.acos(2 * Math.random() - 1);
+
+          positions[i * 3] = x + r * Math.sin(phi) * Math.cos(theta);
+          positions[i * 3 + 1] = y + r * Math.sin(phi) * Math.sin(theta);
+          positions[i * 3 + 2] = z + r * Math.cos(phi);
+
+          // Color variation
+          colors[i * 3] = color.r * (0.7 + Math.random() * 0.3);
+          colors[i * 3 + 1] = color.g * (0.7 + Math.random() * 0.3);
+          colors[i * 3 + 2] = color.b * (0.7 + Math.random() * 0.3);
+        }
+
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMat = new THREE.PointsMaterial({
+          size: 0.5,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.8
+        });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        universeGroup.add(particles);
+      });
+
+      // === RENDER COSMIC FILAMENTS ===
+      COSMIC_FILAMENTS.forEach(filament => {
+        const fromCluster = REAL_SUPERCLUSTERS.find(c => c.name === filament.from);
+        const toCluster = REAL_SUPERCLUSTERS.find(c => c.name === filament.to);
+
+        if (fromCluster && toCluster) {
+          const from = new THREE.Vector3(
+            fromCluster.x * SCALE_FACTOR,
+            fromCluster.z * SCALE_FACTOR,
+            fromCluster.y * SCALE_FACTOR
+          );
+          const to = new THREE.Vector3(
+            toCluster.x * SCALE_FACTOR,
+            toCluster.z * SCALE_FACTOR,
+            toCluster.y * SCALE_FACTOR
+          );
+
+          // Create curved filament with golden-angle spiral
+          const points = [];
+          const numPoints = 30;
+          const midPoint = from.clone().lerp(to, 0.5);
+          const perpendicular = new THREE.Vector3().crossVectors(
+            to.clone().sub(from).normalize(),
+            new THREE.Vector3(0, 1, 0)
+          ).normalize();
+
+          for (let i = 0; i <= numPoints; i++) {
+            const t = i / numPoints;
+            const point = from.clone().lerp(to, t);
+
+            // Add golden-spiral curvature
+            const curveAmount = Math.sin(t * Math.PI) * filament.width * 0.3;
+            const spiralAngle = t * GOLDEN_ANGLE * Math.PI / 180 * 3;
+
+            point.add(perpendicular.clone().multiplyScalar(
+              curveAmount * Math.cos(spiralAngle)
+            ));
+            point.y += curveAmount * Math.sin(spiralAngle) * 0.5;
+
+            points.push(point);
+          }
+
+          const curve = new THREE.CatmullRomCurve3(points);
+          const tubeGeo = new THREE.TubeGeometry(curve, 20, filament.width * 0.1, 8, false);
+          const tubeMat = new THREE.MeshBasicMaterial({
+            color: 0x4466aa,
+            transparent: true,
+            opacity: 0.3
+          });
+          const tube = new THREE.Mesh(tubeGeo, tubeMat);
+          universeGroup.add(tube);
+
+          // Add particles along filament (galaxies in the filament)
+          const filamentParticles = new THREE.BufferGeometry();
+          const filamentPositions = new Float32Array(100 * 3);
+
+          for (let i = 0; i < 100; i++) {
+            const t = Math.random();
+            const point = curve.getPoint(t);
+            const spread = filament.width * 0.2;
+
+            filamentPositions[i * 3] = point.x + (Math.random() - 0.5) * spread;
+            filamentPositions[i * 3 + 1] = point.y + (Math.random() - 0.5) * spread;
+            filamentPositions[i * 3 + 2] = point.z + (Math.random() - 0.5) * spread;
+          }
+
+          filamentParticles.setAttribute('position', new THREE.BufferAttribute(filamentPositions, 3));
+          const filamentMat = new THREE.PointsMaterial({
+            size: 0.3,
+            color: 0x6688cc,
+            transparent: true,
+            opacity: 0.6
+          });
+          universeGroup.add(new THREE.Points(filamentParticles, filamentMat));
+        }
+      });
+
+      // === RENDER COSMIC VOIDS ===
+      COSMIC_VOIDS.forEach(voidData => {
+        const x = voidData.x * SCALE_FACTOR;
+        const y = voidData.z * SCALE_FACTOR;
+        const z = voidData.y * SCALE_FACTOR;
+        const radius = voidData.radius * SCALE_FACTOR;
+
+        // Dark sphere for void
+        const voidGeo = new THREE.SphereGeometry(radius, 16, 16);
+        const voidMat = new THREE.MeshBasicMaterial({
+          color: voidData.color,
+          transparent: true,
+          opacity: 0.1,
+          side: THREE.BackSide
+        });
+        const voidMesh = new THREE.Mesh(voidGeo, voidMat);
+        voidMesh.position.set(x, y, z);
+        voidMesh.userData = { name: voidData.name, type: 'void' };
+        universeGroup.add(voidMesh);
+      });
+
+      // === LOCAL GROUP DETAIL (when zoomed in) ===
+      const localGroupGroup = new THREE.Group();
+      localGroupGroup.name = 'localGroup';
+
+      LOCAL_GROUP_GALAXIES.forEach(galaxy => {
+        // Scale: 1 kly = 0.001 Mly, so scale up significantly for local view
+        const localScale = 0.0005;  // Local group is tiny at universe scale
+        const x = galaxy.x * localScale;
+        const y = galaxy.z * localScale;
+        const z = galaxy.y * localScale;
+
+        // Size based on diameter
+        const size = galaxy.diameter * localScale * 10;
+
+        // Different shapes for different galaxy types
+        let geo;
+        if (galaxy.type.includes('S')) {
+          // Spiral galaxies - disc shape
+          geo = new THREE.CylinderGeometry(size, size, size * 0.1, 32);
+        } else {
+          // Elliptical/dwarf - sphere
+          geo = new THREE.SphereGeometry(size * 0.5, 16, 16);
+        }
+
+        const mat = new THREE.MeshBasicMaterial({
+          color: galaxy.name === 'Milky Way' ? 0xffffcc : 0xaaaaff,
+          transparent: true,
+          opacity: 0.8
+        });
+
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        if (galaxy.type.includes('S')) {
+          mesh.rotation.x = Math.PI / 2 + Math.random() * 0.5;
+        }
+        mesh.userData = { name: galaxy.name, type: 'galaxy', data: galaxy };
+        localGroupGroup.add(mesh);
+      });
+
+      universeGroup.add(localGroupGroup);
+
+      // Store references
+      realUniverseObjects.push(universeGroup);
+      scene.add(universeGroup);
+
+      console.log('Real universe rendered:', {
+        superclusters: REAL_SUPERCLUSTERS.length,
+        filaments: COSMIC_FILAMENTS.length,
+        voids: COSMIC_VOIDS.length,
+        localGalaxies: LOCAL_GROUP_GALAXIES.length
+      });
+    }
+
+    function toggleRealUniverse(show) {
+      showRealUniverse = show;
+      realUniverseObjects.forEach(obj => obj.visible = show);
     }
 
     function getBandForBracket(n) {
@@ -2876,6 +3205,27 @@
       document.getElementById('btn-orbits').addEventListener('click', () => toggleOrbits());
       document.getElementById('btn-minerals').addEventListener('click', () => toggleMinerals());
       document.getElementById('btn-condensation').addEventListener('click', () => toggleCondensation());
+
+      // Real Universe toggles
+      document.getElementById('btn-real-universe').addEventListener('click', function() {
+        showRealUniverse = !showRealUniverse;
+        toggleRealUniverse(showRealUniverse);
+        this.classList.toggle('active', showRealUniverse);
+      });
+      document.getElementById('btn-cosmic-web').addEventListener('click', function() {
+        const shouldShow = !this.classList.contains('active');
+        toggleCosmicWeb(shouldShow);
+        this.classList.toggle('active', shouldShow);
+      });
+      document.getElementById('btn-black-hole').addEventListener('click', function() {
+        const shouldShow = !this.classList.contains('active');
+        toggleBlackHole(shouldShow);
+        this.classList.toggle('active', shouldShow);
+      });
+      document.getElementById('btn-breathing').addEventListener('click', function() {
+        breathingEnabled = !breathingEnabled;
+        this.classList.toggle('active', breathingEnabled);
+      });
 
       // World Finder buttons
       document.getElementById('btn-world-finder').addEventListener('click', () => toggleWorldFinder());
