@@ -2,9 +2,10 @@
 
 **Version 1.0 — March 7, 2026**
 **Author:** Thomas A. Husmann | iBuilt LTD
-**Status:** DEFENSIVE PUBLICATION — Open-source technical specification
+**Status:** DEFENSIVE PUBLICATION
 
-> **Defensive Publication Notice:** This document constitutes a public disclosure of the three-phase interference tuning method, the five-component spatial addressing system, the lattice spacing calibration procedure, and the optimal void-threading transit algorithm. By publishing this specification, the inventor establishes prior art preventing any party from obtaining patent protection on these methods. All existing patents in the Husmann Decomposition portfolio (63/995,401 through 63/998,394 and design patent 30/050,931) remain in force and protect the specific device architectures described therein. This specification describes the PROTOCOL LAYER that connects those devices.
+This document constitutes a public disclosure, effective on the date of publication, of the following subject matter: the three-phase interference tuning method, the five-component spatial addressing system, the lattice spacing calibration procedure, and the optimal void-threading transit algorithm (collectively, the “Protocol Layer”).  This disclosure is made under 35 U.S.C. § 102(a)(1) and is intended to establish prior art that prevents third parties from obtaining patent protection on the disclosed methods or any obvious variations thereof.  Nothing in this notice affects the inventor’s rights to pursue or maintain patent protection on any specific device architectures, improvements, or related inventions already claimed in the Husmann Decomposition portfolio (Including one or more of the following U.S. Provisional Applications 63/995,401 through 63/998,394 and Design Patent Application 30/050,931) or on any future filings. The Protocol Layer is described herein solely as the interconnecting framework that enables operation of those protected devices. All rights to patent improvements, specific implementations, and combinations with the existing portfolio are expressly reserved.
+
 
 ---
 
