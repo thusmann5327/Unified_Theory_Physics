@@ -15,6 +15,9 @@ By the end of this lesson, you will be able to:
 
 ## What is Bracket Space?
 
+![Bracket Space Scales](../../images/foundations/bracket_space_scales.png)
+*The universe organized by φ-scaled brackets from Planck length to Hubble radius*
+
 ### The Logarithmic φ-Coordinate
 
 In the Husmann Decomposition, physical space is organized by **brackets**—logarithmic divisions at the golden ratio scale:
@@ -55,6 +58,9 @@ print(f"Hubble radius: {scale_to_bracket(8.8e26):.2f} brackets")        # ~294
 ---
 
 ## The Wall Structure
+
+![Wall Structure](../../images/foundations/wall_structure.png)
+*Energy barriers at bracket boundaries create the wall structure*
 
 ### Three-Layer Walls at Bracket Boundaries
 
@@ -97,6 +103,9 @@ print(f"Wall fraction W = {W:.6f}")         # 0.467134
 ---
 
 ## Deriving the Fine Structure Constant
+
+![Fine Structure Derivation](../../images/foundations/fine_structure_derivation.png)
+*The fine structure constant α emerges from bracket geometry: α = 1/(N × W)*
 
 ### The Master Equation
 

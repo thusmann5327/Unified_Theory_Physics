@@ -11,6 +11,9 @@
 
 > *It costs SpaceX about $2,700 per kilogram to put something in low Earth orbit. How much energy, in Joules, does it take to get 1 kg there — and why is that number so staggeringly large?*
 
+![Energy to Orbit](../../images/year1/energy_to_orbit.png)
+*Energy required to reach various orbital altitudes*
+
 ---
 
 ## Learning Objectives

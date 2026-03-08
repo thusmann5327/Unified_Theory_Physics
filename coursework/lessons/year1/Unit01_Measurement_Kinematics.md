@@ -11,6 +11,9 @@
 
 > *When SpaceX streams a Falcon 9 launch with a real-time velocity graph on screen, what is that graph actually telling us — and how do we read it?*
 
+![Falcon 9 Telemetry](../../images/year1/falcon9_telemetry.png)
+*Velocity and altitude profiles during a typical Falcon 9 launch*
+
 ---
 
 ## Learning Objectives
@@ -246,6 +249,9 @@ Maximum altitude = 68 + 225 = 293 km
 ---
 
 ## Day 11-12: Projectile Motion
+
+![Projectile Motion](../../images/year1/projectile_motion.png)
+*Multiple launch angles showing range vs. maximum height trade-off*
 
 ### The Key Insight
 

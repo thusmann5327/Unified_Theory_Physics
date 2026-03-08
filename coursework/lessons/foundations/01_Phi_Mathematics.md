@@ -15,6 +15,9 @@ By the end of this lesson, you will be able to:
 
 ## The Golden Ratio: More Than a Number
 
+![Golden Spiral](../../images/foundations/golden_spiral.png)
+*The golden rectangle and spiral - each subdivision maintains the φ ratio*
+
 ### Definition and Calculation
 
 The golden ratio φ (phi) is defined as:
@@ -38,6 +41,9 @@ print(f"φ - 1 = {phi - 1}")  # Same as 1/φ!
 ```
 
 ### The Self-Referential Property
+
+![Phi Properties](../../images/foundations/phi_properties.png)
+*The unique self-referential properties of the golden ratio*
 
 φ is the ONLY positive number where:
 - **φ² = φ + 1** (squaring it adds one)
@@ -69,6 +75,9 @@ F(n) = F(n-1) + F(n-2)
 ```
 
 ### Convergence to φ
+
+![Fibonacci Convergence](../../images/foundations/fibonacci_convergence.png)
+*Fibonacci ratios F(n)/F(n-1) rapidly converge to φ = 1.618...*
 
 The ratio of consecutive Fibonacci numbers converges to φ:
 

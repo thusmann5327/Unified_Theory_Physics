@@ -11,6 +11,9 @@
 
 > *When Dragon capsule docks with the ISS, it approaches at 0.03 m/s relative to the station. If Dragon has a mass of 12,000 kg and the ISS has a mass of 420,000 kg, what happens to the ISS's velocity when they dock?*
 
+![DART Momentum](../../images/year1/dart_momentum.png)
+*NASA DART mission: Momentum transfer from impactor to asteroid*
+
 ---
 
 ## Learning Objectives

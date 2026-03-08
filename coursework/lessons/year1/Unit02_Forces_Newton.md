@@ -55,6 +55,9 @@ Source: [Wikipedia - Falcon 9 Landing Tests](https://en.wikipedia.org/wiki/Falco
 
 ## Day 3-4: Free-Body Diagrams
 
+![Free Body Diagram](../../images/year1/free_body_falcon9.png)
+*Free-body diagram of Falcon 9 during landing burn*
+
 ### The Most Important Tool in Physics
 
 A **free-body diagram (FBD)** shows ALL forces acting on ONE object.

@@ -15,6 +15,9 @@ By the end of this lesson, you will be able to:
 
 ## The Mathematical Foundation
 
+![Unity Equation Visual](../../images/foundations/unity_equation_visual.png)
+*The Unity Equation: 1/φ + 1/φ³ + 1/φ⁴ = 1 exactly*
+
 ### The Exact Identity
 
 The Husmann Decomposition framework is built on a single mathematical identity:
@@ -51,6 +54,9 @@ Any physical quantity that partitions into three components with these exact rat
 
 ## The Three-Source Model
 
+![Three-Source Interference](../../images/foundations/three_source_interference.png)
+*Three waves with φ-ratio amplitudes combine to create structured patterns*
+
 ### Component Mapping
 
 | φ-Term | Fraction | Proposed Physical Mapping |
@@ -60,6 +66,9 @@ Any physical quantity that partitions into three components with these exact rat
 | 1/φ⁴ | 0.1459 (14.6%) | **σ₅** — Ordinary Matter (what we observe) |
 
 ### Comparison to Observation
+
+![Unity Equation Comparison](../../images/foundations/unity_equation_comparison.png)
+*φ-partition prediction vs. observed cosmic energy distribution*
 
 The ΛCDM (Lambda Cold Dark Matter) model gives observed fractions from cosmic microwave background measurements:
 
