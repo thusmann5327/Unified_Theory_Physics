@@ -281,6 +281,56 @@ def zeckendorf(n):
 
 ---
 
+## Orbital Mechanics Constants (φ-based)
+
+Stable orbits occur at bracket boundaries where three-source interference creates potential wells.
+
+### Orbital Radius Formula
+```python
+r_n = r_0 × φ^(n / F_k)
+
+where:
+  r_0  = reference radius (1 AU for solar system)
+  n    = orbital index (0, 1, 2, 3, ...)
+  F_k  = Fibonacci spacing factor (typically 2.5 for solar system)
+```
+
+### Orbital Velocity Formula
+```python
+v_n = v_0 × φ^(-n / 2F_k)
+
+Equivalently: v_n = √(GM / r_n)  # Kepler conservation
+```
+
+### Orbital Period Formula
+```python
+T_n = T_0 × φ^(3n / 2F_k)
+
+From Kepler's Third Law: T² ∝ r³
+```
+
+### Planar Alignment (Ecliptic Condition)
+```python
+inclination_n = i_max × sin(n × θ_golden)
+
+where:
+  i_max = maximum inclination (~7° for solar system)
+  θ_golden = 137.5077° = 360°/φ²
+```
+
+### Orbital Constants Table
+
+| Constant | Symbol | Value | Definition |
+|----------|--------|-------|------------|
+| Fibonacci spacing | F_k | 2.5 | Solar system orbital fit |
+| Max inclination | i_max | 7° | Ecliptic spread |
+| Phase spacing | θ_g | 137.5077° | Golden angle |
+| Resonance | F_j/F_k | Fibonacci | Stable orbital ratios |
+
+> See: [Orbital_Mechanics.md](Orbital_Mechanics.md) for full derivation
+
+---
+
 ## Summary Table
 
 | Constant | Symbol | Value | Origin |

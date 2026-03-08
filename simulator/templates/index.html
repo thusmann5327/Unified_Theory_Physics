@@ -1256,19 +1256,25 @@
         { name: 'Fornax Dwarf', distance_Mly: 0.46, bracket: 266, index: 8, size: 12, color: 0xAAFFCC },
       ];
 
-      // Calculate positions using golden-angle distribution
+      // Calculate positions using PLANAR golden-angle distribution
+      // Local Group galaxies are approximately in the supergalactic plane
+      // See: Husmann Orbital Mechanics - planar alignment condition
+      const MAX_INCLINATION = 0.12;  // ~7 degrees max deviation from plane
+
       GALAXY_DATA.forEach((gal, i) => {
-        // Distance based on bracket
+        // Distance based on bracket (φ-scaled)
         const r = (gal.bracket / BRACKET_COUNT) * MAX_VISUAL_RADIUS * 0.85;
 
-        // GOLDEN ANGLE positioning - the φ-based placement
-        const theta = gal.index * goldenAngleRad;  // Golden angle spacing
-        const phi = Math.acos(1 - 2 * (gal.index + 0.5) / (GALAXY_DATA.length * 2));  // Fibonacci sphere distribution
+        // GOLDEN ANGLE positioning in the PLANE (not sphere)
+        const theta = gal.index * goldenAngleRad;  // Golden angle spacing around disk
 
-        // Convert to Cartesian coordinates
-        gal.x = r * Math.sin(phi) * Math.cos(theta);
-        gal.y = r * Math.cos(phi);
-        gal.z = r * Math.sin(phi) * Math.sin(theta);
+        // Small inclination following golden-angle pattern
+        const inclination = MAX_INCLINATION * Math.sin(gal.index * goldenAngleRad);
+
+        // Convert to Cartesian - PLANAR (Y near zero, with small inclination)
+        gal.x = r * Math.cos(theta);
+        gal.z = r * Math.sin(theta);
+        gal.y = r * inclination;  // Small vertical offset from plane
       });
 
       GALAXY_DATA.forEach(gal => {
@@ -1808,14 +1814,16 @@
         const color = new THREE.Color(cluster.color);
 
         for (let i = 0; i < particleCount; i++) {
-          // Distribute in φ-spiral pattern
+          // Distribute in PLANAR φ-spiral pattern (disk, not sphere)
+          // Cosmic structures are sheet-like, not spherical
           const theta = i * GOLDEN_ANGLE * Math.PI / 180;
-          const r = size * (0.5 + Math.random() * 2);
-          const phi = Math.acos(2 * Math.random() - 1);
+          const r = size * (0.3 + Math.random() * 1.5);
+          // Small vertical spread (disk-like, ~15% of radius)
+          const verticalSpread = r * 0.15 * (Math.random() - 0.5);
 
-          positions[i * 3] = x + r * Math.sin(phi) * Math.cos(theta);
-          positions[i * 3 + 1] = y + r * Math.sin(phi) * Math.sin(theta);
-          positions[i * 3 + 2] = z + r * Math.cos(phi);
+          positions[i * 3] = x + r * Math.cos(theta);
+          positions[i * 3 + 1] = y + verticalSpread;  // Thin disk
+          positions[i * 3 + 2] = z + r * Math.sin(theta);
 
           // Color variation
           colors[i * 3] = color.r * (0.7 + Math.random() * 0.3);
