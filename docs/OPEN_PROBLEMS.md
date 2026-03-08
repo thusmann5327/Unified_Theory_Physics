@@ -127,16 +127,44 @@ The "baryonic matter" (~5%) is the **observable** portion of the σ₁ sector. T
 
 **Status**: ACTIVE RESEARCH AREA (not original to this framework)
 
-### 3.2 Higher-Dimensional Extensions
+### 3.2 Why Three Spatial Dimensions — **SOLVED**
 
-**Problem**: Current framework is primarily 1D (AAH chain) or 3D (Euclidean space).
+**Problem**: Why does space have exactly three spatial dimensions?
+
+**Solution**: The **Unity Triangulation** explains this fundamental property.
+
+The unity equation 1/φ + 1/φ³ + 1/φ⁴ = 1 has **exactly three terms**. Each term is a wave source with amplitude 1/φⁿ and frequency φⁿ. The forbidden exponent φ² (= V = 2J, the mediator) is NOT a source.
+
+**Key insight**: Three sources placed at golden-angle separation (137.5°) are linearly independent:
+```
+det(S₁, S₂, S₃) ≠ 0 → span exactly 3D
+```
+
+| Source | Amplitude | Frequency | Role |
+|--------|-----------|-----------|------|
+| S₁ (DE) | 1/φ | φ | Backbone threads |
+| S₂ (DM) | 1/φ³ | φ³ | Conduit web |
+| S₃ (M) | 1/φ⁴ | φ⁴ | Matter endpoints |
+
+**The number of spatial dimensions = the number of terms in the unity equation = 3.**
+
+If the unity equation had 4 terms, space would be 4D. If it had 2, space would be 2D. It has 3 because φ² is consumed as the mediator.
+
+> See: [theory/Unity_Triangulation.md](../theory/Unity_Triangulation.md)
+> Verification: [verification/unity_triangulation.py](../verification/unity_triangulation.py)
+
+**Status**: ✓ **SOLVED** (March 7, 2026)
+
+### 3.3 Higher-Dimensional Extensions
+
+**Problem**: Can the framework extend to other dimensions?
 
 **Questions**:
 - How does framework extend to 2D (quasicrystal surfaces)?
-- What about 4D spacetime treatment?
+- 4D spacetime (3+1) emerges from three spatial sources + time
 - Connection to string/M-theory extra dimensions?
 
-**Status**: OPEN
+**Status**: OPEN (now informed by Unity Triangulation)
 
 ### 3.3 φ-Fourier Transform Formalization
 

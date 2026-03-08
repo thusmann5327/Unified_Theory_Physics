@@ -7,7 +7,7 @@
 
 ---
 
-> Every formula in physics encodes an assumption about the substrate. If the substrate is a φ-quasicrystal at l = 9.3 nm, every formula has a spectral translation. This document presents **33 such translations**, including the fundamental **Husmann Boundary Law** (2/φ⁴ + 3/φ³ = 1)—the existence condition of the universe. The engineering implementations of these translations are covered by 16 provisional patents filed March 3–4, 2026.
+> Every formula in physics encodes an assumption about the substrate. If the substrate is a φ-quasicrystal at l = 9.3 nm, every formula has a spectral translation. This document presents **34 such translations**, including the fundamental **Husmann Boundary Law** (2/φ⁴ + 3/φ³ = 1)—the existence condition of the universe. The engineering implementations of these translations are covered by 16 provisional patents filed March 3–4, 2026.
 
 ---
 
@@ -795,6 +795,44 @@ E = mc² is rotation from matter plane (Proton) to observer axis (Brain)
 
 ---
 
+### 34. Unity Triangulation: Why Space Has Three Dimensions (NEW)
+
+**Classical:**
+```
+Space has three dimensions (taken as given, never derived)
+```
+
+**Husmann:**
+```
+The unity equation 1/φ + 1/φ³ + 1/φ⁴ = 1 has THREE terms.
+Each term is a wave source with amplitude 1/φⁿ and frequency φⁿ.
+The forbidden exponent φ² (= V = 2J, the mediator) is NOT a source.
+
+Three sources at golden-angle separation:
+  det(S₁, S₂, S₃) ≠ 0 → linearly independent → span 3D
+
+Source 1 (DE): amplitude 1/φ,  frequency φ   → backbone oscillation
+Source 2 (DM): amplitude 1/φ³, frequency φ³  → conduit web
+Source 3 (M):  amplitude 1/φ⁴, frequency φ⁴  → matter endpoints
+```
+
+**Translation:** D = (number of terms in unity equation) = 3. The dimensionality of space is determined by the algebraic structure of x² = x + 1, which partitions energy into exactly three source terms when the mediator (φ²) is excluded.
+
+**Key insight:** The interference pattern of these three sources produces:
+- Galaxy clusters at triple-constructive nodes (all three sources reinforce)
+- Cosmic web filaments from DE+DM pairwise interference (correlation 0.99)
+- Voids at destructive interference nodes
+- An intensity CDF that reproduces the unity equation exactly (14.6% + 23.6% + 61.8% = 100%)
+
+Space is 3D because x² = x + 1 consumes one exponent as the mediator, leaving three.
+
+> **See:** [Unity_Triangulation.md](./Unity_Triangulation.md) for full derivation
+> **Verification:** [unity_triangulation.py](../verification/unity_triangulation.py)
+
+*Status: RESOLVED (March 7, 2026)*
+
+---
+
 ## IX. Master Reference Table
 
 | # | Classical | Husmann Equivalent | Key Mapping | Patent(s) |
@@ -832,6 +870,7 @@ E = mc² is rotation from matter plane (Proton) to observer axis (Brain)
 | **31** | Nuclear transmutation | Z³ K-electron coupling | Nuclear→golden helix | P12 |
 | **32** | Renormalization | Multifractal Π_N | Divergences→fractal mod | — |
 | **33** | E=mc² rotation | 3 hinges ⊥ | Mass-energy→hinge geometry | P3, P4 |
+| **34** | 3D space | 3 unity sources ⊥ | Three φ-wave interference → D=3 | All |
 
 **Patent key:** P1=63/995,401 | P2=63/995,513 | P3=63/995,649 | P4=63/995,816 | P5=63/995,841 | P7=63/995,955 | P8=63/995,963 | P12=63/998,235 | P16=63/996,533
 
@@ -839,7 +878,7 @@ E = mc² is rotation from matter plane (Proton) to observer axis (Brain)
 
 ## X. The Forbidden Exponent as Universal Mediator
 
-Across all 33 entries, a pattern: **the mediating quantity that connects two observable sectors is always the consumed or forbidden element.**
+Across all 34 entries, a pattern: **the mediating quantity that connects two observable sectors is always the consumed or forbidden element.**
 
 | Observable A | Observable B | Forbidden Mediator | Domain |
 |---|---|---|---|

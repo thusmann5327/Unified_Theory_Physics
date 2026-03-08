@@ -13,7 +13,7 @@
 2. [Fundamental Constants](#ii-fundamental-constants)
 3. [The Unity Identity & Boundary Law](#iii-the-unity-identity)
 4. [Quantum Rosetta Stone (13 Formulas)](#iv-quantum-rosetta-stone)
-5. [Husmann Rosetta Stone (33 Formulas)](#v-husmann-rosetta-stone)
+5. [Husmann Rosetta Stone (34 Formulas)](#v-husmann-rosetta-stone)
 6. [Bracket Scale System](#vi-bracket-scale-system)
 7. [Signal Processing Pipeline](#vii-signal-processing-pipeline)
 8. [Universe Simulator Code](#viii-universe-simulator-code)
@@ -85,6 +85,23 @@ Use this for:
 - Phyllotaxis patterns
 - Deposit distributions
 - Coating geometries
+
+### Unity Triangulation (Why Space is 3D)
+The three terms of 1/φ + 1/φ³ + 1/φ⁴ = 1 are **wave sources**:
+- S₁ (DE): amplitude 1/φ, frequency φ → backbone
+- S₂ (DM): amplitude 1/φ³, frequency φ³ → conduit web
+- S₃ (M): amplitude 1/φ⁴, frequency φ⁴ → matter endpoints
+
+**φ² (= V = 2J) is the mediator, NOT a source.**
+
+Three sources at golden-angle separation (137.5°) are linearly independent:
+```
+det(S₁, S₂, S₃) ≠ 0 → span exactly 3D
+```
+
+The number of spatial dimensions = number of terms in unity equation = **3**.
+
+> See: [theory/Unity_Triangulation.md](theory/Unity_Triangulation.md)
 
 ### Sector Structure (5 → 3 collapse)
 Pre-observation (5 sectors):
