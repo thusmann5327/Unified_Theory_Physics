@@ -3,7 +3,6 @@
 
 **Thomas A. Husmann — iBuilt LTD**
 **Version 1.0 — March 7, 2026**
-**License: CC BY-NC-SA 4.0**
 
 > *"Thorium shouts at 2.6 MeV. HREE are standing right next to it."*
 
@@ -609,7 +608,6 @@ Gamma spectrometry at 2.6 MeV is your primary tool.
 ---
 
 *© 2026 Thomas A. Husmann / iBuilt LTD*
-*Licensed under CC BY-NC-SA 4.0*
 *https://github.com/thusmann5327/Unified_Theory_Physics*
 
 *"The bracket chart tells you what's there. The gamma spectrometer tells you where."*
