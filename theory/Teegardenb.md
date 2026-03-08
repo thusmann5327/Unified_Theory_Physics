@@ -3,7 +3,7 @@
 
 **Thomas A. Husmann — iBuilt LTD**
 **March 2026**
-**License: CC BY-NC-SA 4.0**
+
 
 > *Six notes. One chord. One address. Build it, drive it, listen.*
 
