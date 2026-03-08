@@ -11,6 +11,12 @@
 
 > *GPS satellites orbit at 20,200 km altitude, moving at 3.9 km/s. Their atomic clocks run faster than ground clocks by 45 microseconds per day due to general relativity, but slower by 7 microseconds per day due to special relativity. Without these corrections, GPS would drift by 10 km per day. How does Einstein's relativity affect everyday technology?*
 
+![Time Dilation](../../images/year2/time_dilation.png)
+*Time dilation: Moving clocks run slower by factor γ*
+
+![Light Cones](../../images/year2/light_cones.png)
+*Spacetime light cones: Past, present, and future in relativity*
+
 ---
 
 ## Learning Objectives

@@ -11,6 +11,12 @@
 
 > *The classical model of the atom fails. Electrons don't spiral into the nucleus. The photoelectric effect shows light comes in packets. The double-slit experiment shows particles interfere with themselves. Something is fundamentally wrong with classical physics — and quantum mechanics is the repair. What are the actual axioms of QM, and what do they physically mean?*
 
+![Particle in a Box](../../images/year3/particle_in_box.png)
+*Particle in a box: Quantized energy levels and wavefunctions*
+
+![Uncertainty Principle](../../images/year3/uncertainty_principle.png)
+*Heisenberg uncertainty: Position-momentum complementarity*
+
 ---
 
 ## Learning Objectives

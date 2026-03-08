@@ -11,6 +11,12 @@
 
 > *You have spent three years learning physics — from Newton's laws to quantum mechanics, from Kepler's orbits to the φ-framework. Now it's your turn. Design a mission that integrates everything you've learned. Where will you go, and what will you discover?*
 
+![Capstone Elements](../../images/year3/capstone_elements.png)
+*Capstone project elements: Science, engineering, and integration*
+
+![Curriculum Summary](../../images/year3/curriculum_summary.png)
+*Three-year curriculum summary: From fundamentals to frontier*
+
 ---
 
 ## Learning Objectives

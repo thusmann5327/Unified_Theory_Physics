@@ -11,6 +11,12 @@
 
 > *A Falcon 9 rocket doesn't accelerate at a constant rate — as it burns fuel, it gets lighter, and acceleration increases. The Tsiolkovsky rocket equation relates velocity change to mass ratio. How do we handle motion when the rules themselves are changing?*
 
+![Rocket Equation](../../images/year2/rocket_equation.png)
+*Tsiolkovsky rocket equation: Δv = vₑ ln(m₀/mf)*
+
+![Numerical Integration](../../images/year2/numerical_integration.png)
+*Euler vs. RK4 numerical integration comparison*
+
 ---
 
 ## Learning Objectives

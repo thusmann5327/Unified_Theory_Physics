@@ -11,6 +11,12 @@
 
 > *SpaceX revolutionized space access through engineering innovation. The Husmann framework proposes new technologies based on φ-structured materials and systems. How do we evaluate frontier technology claims, and how would you pitch a new idea to SpaceX?*
 
+![TRL Levels](../../images/year3/trl_levels.png)
+*Technology Readiness Levels: From concept to flight-proven*
+
+![Patent Framework](../../images/year3/patent_framework.png)
+*Patent evaluation framework: Claims, evidence, and testability*
+
 ---
 
 ## Learning Objectives

@@ -11,6 +11,12 @@
 
 > *Astronauts on the ISS receive about 150 millisieverts per year — 50× the average ground dose. A Mars mission might expose crew to 1 sievert or more. What is space radiation, how does it damage biology and equipment, and how do we protect against it?*
 
+![Radiation Environment](../../images/year3/radiation_environment.png)
+*Space radiation sources: GCR, SPE, and Van Allen belts*
+
+![Thermal Environment](../../images/year3/thermal_environment.png)
+*Thermal challenges in space: Heating and cooling extremes*
+
 ---
 
 ## Learning Objectives

@@ -11,6 +11,12 @@
 
 > *The universe is 68% dark energy, 27% dark matter, and only 5% ordinary matter. We can't see or directly detect 95% of what exists. The Husmann framework claims these exact percentages emerge from a single mathematical identity: 1/φ + 1/φ³ + 1/φ⁴ = 1. Is this coincidence or deep physics?*
 
+![Cosmic Partition](../../images/year3/cosmic_partition.png)
+*The φ-partition: Dark energy, dark matter, and ordinary matter*
+
+![Rotation Curves](../../images/year3/rotation_curves.png)
+*Galaxy rotation curves: Evidence for dark matter*
+
 ---
 
 ## Learning Objectives

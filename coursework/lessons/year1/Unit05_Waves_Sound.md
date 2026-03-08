@@ -11,6 +11,12 @@
 
 > *Raptor engines nearly destroyed Starship's launch mount on the first integrated test. The cause was partly acoustic — shock waves and resonance. How do sound waves destroy structures, and how do engineers design around this?*
 
+![Standing Waves](../../images/year1/standing_waves.png)
+*Standing wave patterns showing nodes and antinodes*
+
+![Combustion Instability](../../images/year1/combustion_instability.png)
+*Stable vs. unstable combustion pressure oscillations*
+
 ---
 
 ## Learning Objectives

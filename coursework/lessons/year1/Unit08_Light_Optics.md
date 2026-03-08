@@ -11,6 +11,12 @@
 
 > *Starlink satellites use laser inter-satellite links to route data at the speed of light. Star trackers use light from known stars to determine attitude with 0.001° precision. How do we use light itself as an instrument?*
 
+![EM Spectrum](../../images/year1/em_spectrum.png)
+*The electromagnetic spectrum with SpaceX applications*
+
+![Photoelectric Effect](../../images/year1/photoelectric_effect.png)
+*Einstein's photoelectric effect: Light behaves as particles (photons)*
+
 ---
 
 ## Learning Objectives

@@ -11,6 +11,9 @@
 
 > *Hall-effect ion thrusters on satellites use electric and magnetic fields to accelerate xenon ions to 30 km/s. No moving parts. No chemical combustion. How does an electromagnetic field push a rocket?*
 
+![Hall Thruster](../../images/year1/hall_thruster.png)
+*Hall effect thruster: E×B drift creates plasma confinement and ion acceleration*
+
 ---
 
 ## Learning Objectives

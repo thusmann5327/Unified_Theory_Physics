@@ -11,6 +11,12 @@
 
 > *A Starlink satellite communicates with millions of ground terminals using electronically steered phased arrays — antennas that can point their beams without moving parts. How do AC circuits, resonance, and electromagnetic wave physics make this possible?*
 
+![RLC Resonance](../../images/year2/rlc_resonance.png)
+*RLC circuit resonance: Maximum current when XL = XC*
+
+![Phased Array](../../images/year2/phased_array.png)
+*Phased array beam steering by phase control*
+
 ---
 
 ## Learning Objectives

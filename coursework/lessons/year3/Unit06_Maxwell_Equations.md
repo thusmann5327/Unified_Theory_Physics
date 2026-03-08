@@ -11,6 +11,12 @@
 
 > *In 1865, James Clerk Maxwell unified electricity and magnetism with four equations — and accidentally discovered that light is an electromagnetic wave. This was the first unification in physics. What are these equations, and what do they tell us about the nature of reality?*
 
+![EM Wave 3D](../../images/year3/em_wave_3d.png)
+*Electromagnetic wave: E and B fields oscillating perpendicular to propagation*
+
+![Maxwell Summary](../../images/year3/maxwell_summary.png)
+*Maxwell's four equations: The complete theory of electromagnetism*
+
 ---
 
 ## Learning Objectives

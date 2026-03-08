@@ -11,6 +11,12 @@
 
 > *Starship is designed to reach Mars. The trajectory from Earth to Mars is not a straight line — it's an elliptical arc called a Hohmann transfer, calculated from the same physics Newton derived in 1687. Calculate the minimum Δv required to send Starship to Mars — and verify it against publicly available SpaceX mission parameters.*
 
+![Hohmann Transfer](../../images/year3/hohmann_transfer.png)
+*Hohmann transfer orbit: Minimum-energy path between circular orbits*
+
+![Vis-Viva Equation](../../images/year3/vis_viva.png)
+*Vis-viva equation: The master equation of orbital mechanics*
+
 ---
 
 ## Learning Objectives

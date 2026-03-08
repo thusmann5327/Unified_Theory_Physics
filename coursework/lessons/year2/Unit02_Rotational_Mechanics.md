@@ -11,6 +11,12 @@
 
 > *A spacecraft in orbit has no air resistance, no friction — how does it change its orientation? The answer involves angular momentum, reaction wheels, and gyroscopic physics. How do we control rotation in the vacuum of space?*
 
+![Moment of Inertia](../../images/year2/moment_of_inertia.png)
+*Moments of inertia for common shapes*
+
+![Reaction Wheel](../../images/year2/reaction_wheel.png)
+*Reaction wheel: Conservation of angular momentum for attitude control*
+
 ---
 
 ## Learning Objectives

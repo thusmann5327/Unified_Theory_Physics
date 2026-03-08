@@ -11,6 +11,12 @@
 
 > *A spacecraft in orbit accumulates electric charge from solar wind and photoelectron emission. This "spacecraft charging" can reach thousands of volts, causing arcing, instrument damage, and astronaut safety hazards. How do we understand and control electric fields in space?*
 
+![Gauss's Law](../../images/year2/gauss_law.png)
+*Gauss's Law: Electric flux through any closed surface equals enclosed charge*
+
+![Capacitance & Charging](../../images/year2/capacitance_charging.png)
+*Capacitors and spacecraft charging in plasma environments*
+
 ---
 
 ## Learning Objectives

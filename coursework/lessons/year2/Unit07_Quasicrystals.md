@@ -13,6 +13,12 @@
 
 *This is the question behind Patent 63/995,401: Self-Assembling Quasicrystalline Coating with Golden-Angle Helical Architecture.*
 
+![Penrose Tiling](../../images/year2/penrose_tiling.png)
+*Penrose tiling: Aperiodic pattern with 5-fold symmetry and φ ratio*
+
+![AAH Spectrum](../../images/year2/aah_spectrum.png)
+*Aubry-André-Harper spectrum: Cantor set emerges at α = 1/φ*
+
 ---
 
 ## Learning Objectives

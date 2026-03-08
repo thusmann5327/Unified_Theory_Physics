@@ -11,6 +11,12 @@
 
 > *The Saturn V nearly destroyed itself on Apollo 6 due to "pogo oscillations" — the engines, fuel lines, and structure formed a coupled oscillator that nearly tore the rocket apart. How do we understand, predict, and prevent resonance in complex systems?*
 
+![Resonance Q-Factor](../../images/year2/resonance_q_factor.png)
+*Q-factor determines resonance sharpness and damping behavior*
+
+![POGO Oscillations](../../images/year2/pogo_oscillations.png)
+*POGO instability: Propellant-structure feedback amplification*
+
 ---
 
 ## Learning Objectives

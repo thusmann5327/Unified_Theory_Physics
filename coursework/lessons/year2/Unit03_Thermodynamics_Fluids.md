@@ -11,6 +11,12 @@
 
 > *The Raptor engine converts chemical energy into thrust with ~98% combustion efficiency. But thermodynamics says no heat engine can be 100% efficient. What is efficiency in a rocket engine, and what does the de Laval nozzle do that makes rocket propulsion possible?*
 
+![De Laval Nozzle](../../images/year2/delaval_nozzle.png)
+*De Laval nozzle: Subsonic to supersonic flow transition*
+
+![Carnot Efficiency](../../images/year2/carnot_efficiency.png)
+*Carnot efficiency limits for heat engines*
+
 ---
 
 ## Learning Objectives

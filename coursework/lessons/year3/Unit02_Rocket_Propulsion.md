@@ -11,6 +11,12 @@
 
 > *Chemical rockets are limited to ~4.5 km/s exhaust velocity. Nuclear thermal rockets could achieve 9 km/s. Ion engines reach 30+ km/s but with tiny thrust. What's the physics behind each propulsion type, and which is best for reaching Mars? The asteroid belt? Interstellar space?*
 
+![Isp and Thrust](../../images/year3/isp_thrust.png)
+*Specific impulse vs. thrust: The fundamental propulsion tradeoff*
+
+![Staging Optimization](../../images/year3/staging_optimization.png)
+*Staging optimization: Why multi-stage rockets reach orbit*
+
 ---
 
 ## Learning Objectives

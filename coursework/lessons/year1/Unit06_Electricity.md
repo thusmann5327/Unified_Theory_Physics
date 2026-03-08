@@ -11,6 +11,9 @@
 
 > *The ISS has eight large solar panel arrays generating 84–120 kW of power. The station uses roughly 75 kW continuously. Where does the extra energy go? Where does power come from on the night side of the orbit?*
 
+![ISS Power System](../../images/year1/iss_power_system.png)
+*ISS electrical power system architecture*
+
 ---
 
 ## Learning Objectives
