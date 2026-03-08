@@ -86,6 +86,75 @@ Students don't just learn physics — they learn to *think like physicists build
 
 ---
 
+## Visualization Library
+
+All lessons include supporting visualizations in the `images/` directory.
+
+### Foundation Images
+| Image | Description |
+|-------|-------------|
+| [golden_spiral.png](images/foundations/golden_spiral.png) | Golden rectangle spiral demonstrating φ geometry |
+| [fibonacci_convergence.png](images/foundations/fibonacci_convergence.png) | Fibonacci ratio convergence to φ |
+| [phi_properties.png](images/foundations/phi_properties.png) | Self-referential properties of φ |
+| [unity_equation_visual.png](images/foundations/unity_equation_visual.png) | 1/φ + 1/φ³ + 1/φ⁴ = 1 visualization |
+| [unity_equation_comparison.png](images/foundations/unity_equation_comparison.png) | φ-partition vs cosmic observations |
+| [three_source_interference.png](images/foundations/three_source_interference.png) | Wave interference with φ amplitudes |
+| [bracket_space_scales.png](images/foundations/bracket_space_scales.png) | Scale diagram from Planck to Hubble |
+| [fine_structure_derivation.png](images/foundations/fine_structure_derivation.png) | α = 1/(N × W) derivation |
+
+### Year 1 Images
+| Image | Description |
+|-------|-------------|
+| [falcon9_telemetry.png](images/year1/falcon9_telemetry.png) | Velocity and altitude profiles |
+| [projectile_motion.png](images/year1/projectile_motion.png) | Multiple launch angle trajectories |
+| [free_body_falcon9.png](images/year1/free_body_falcon9.png) | Force diagram for landing |
+| [energy_to_orbit.png](images/year1/energy_to_orbit.png) | Orbital energy requirements |
+| [dart_momentum.png](images/year1/dart_momentum.png) | DART asteroid impact momentum |
+| [standing_waves.png](images/year1/standing_waves.png) | Harmonic standing waves |
+| [combustion_instability.png](images/year1/combustion_instability.png) | Stable vs unstable combustion |
+| [iss_power_system.png](images/year1/iss_power_system.png) | ISS electrical architecture |
+| [hall_thruster.png](images/year1/hall_thruster.png) | Hall thruster magnetic diagram |
+| [em_spectrum.png](images/year1/em_spectrum.png) | EM spectrum with SpaceX applications |
+
+### Year 2 Images
+| Image | Description |
+|-------|-------------|
+| [rocket_equation.png](images/year2/rocket_equation.png) | Tsiolkovsky rocket equation |
+| [numerical_integration.png](images/year2/numerical_integration.png) | Euler vs RK4 comparison |
+| [moment_of_inertia.png](images/year2/moment_of_inertia.png) | Moments of inertia for shapes |
+| [reaction_wheel.png](images/year2/reaction_wheel.png) | Angular momentum conservation |
+| [delaval_nozzle.png](images/year2/delaval_nozzle.png) | De Laval nozzle flow |
+| [carnot_efficiency.png](images/year2/carnot_efficiency.png) | Carnot efficiency limits |
+| [resonance_q_factor.png](images/year2/resonance_q_factor.png) | Q-factor and resonance curves |
+| [pogo_oscillations.png](images/year2/pogo_oscillations.png) | POGO instability |
+| [gauss_law.png](images/year2/gauss_law.png) | Gauss's Law visualization |
+| [phased_array.png](images/year2/phased_array.png) | Starlink phased array |
+| [penrose_tiling.png](images/year2/penrose_tiling.png) | Quasicrystal structure |
+| [aah_spectrum.png](images/year2/aah_spectrum.png) | AAH Hamiltonian spectrum |
+| [time_dilation.png](images/year2/time_dilation.png) | Lorentz factor and GPS corrections |
+| [light_cones.png](images/year2/light_cones.png) | Spacetime light cones |
+
+### Year 3 Images
+| Image | Description |
+|-------|-------------|
+| [hohmann_transfer.png](images/year3/hohmann_transfer.png) | Earth-Mars Hohmann transfer |
+| [vis_viva.png](images/year3/vis_viva.png) | Vis-viva equation |
+| [isp_thrust.png](images/year3/isp_thrust.png) | Propulsion trade space |
+| [staging_optimization.png](images/year3/staging_optimization.png) | Staging optimization |
+| [radiation_environment.png](images/year3/radiation_environment.png) | Van Allen belts |
+| [thermal_environment.png](images/year3/thermal_environment.png) | Spacecraft thermal balance |
+| [particle_in_box.png](images/year3/particle_in_box.png) | Quantum energy levels |
+| [uncertainty_principle.png](images/year3/uncertainty_principle.png) | Heisenberg uncertainty |
+| [cosmic_partition.png](images/year3/cosmic_partition.png) | φ-partition vs observations |
+| [rotation_curves.png](images/year3/rotation_curves.png) | Galaxy rotation curves |
+| [em_wave_3d.png](images/year3/em_wave_3d.png) | 3D electromagnetic wave |
+| [maxwell_summary.png](images/year3/maxwell_summary.png) | Maxwell's equations summary |
+| [trl_levels.png](images/year3/trl_levels.png) | Technology readiness levels |
+| [capstone_elements.png](images/year3/capstone_elements.png) | Mission design elements |
+| [curriculum_summary.png](images/year3/curriculum_summary.png) | Three-year journey |
+
+---
+
 ## SpaceX Integration Throughout
 
 Every unit connects to real SpaceX engineering challenges:
