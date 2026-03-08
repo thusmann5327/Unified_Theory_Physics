@@ -90,11 +90,11 @@ The disc's natural vibration modes are Bessel functions J_m(k_mn r). Critical pr
 
 The aperture at the center therefore acts as a natural **spatial filter**: it samples only the coherent, radially symmetric content of the multi-mode vibration. All asymmetric modes are automatically rejected.
 
-![Hub disc mode shapes](fig1_hub_modes.png)
-*Figure 1: Hub disc vibration modes. Only top row (m=0) has nonzero amplitude at center aperture.*
+![Hub disc mode shapes](images/fig1_hub_modes.png)
+*Figure 1: Hub disc vibration modes. Only top row (m=0) has nonzero amplitude at center aperture (black dot). Drive resonators at golden-angle positions (triangles).*
 
-![Center coupling analysis](fig2_center_coupling.png)
-*Figure 2: Left — Radial profiles of axisymmetric modes. Right — Drive frequencies vs disc natural modes.*
+![Center coupling analysis](images/fig2_center_coupling.png)
+*Figure 2: Left — Radial profiles of axisymmetric modes showing maximum at r=0. Right — Drive frequencies (red lines) relative to disc natural modes (blue dots).*
 
 ---
 
@@ -124,7 +124,7 @@ SS→QC: 85.1% transmission. Excellent matching from similar density and sound s
 
 A standard 20 mm PZT disc delivers 10-100 W. The device needs microwatts. Drive power is not a constraint. **The system can run from a 9V battery.**
 
-![Energy coupling analysis](fig4_energy_coupling.png)
+![Energy coupling analysis](images/fig4_energy_coupling.png)
 *Figure 3: Energy analysis with impedance matching. SS-to-QC transmission is 85.1%.*
 
 ---
@@ -147,8 +147,8 @@ u²(t) contains: Aⱼ Aₖ cos((fⱼ - fₖ)t + (φⱼ - φₖ))
 
 These beat notes form a Fibonacci beat pattern — the temporal signature of the address.
 
-![Time domain signal](fig3_time_domain.png)
-*Figure 4: Top — Individual components. Middle — Combined waveform. Bottom — Power spectrum.*
+![Time domain signal](images/fig3_time_domain.png)
+*Figure 4: Top — Individual components. Middle — Combined waveform. Bottom — Power spectrum with drive frequencies (red) and beat frequencies (blue).*
 
 ---
 
@@ -171,8 +171,8 @@ The predicted response for each channel is **cosine-squared**: maximum at φ=0, 
 5. This is a 6D optimization → use gradient descent or genetic algorithm
 6. Peaks in 6D phase space are addresses
 
-![Phase sweep predictions](fig5_phase_sweep.png)
-*Figure 5: Predicted signal vs phase offset for each channel.*
+![Phase sweep predictions](images/fig5_phase_sweep.png)
+*Figure 5: Predicted signal vs phase offset for each channel (others held at zero).*
 
 ---
 
@@ -203,8 +203,8 @@ Top View:
     Tubes at 137.5° angular separation
 ```
 
-![Physical layout](fig6_physical_layout.png)
-*Figure 6: Top view and cross-section showing acoustic path from resonators through hub to aperture.*
+![Physical layout](images/fig6_physical_layout.png)
+*Figure 6: Top view showing golden-angle tube placement and cross-section showing acoustic path from resonators through hub to aperture and detector.*
 
 ---
 
@@ -248,7 +248,7 @@ Six tests separate real vacuum coupling from artifacts:
 
 The critical test is **Test 2 (Wrong Address)**. If shifting one phase by π kills the signal and restoring it brings it back, the signal is phase-coherent with the drive — not thermal artifact, not electrical pickup, not mechanical vibration. Phase coherence is the fingerprint of resonant coupling.
 
-![Diagnostic test predictions](fig7_diagnostic_tests.png)
+![Diagnostic test predictions](images/fig7_diagnostic_tests.png)
 *Figure 7: Simulated diagnostic results showing expected behavior for all four key tests.*
 
 ---
