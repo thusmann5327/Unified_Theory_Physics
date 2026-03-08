@@ -60,14 +60,14 @@ Students don't just learn physics — they learn to *think like physicists build
 
 | Unit | Topic | Description | SpaceX Connection |
 |------|-------|-------------|-------------------|
-| Unit01 | **Advanced Kinematics** | Variable acceleration, numerical integration, Tsiolkovsky rocket equation. | Variable-mass trajectory simulation |
-| Unit02 | **Rotational Mechanics** | Torque, moment of inertia, angular momentum, gyroscopes. | Reaction wheels, attitude control |
-| Unit03 | **Thermodynamics & Fluids** | Laws of thermodynamics, Carnot efficiency, nozzle physics. | Raptor efficiency, de Laval nozzle |
-| Unit04 | **Oscillations & Waves** | SHM, damped/driven oscillations, Q-factor, resonance. | Pogo oscillations, structural modes |
-| Unit05 | **Electric Fields & Potential** | Gauss's Law, capacitance, plasma physics. | Spacecraft charging, Langmuir probes |
-| Unit06 | **AC Circuits & EM Waves** | RLC circuits, resonance, phased arrays. | Starlink beam steering |
+| [Unit01](lessons/year2/Unit01_Advanced_Kinematics.md) | **Advanced Kinematics** | Variable acceleration, numerical integration, Tsiolkovsky rocket equation. | Variable-mass trajectory simulation |
+| [Unit02](lessons/year2/Unit02_Rotational_Mechanics.md) | **Rotational Mechanics** | Torque, moment of inertia, angular momentum, gyroscopes. | Reaction wheels, attitude control |
+| [Unit03](lessons/year2/Unit03_Thermodynamics_Fluids.md) | **Thermodynamics & Fluids** | Laws of thermodynamics, Carnot efficiency, nozzle physics. | Raptor efficiency, de Laval nozzle |
+| [Unit04](lessons/year2/Unit04_Oscillations_Waves.md) | **Oscillations & Waves** | SHM, damped/driven oscillations, Q-factor, resonance. | Pogo oscillations, structural modes |
+| [Unit05](lessons/year2/Unit05_Electric_Fields.md) | **Electric Fields & Potential** | Gauss's Law, capacitance, plasma physics. | Spacecraft charging, Langmuir probes |
+| [Unit06](lessons/year2/Unit06_AC_Circuits_EM_Waves.md) | **AC Circuits & EM Waves** | RLC circuits, resonance, phased arrays. | Starlink beam steering |
 | [Unit07](lessons/year2/Unit07_Quasicrystals.md) | **Quasicrystals & Advanced Materials** | Penrose tilings, AAH model introduction, quasicrystalline coatings. | Heat shield materials, Patent 63/995,401 |
-| Unit08 | **Special Relativity** | Einstein's postulates, time dilation, GPS corrections. | GPS relativistic corrections, interstellar preview |
+| [Unit08](lessons/year2/Unit08_Special_Relativity.md) | **Special Relativity** | Einstein's postulates, time dilation, GPS corrections. | GPS relativistic corrections, interstellar preview |
 
 ---
 
@@ -76,13 +76,13 @@ Students don't just learn physics — they learn to *think like physicists build
 | Unit | Topic | Description | SpaceX Connection |
 |------|-------|-------------|-------------------|
 | [Unit01](lessons/year3/Unit01_Orbital_Mechanics.md) | **Orbital Mechanics** | Kepler's laws from Newton, vis-viva equation, Hohmann transfers, gravity assists. | Mars mission Δv budget, trajectory design |
-| Unit02 | **Rocket Propulsion** | Specific impulse spectrum, staging optimization, Parametric Cascade patent. | Raptor performance, nuclear/electric propulsion |
-| Unit03 | **Space Environment** | Radiation, shielding, plasma physics, vacuum effects. | Astronaut dose limits, material degradation |
+| [Unit02](lessons/year3/Unit02_Rocket_Propulsion.md) | **Rocket Propulsion** | Specific impulse spectrum, staging optimization, Parametric Cascade patent. | Raptor performance, nuclear/electric propulsion |
+| [Unit03](lessons/year3/Unit03_Space_Environment.md) | **Space Environment** | Radiation, shielding, plasma physics, vacuum effects. | Astronaut dose limits, material degradation |
 | [Unit04](lessons/year3/Unit04_Quantum_Mechanics.md) | **Quantum Mechanics Foundations** | Schrödinger equation, particle in box, uncertainty principle, AAH at criticality. | Framework deep dive, Zeckendorf addressing |
-| Unit05 | **Cosmology & Dark Matter/Energy** | ΛCDM model, φ-partition predictions, observational tests. | Testing framework predictions |
-| Unit06 | **Maxwell's Equations** | Full Maxwell equations, EM wave derivation, unified EM. | Speed of light from μ₀ε₀ |
-| Unit07 | **Emerging Technologies** | Full patent portfolio analysis, SpaceX pitch format. | Technology evaluation |
-| Unit08 | **Capstone Project** | Mission design integrating all three years. | Mars/asteroid/interstellar missions |
+| [Unit05](lessons/year3/Unit05_Cosmology_Dark_Energy.md) | **Cosmology & Dark Matter/Energy** | ΛCDM model, φ-partition predictions, observational tests. | Testing framework predictions |
+| [Unit06](lessons/year3/Unit06_Maxwell_Equations.md) | **Maxwell's Equations** | Full Maxwell equations, EM wave derivation, unified EM. | Speed of light from μ₀ε₀ |
+| [Unit07](lessons/year3/Unit07_Emerging_Technologies.md) | **Emerging Technologies** | Full patent portfolio analysis, SpaceX pitch format. | Technology evaluation |
+| [Unit08](lessons/year3/Unit08_Capstone_Project.md) | **Capstone Project** | Mission design integrating all three years. | Mars/asteroid/interstellar missions |
 
 ---
 
