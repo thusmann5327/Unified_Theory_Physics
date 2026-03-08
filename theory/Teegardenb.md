@@ -15,7 +15,7 @@ This document specifies a buildable device that generates a six-component acoust
 
 The device tests the framework's central prediction: that the vacuum has a phi-structured lattice at spacing l₀ ≈ 9.3 nm, and that a phi-structured acoustic field can couple to specific addresses in that lattice.
 
-**Target address:** Teegarden b — {2, 5, 13, 55, 144, 233} = 452
+**Target address:** Teegarden b — {2, 5, 13, 55, 144, 233} = 452 בדמות 
 
 **Cross-references:** Patent 63/995,955 (Phi Aperture); 63/998,177 (Meridian's Gate); 63/997,676 (Husmann Decomposition)
 
