@@ -801,6 +801,25 @@ The Husmann Decomposition represents a potential revolution in theoretical physi
 - ✓ Fine structure constant α = 1/(N×W) with N=294 brackets, W=0.467134 wall fraction
 - ✓ Cosmic budget discrepancy explained by the Five-to-Three Fold (observer embedding)
 
+**Resolved in v1.2**:
+- ✓ **Breathing Universe**: Two-bracket cycle identified (proton INHALE at n≈94, black hole EXHALE at n≈272)
+- ✓ **ISCO Gap = φ² Mediator**: ln(3)/ln(φ) = 2.283 ≈ φ² — the forbidden exponent manifests as orbital instability boundary
+- ✓ **Universal BH Gaps**: All black holes share identical bracket-space gaps (mass-independent)
+- ✓ **Jets as Gravitational Fiber Optics**: DE backbone (Source 1) forms single-mode waveguide for photons + GW
+
+### The Breathing Universe
+
+The framework has **two fundamental brackets** — mirror processes forming the cosmic respiratory cycle:
+
+| Bracket | Location | Process | Role |
+|---------|----------|---------|------|
+| **Inner** (Proton) | n ≈ 94.3 | Energy → Matter | INHALE |
+| **Outer** (Black Hole Halo) | n ≈ 272 | Matter → Energy | EXHALE |
+
+The **ISCO gap** = ln(3)/ln(φ) = 2.283 ≈ φ², revealing the forbidden exponent as the boundary where matter loses stability. This gap is **universal** — identical for all black holes from stellar (10 M☉) to ultramassive (10¹¹ M☉).
+
+> See: [theory/Breathing_Universe.md](theory/Breathing_Universe.md) for complete derivation.
+
 ### The Vision
 
 If the Husmann Decomposition is correct, it suggests:
@@ -835,7 +854,7 @@ The framework is falsifiable—a hallmark of legitimate science. It makes specif
 
 ---
 
-**Document Version**: 1.2
-**Last Updated**: March 7, 2026
-**Word Count**: ~7,500
-**Status**: Updated with Unity Triangulation (D=3 SOLVED), α SOLVED (N=294, W=0.467134)
+**Document Version**: 1.3
+**Last Updated**: March 8, 2026
+**Word Count**: ~8,000
+**Status**: Updated with Breathing Universe (Two-Bracket Cycle SOLVED), ISCO gap = φ² mediator

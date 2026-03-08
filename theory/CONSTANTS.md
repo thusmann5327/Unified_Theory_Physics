@@ -53,6 +53,31 @@ unity = component_1 + component_2 + component_3
 | Wall fraction | W | 0.467134 | - | Derived (three-layer wall) |
 | Hinge constant | H | 0.742743 | - | Exact: φ^(-1/φ) |
 
+### Black Hole Bracket Gaps (Universal, Mass-Independent)
+
+All black holes share identical bracket-space gaps:
+
+| Gap | Definition | Value (brackets) | Physical Role |
+|-----|------------|------------------|---------------|
+| **ISCO** | ln(3)/ln(φ) | 2.283 | φ² MEDIATOR — forbidden exponent manifests |
+| **Photon sphere** | ln(1.5)/ln(φ) | 0.843 | THE WALL — light trapped |
+| **ISCO→Photon** | ln(2)/ln(φ) | 1.440 | Doubling bracket |
+| **GW wavelength** | ln(2π)/ln(φ) | 3.819 | π bracket — orbital encoding |
+| **Hawking peak** | — | 5.26 | Photon strand length |
+| **Horizon→Halo** | — | 56.92 | Universal breathing zone |
+
+### Black Hole Bracket Positions
+
+| Object | Mass | Horizon Bracket | DM Halo Edge | Gap |
+|--------|------|-----------------|--------------|-----|
+| Stellar (10 M☉) | 10 M☉ | 187.82 | 244.74 | 56.92 |
+| IMBH (1000 M☉) | 1000 M☉ | 197.38 | 254.30 | 56.92 |
+| Sgr A* | 4×10⁶ M☉ | 214.62 | 271.54 | 56.92 |
+| M87* | 6.5×10⁹ M☉ | 230.38 | 287.30 | 56.92 |
+| TON 618 | 6.6×10¹⁰ M☉ | 234.80 | 291.72 | 56.92 |
+
+**Computation**: `horizon_bracket = log_φ(R_s / L_Planck) = log_φ(2GM/c² / L_Planck)`
+
 ### Derived Quantities
 
 **Speed of light derivation**:

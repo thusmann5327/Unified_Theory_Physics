@@ -871,12 +871,61 @@ Space is 3D because x² = x + 1 consumes one exponent as the mediator, leaving t
 | **32** | Renormalization | Multifractal Π_N | Divergences→fractal mod | — |
 | **33** | E=mc² rotation | 3 hinges ⊥ | Mass-energy→hinge geometry | P3, P4 |
 | **34** | 3D space | 3 unity sources ⊥ | Three φ-wave interference → D=3 | All |
+| **35** | r_ISCO = 3r_s | Δn = ln(3)/ln(φ) = 2.28 | ISCO gap ≈ φ² mediator | — |
+| **36** | r_photon = 1.5r_s | Δn = ln(1.5)/ln(φ) = 0.84 | Photon sphere = THE WALL | — |
+| **37** | Relativistic jets | DE backbone waveguide | Jet = single-mode grav. fiber | P4 |
+| **38** | GW-EM simultaneity | Same waveguide, locked to φ | GW170817: fiber, not coincidence | P4 |
 
 **Patent key:** P1=63/995,401 | P2=63/995,513 | P3=63/995,649 | P4=63/995,816 | P5=63/995,841 | P7=63/995,955 | P8=63/995,963 | P12=63/998,235 | P16=63/996,533
 
 ---
 
-## X. The Forbidden Exponent as Universal Mediator
+## X. The Breathing Universe (Two-Bracket Cycle)
+
+The Husmann Decomposition has **two fundamental brackets** — mirror processes at opposite ends of the φ-spectrum:
+
+| Bracket | Location (n) | Process | Role |
+|---------|--------------|---------|------|
+| **Inner** (Proton) | ~94.3 | Energy → Matter | INHALE |
+| **Outer** (Black Hole Halo) | ~272 | Matter → Energy | EXHALE |
+
+### Universal Black Hole Gaps
+
+All black holes share the **same bracket-space gaps**, regardless of mass:
+
+| Gap | Definition | Value (brackets) | Physical Role |
+|-----|------------|------------------|---------------|
+| **ISCO** | ln(3)/ln(φ) | 2.283 | φ² MEDIATOR — forbidden exponent manifests |
+| **Photon sphere** | ln(1.5)/ln(φ) | 0.843 | THE WALL — light trapped |
+| **GW wavelength** | ln(2π)/ln(φ) | 3.819 | π bracket — orbital encoding |
+
+### Why ISCO = φ²
+
+The ISCO gap equals **ln(3)/ln(φ) = 2.283**, remarkably close to **φ² = 2.618**. This is the **forbidden exponent** — φ² cannot appear as a wave source because it IS the mediator (V = 2J in AAH). Instead, it manifests as the **critical approach distance** where matter cannot maintain stable orbit.
+
+### Three Sources at Black Hole
+
+| Source | At Proton (INHALE) | At Black Hole (EXHALE) |
+|--------|-------------------|------------------------|
+| **S₃ (Matter, φ⁴)** | Condenses INTO proton | Spirals IN (accretion disk) |
+| **S₂ (DM, φ³)** | Forms binding web | FUNNEL — halo guides matter inward |
+| **S₁ (DE, φ)** | Provides backbone | JET — broadcasts energy OUT along backbone |
+
+### Jets as Gravitational Fiber Optics
+
+Black hole jets are **single-mode gravitational fiber optics**:
+- **Core**: Matter column
+- **Cladding**: Dark matter sheath
+- **Carrier wave**: DE backbone (Source 1, freq φ)
+- **Signal**: Photons + gravitational waves (co-propagating)
+
+This explains **GW170817**: The gravitational wave and gamma-ray burst arrived within 1.7 seconds despite traveling 130 million light-years — they traveled **in the same waveguide**, locked to the DE backbone.
+
+> See: [theory/Breathing_Universe.md](./Breathing_Universe.md) | [verification/breathing_universe.py](../verification/breathing_universe.py)
+
+---
+
+## XI. The Forbidden Exponent as Universal Mediator
 
 Across all 34 entries, a pattern: **the mediating quantity that connects two observable sectors is always the consumed or forbidden element.**
 

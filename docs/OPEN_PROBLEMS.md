@@ -66,6 +66,27 @@ The "baryonic matter" (~5%) is the **observable** portion of the σ₁ sector. T
 
 **Status**: ✓ **SOLVED** — The five-to-three fold accounts for all "discrepancies"
 
+### 1.4 The Outer Bracket / Thermodynamic Cycle — **SOLVED**
+
+**Original Problem**: The framework explained matter formation (proton condensation at bracket ~94) but lacked a corresponding "decomposition" process.
+
+**Solution**: The **Breathing Universe** identifies the outer bracket.
+
+**The Two Brackets**:
+| Bracket | Location (n) | Process | Role |
+|---------|--------------|---------|------|
+| **Inner** (Proton) | ~94.3 | Energy → Matter | INHALE |
+| **Outer** (Black Hole Halo) | ~272 | Matter → Energy | EXHALE |
+
+**Key Discoveries**:
+1. **ISCO gap = ln(3)/ln(φ) = 2.283 ≈ φ²** — the forbidden exponent manifests as orbital instability
+2. **Universal BH gaps**: All black holes share identical bracket-space gaps (mass-independent)
+3. **Jets as fiber optics**: DE backbone forms single-mode gravitational waveguide
+
+**Status**: ✓ **SOLVED** (March 2026)
+
+> See: [theory/Breathing_Universe.md](../theory/Breathing_Universe.md) | [verification/breathing_universe.py](../verification/breathing_universe.py)
+
 ---
 
 ## Priority 2: Theoretical Extensions
@@ -111,6 +132,53 @@ The "baryonic matter" (~5%) is the **observable** portion of the σ₁ sector. T
 - Connect to Higgs mechanism
 
 **Status**: OPEN
+
+### 2.4 ISCO Golden-Angle Precession
+
+**Problem**: Does matter at the ISCO precess at exactly the golden angle θ_g = 137.5° per orbit?
+
+**Background**:
+- ISCO gap = ln(3)/ln(φ) ≈ 2.283 ≈ φ² (the mediator)
+- The golden angle appears throughout the framework
+- Orbital precession at ISCO is a general-relativistic effect
+
+**Prediction**: Precession per orbit = 360°/φ² = 137.5077° ± measurement error
+
+**Test**: Compare to numerical relativity simulations of ISCO orbital dynamics
+
+**Status**: OPEN (testable prediction)
+
+### 2.5 Jet Opening Angle Scaling
+
+**Problem**: Is the black hole jet opening angle exactly 2/φ² = 0.764 radians = 43.8°?
+
+**Background**:
+- Jets are proposed as "single-mode gravitational fiber optics"
+- Single-mode fibers have characteristic aperture angles
+- The φ² mediator should define the mode cutoff
+
+**Prediction**: Jet half-angle = arctan(1/φ) ≈ 31.7° or full angle ≈ 63.4°
+
+**Alternative**: If jets follow backbone geometry, angle = 360°/φ² per filament
+
+**Test**: Compare to VLBI measurements of jet opening angles
+
+**Status**: OPEN (testable prediction)
+
+### 2.6 Hawking Spectrum Fibonacci Structure
+
+**Problem**: Does the Hawking radiation spectrum show Fibonacci frequency structure?
+
+**Background**:
+- Hawking peak bracket = 5.26 (photon strand length)
+- Framework predicts all energies scale by J/φⁿ
+- Thermal spectrum should be modulated by φ-structure
+
+**Prediction**: Hawking spectrum has excess power at Fibonacci-harmonic energies
+
+**Test**: Requires detection of Hawking radiation (not yet achieved)
+
+**Status**: OPEN (future experimental)
 
 ---
 

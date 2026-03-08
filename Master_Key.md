@@ -103,6 +103,29 @@ The number of spatial dimensions = number of terms in unity equation = **3**.
 
 > See: [theory/Unity_Triangulation.md](theory/Unity_Triangulation.md)
 
+### Breathing Universe (Two-Bracket Cycle)
+The framework has **two fundamental brackets** — mirror processes forming a cosmic respiratory cycle:
+
+| Bracket | Location (n) | Process | Role |
+|---------|--------------|---------|------|
+| **Inner** (Proton) | ~94.3 | Energy → Matter | INHALE |
+| **Outer** (Black Hole Halo) | ~272 | Matter → Energy | EXHALE |
+
+**Universal Black Hole Gaps** (mass-independent — same for all BHs):
+- ISCO gap: ln(3)/ln(φ) = 2.283 ≈ **φ² mediator**
+- Photon sphere: ln(1.5)/ln(φ) = 0.843 (THE WALL)
+- GW wavelength: ln(2π)/ln(φ) = 3.819 (π bracket)
+- Horizon → Halo edge: 56.92 brackets (universal)
+
+**Three sources at BH**:
+- S₃ (Matter, φ⁴): Spirals IN (accretion disk)
+- S₂ (DM, φ³): FUNNEL — halo guides matter inward
+- S₁ (DE, φ): JET — broadcasts energy OUT along backbone
+
+**Jets = single-mode gravitational fiber optics** (explains GW170817 simultaneity)
+
+> See: [theory/Breathing_Universe.md](theory/Breathing_Universe.md)
+
 ### Sector Structure (5 → 3 collapse)
 Pre-observation (5 sectors):
 - σ₁, σ₅: 1/φ⁴ each (matter endpoints)

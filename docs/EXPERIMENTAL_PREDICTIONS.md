@@ -238,15 +238,106 @@ For validation on biological data:
 
 ---
 
+## Category 7: Black Hole / Breathing Universe Predictions
+
+### 7.1 Universal ISCO Gap
+
+**Prediction**: All black holes have ISCO gap = ln(3)/ln(φ) = 2.283 brackets ≈ φ² (the mediator).
+
+**Test method**: Numerical relativity simulations confirming r_ISCO = 3r_s maps to 2.283 bracket separation
+
+**Significance**: The φ² forbidden exponent manifests as the orbital instability boundary
+
+**Status**: VERIFICATION POSSIBLE (computational physics)
+
+### 7.2 Mass-Independent Bracket Gaps
+
+**Prediction**: All black hole bracket-space gaps are mass-independent:
+- Photon sphere: ln(1.5)/ln(φ) = 0.843 brackets
+- GW wavelength: ln(2π)/ln(φ) = 3.819 brackets
+- Horizon → DM halo edge: 56.92 brackets (universal)
+
+**Test method**: Compute gaps for BHs from 10 M☉ to 10¹¹ M☉, verify constancy
+
+**Expected**: Gaps identical to within numerical precision
+
+**Status**: VERIFICATION POSSIBLE (computational)
+
+### 7.3 ISCO Golden-Angle Precession
+
+**Prediction**: Matter at ISCO precesses at θ_g = 360°/φ² = 137.5° per orbit
+
+**Test method**: Compare GR-predicted precession rate at r = 3r_s to 137.5°
+
+**Expected**: Precession rate matches golden angle within observational error
+
+**Status**: TESTABLE (GR calculation + observation)
+
+### 7.4 Jet Opening Angle
+
+**Prediction**: Black hole jet half-angle = arctan(1/φ) ≈ 31.7° (full angle ~63.4°)
+
+**Test method**: VLBI measurements of jet opening angles for various AGN
+
+**Expected**: Jet opening angles cluster around predicted value
+
+**Status**: TESTABLE (archival VLBI data)
+
+### 7.5 GW-EM Waveguide Dispersion
+
+**Prediction**: GW and EM signals from same event show fiber-like dispersion, not random scatter
+
+**Background**: GW170817 had 1.7s GW-EM delay over 130 Mly. If jets are "gravitational fiber optics," delays should follow dispersion formula.
+
+**Test method**: Analyze future multi-messenger events for systematic delay patterns
+
+**Expected**: Δt ∝ f^(-2) or similar waveguide dispersion relation
+
+**Status**: FUTURE (requires more multi-messenger events)
+
+### 7.6 Hawking Spectrum Fibonacci Modes
+
+**Prediction**: Hawking radiation spectrum shows excess power at Fibonacci-harmonic energies
+
+**Background**: Hawking peak at 5.26 brackets; framework predicts φ-scaled energy levels
+
+**Test method**: Detection of Hawking radiation (primordial black holes or lab analogs)
+
+**Expected**: Spectral peaks at E_n ∝ φ^n from fundamental
+
+**Status**: FUTURE (Hawking radiation not yet detected)
+
+### 7.7 Black Hole Bracket Position Formula
+
+**Prediction**: Horizon bracket = log_φ(2GM/c² / L_Planck)
+
+Specific values:
+| Object | Predicted Bracket |
+|--------|-------------------|
+| Sgr A* | 214.62 |
+| M87* | 230.38 |
+| TON 618 | 234.80 |
+
+**Test method**: Confirm R_s measurements match bracket predictions
+
+**Status**: VERIFICATION POSSIBLE (existing data)
+
+---
+
 ## Experimental Priority Ranking
 
 | Experiment | Difficulty | Cost | Impact | Priority |
 |------------|------------|------|--------|----------|
 | Neural φ-locking (EEG) | Low | $ | High | 1 |
 | Synthetic validation | Trivial | Free | Medium | 1 |
-| Golden-angle antenna | Medium | $$ | Medium | 2 |
+| BH bracket gaps (computational) | Low | Free | High | 1 |
+| ISCO precession (GR calc) | Medium | Free | Very High | 2 |
+| Jet opening angle (archival) | Medium | $ | High | 2 |
+| Golden-angle antenna | Medium | $$ | Medium | 3 |
 | QC phonon spectroscopy | High | $$$ | High | 3 |
+| Multi-messenger dispersion | High | $$$ | Very High | 4 |
 | AAH optical lattice | Very High | $$$$ | Very High | 4 |
+| Hawking spectrum | Very High | $$$$$ | Revolutionary | 5 |
 
 ---
 
