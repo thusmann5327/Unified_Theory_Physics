@@ -44,7 +44,7 @@ All other material in this repository — including any device architectures, nu
 
 ## Existing Patent Protection (Reserved)
 
-
+ALL RIGHTS RESERVED
 
 ---
 
