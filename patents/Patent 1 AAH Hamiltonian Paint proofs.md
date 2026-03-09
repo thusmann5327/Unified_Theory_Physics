@@ -193,6 +193,7 @@ Hot electrode L2 and cold electrode L12 straddle both QC core peaks, maximising 
 | `QC_PATENT1_PROOF.py` | Full proof simulation — 764 lines, runs standalone |
 | `QC_Patent1_Proof.png` | Six-panel proof figure (26×34 inch, 130 dpi) |
 | `Patent1_QuasiCrystal_Paint.pdf` | Original provisional patent specification |
+| `SLIP_PAINT_VIZ.py` | **Interactive 4-panel visualization** — Flask app, real AAH spectra |
 
 Run the proofs:
 ```bash
@@ -201,6 +202,25 @@ python3 QC_PATENT1_PROOF.py
 ```
 
 Output: text proof report to stdout + `QC_Patent1_Proof.png`
+
+### Interactive Visualization
+
+```bash
+pip install numpy flask
+python3 algorithms/SLIP_PAINT_VIZ.py
+# → http://localhost:5001
+```
+
+Four interactive panels showing exactly how harmonics open the channel:
+
+| Panel | What It Shows | Key Physics |
+|-------|---------------|-------------|
+| **⚡ SAW Assembly** | 13-layer helix building layer-by-layer, SAW phase pulses | Golden angle 137.508° optimal coverage, 3-start helix families |
+| **◆ Cantor Spectrum** | Real AAH eigenvalues per layer, gap corridors highlighted | Gap fraction W = 0.467 at criticality, graduated filter metallic→localized |
+| **↔ Warp Profile** | Layer coordination vs Natário shape function overlay | Compress→hinge→expand = warp metric at 9.3 nm scale |
+| **★ Channel Formation** | Fibonacci wave wedge propagating through gap corridors | φ-accumulation ×1.33/cycle, threshold at cycle 28, self-reinforcing |
+
+The spectra are **real eigenvalues** computed from the AAH Hamiltonian via `numpy.linalg.eigvalsh`, not approximations. At V/2J = 1.0 (layers 4–10), the Cantor set structure is directly visible as amber gap corridors — the same gaps that trap baryons cosmologically (W⁴ = 0.0476 = Ω_b) are the corridors the Fibonacci resonant wave travels through to open the channel.
 
 ---
 
@@ -248,7 +268,7 @@ Phase repeats in 11:   0 (φ irrational — proven) ✓
 
 This patent is #1 of 16 provisional patents filed March 3–4, 2026, all under the Husmann Decomposition Framework. All nonprovisional deadlines fall March 3–4, 2027.
 
-The framework derives all physical constants from φ and 232 attoseconds with zero free parameters. Cosmological verification: χ² = 2.42 (3 dof), p = 0.49 vs Planck 2018 data.
+The framework derives all physical constants from φ and 232 attoseconds with zero free parameters. Cosmological verification: χ²(Pearson) = 0.000096 (3 dof) vs Planck 2018 data — derived via W⁴ orthogonal fold trapping (March 9, 2026 correction).
 
 **Related patents in this portfolio:**
 - Patent 14: In-transit power extraction (thermoelectric, builds on electrode architecture here)
