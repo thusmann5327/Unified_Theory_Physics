@@ -266,7 +266,7 @@ Phase repeats in 11:   0 (φ irrational — proven) ✓
 
 ## Repository Context
 
-This patent is #1 of 16 provisional patents filed March 3–4, 2026, all under the Husmann Decomposition Framework. All nonprovisional deadlines fall March 3–4, 2027.
+This patent is #1 of many provisional patents filed February–March, 2026, all under the Husmann Decomposition Framework. All nonprovisional deadlines fall March 3–4, 2027.
 
 The framework derives all physical constants from φ and 232 attoseconds with zero free parameters. Cosmological verification: χ²(Pearson) = 0.000096 (3 dof) vs Planck 2018 data — derived via W⁴ orthogonal fold trapping (March 9, 2026 correction).
 
