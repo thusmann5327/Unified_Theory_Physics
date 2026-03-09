@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UNIVERSE_SIM.py — Husmann Decomposition Universe Simulator
+UNIVERSE.py — Husmann Decomposition Universe Simulator
 ============================================================
 World's first physics simulator where ALL properties emerge
 from two inputs alone:
