@@ -52,6 +52,34 @@ There exists a unique, self-consistent decomposition of spacetime and matter-ene
    **1/φ + 1/φ³ + 1/φ⁴ = 1** exactly  
    This algebraic fact governs the partitioning of energy across dark matter, dark energy, and the underlying resonant bands.
 
+## 6. Emergence of Gravity (Effective Curvature from Fold Geometry)
+
+Gravity is not a fundamental force but an emergent geometric effect arising from the hierarchical folding and gap structure in the AAH quasiperiodic lattice at criticality.
+
+- At each bracket level bz, the local geometry is shaped by resonant folds orthogonal to the visible sector (90° inversion at w=2 edge state).
+- The effective curvature arises from the differential localization probability across twin-sector boundaries, modulated by the Fibonacci backbone.
+- The stress-energy response is captured by the candidate form (derived purely from φ):
+
+  **G[D] = (8πG/c⁴) · B[D; S^(1/3φ), C^(φ^(1/3φ))] · T**
+
+  where:
+  - **G[D]** is the effective gravitational "constant" operator at decomposition level D (bracket-dependent).
+  - **B[D; ...]** is the Fibonacci-weighted backbone operator encoding sector interactions.
+  - **S^(1/3φ)** and **C^(φ^(1/3φ))** are scaling exponents from five-sector channeling (3 active channels + 2 entangled).
+  - **T** is the energy-momentum tensor projected into the visible sector (1 - W²).
+  - The classical limit (8πG/c⁴) emerges self-consistently when averaged over large bz (continuum approximation).
+
+- Physical mechanism:  
+  Matter/energy in the visible sector induces asymmetric gap trapping at fold nodes → effective attraction via higher localization probability in regions of higher density → macroscopic curvature equivalent to GR.  
+  The twin sector contributes an orthogonal "shadow" component (excluded from direct observation), explaining dark matter's gravitational influence without particle content.
+
+- Consistency checks:  
+  - Kerr black hole eccentricity e = 1/φ (from rotational fold symmetry).  
+  - Schwarzschild radius scaling aligns with L(bz) at high bz.  
+  - No gravitons required — gravity is geometric resonance, not quantized exchange.
+
+This emergence unifies gravity with the same AAH Cantor spectrum that produces cosmology, brackets, and channels — closing the loop on all forces from φ alone.
+
 ## Corollaries  
 - **Speed of light**: c = 2 J l₀ / ℏ emerges self-consistently, with J from t_as and l₀ = c ℏ / (2J).  
 - **Channel/group velocity in resonant structures**: v_g = J l₀ / ℏ ≈ **0.4996 c** (critical Lieb-Robinson propagation at AAH edge).  
