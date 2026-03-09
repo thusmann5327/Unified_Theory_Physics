@@ -44,7 +44,7 @@ All other material in this repository — including any device architectures, nu
 
 ## Existing Patent Protection (Reserved)
 
-The following provisional and design applications were filed **before** this disclosure and protect specific device architectures. These are **not** affected:
+
 
 ---
 
