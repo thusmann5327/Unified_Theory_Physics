@@ -1,954 +1,1235 @@
+#!/usr/bin/env python3
 """
-husmann_cantor_grid_v3b.py
-==========================
-Husmann Decomposition Framework — Fibonacci Spiral Cantor Grid
-VERSION 3b: ABSOLUTE BRACKET MAPPING
+UNIVERSE.py
+===========
+Husmann Decomposition Framework — Complete Universe Visualization
 
-KEY FIX FROM v3:
-  v3 used relative bracket positioning (offset from parent).
-  This compressed ALL nodes into the top ~10 brackets (bz≈284-294),
-  so every rotation immediately approached the Hubble cutoff at bz>294.
-  Result: max_turn_reached=0, no visible spiral winding.
+Renders 98 worlds (solar system + exoplanets) placed on the
+Fibonacci spiral Cantor grid using absolute bracket addressing.
 
-  v3b uses ABSOLUTE bracket positioning based on Fibonacci index:
-    bz(count) = fib_index(count) × (N_BRACKETS / F_ROOT_INDEX)
-    
-  Since F(k) ~ φ^k and L(n) = L_P × φⁿ:
-    count = F(k)  →  bz = k × (294/16) ≈ k × 18.375
-  
-  This distributes nodes throughout the FULL bracket range 0–294:
-    F(16)=987  → bz=294  (Hubble — root)
-    F(13)=233  → bz=237  (cosmic web scale)
-    F(12)=144  → bz=220  (supercluster scale)
-    F(10)=55   → bz=184  (galaxy cluster scale)
-    F(8) =21   → bz=147  ← CENTER FOLD (observer sector center)
-    F(7) =13   → bz=129  (galactic scale)
-    F(5) =5    → bz=92   (stellar scale)
-    F(3) =2    → bz=55   (molecular scale)
-    F(1) =1    → bz=18   (atomic scale)
-  
-  The fold at bz=147 is EXACT: F(8)=21 states IS the center of the
-  observer sector cascade AND the geometric center of the bracket range.
-  This is not engineered — it emerges from the Fibonacci index mapping.
+FRAMEWORK CORE:
+  AAH Hamiltonian at criticality: α=1/φ, V=2J, J=10.6 eV
+  Bracket law:     L(n) = L_Planck × φⁿ
+  Wall fraction:   W = 2/φ⁴ + φ^(-1/φ)/φ³ = 0.467134
+  Unity equation:  1/φ + 1/φ³ + 1/φ⁴ = 1  (DE + DM + baryons)
+  Titius-Bode:     r(k) = 0.387 AU × φ^k  (zero free parameters)
+  N_brackets = 294, SPIRAL_TURNS = 73.5
 
-  With nodes distributed across all 294 brackets, rotations at mid-range
-  (bz≈100-200) can complete multiple spiral turns before hitting the cutoff.
-  max_turn_reached now reflects genuine multi-wind spiral structure.
+WHAT THE SPIRAL IS:
+  The helix is the propagating vacuum (dark energy — not trapped).
+  Matter is what the helix leaves behind at expanding gap boundaries.
+  Baryons (1/φ⁴): trapped at gap boundary walls.
+  Dark matter (1/φ³): trapped at fold intersections (adjacent winds).
+  Dark energy (1/φ): the helix itself — never trapped.
 
-Author: Thomas Husmann (framework, spiral insight, open-loop recognition)
-        Claude/Anthropic (implementation)
-Peer:   Grok/xAI (verified F-band structure, diagnosed turn=0 issue)
-Date:   March 2026
+PLANET ADDRESSING:
+  Every world has a Zeckendorf address — its position in the
+  φ-resonant bracket hierarchy expressed as a sum of Fibonacci numbers.
+  bz(world) = log(distance / L_Planck) / log(φ)
+
+OUTPUT FIGURES:
+  [1] Main spiral map — all 98 worlds on Fibonacci helix
+  [2] Bracket scale bar — full hierarchy from Planck to Hubble
+  [3] ESI distribution — habitability by spectral sector
+  [4] Solar system orbital radii vs Titius-Bode prediction
+  [5] Zeckendorf address heatmap — which Fibonacci terms appear where
+  [6] Cosmic web schematic — gap→void, wall→filament, node→cluster
+
+Author: Thomas Husmann (framework), March 2026
 """
 
-import math
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm, Normalize
-import matplotlib.cm as cm
-from dataclasses import dataclass, field
-from typing import Optional, List, Tuple, Dict
-from enum import Enum
-from collections import defaultdict
+import matplotlib.gridspec as gridspec
+import matplotlib.patches as mpatches
+from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib.cm import ScalarMappable
+from matplotlib.lines import Line2D
+import math
+import json
+import os
 
-# ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
 # CONSTANTS
-# ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
 
-PHI        = (1 + math.sqrt(5)) / 2
-W          = 2/PHI**4 + PHI**(-1/PHI)/PHI**3
-N_BRACKETS = 294
-N_AAH      = 987
-F_ROOT_IDX = 16          # F(16) = 987, the root state count
-SCALE_PER_FIB = N_BRACKETS / F_ROOT_IDX   # ≈ 18.375 brackets per Fibonacci index
-L_PLANCK   = 1.616e-35
-N_GRAVITY  = N_BRACKETS/2 + 55*W          # = 172.69
-FOLD_CENTER = N_BRACKETS // 2             # = 147 (F(8)=21 states lives here)
-SPIRAL_TURNS = N_BRACKETS / 4            # = 73.5
-HALF_TURN_RESIDUAL = SPIRAL_TURNS - int(SPIRAL_TURNS)  # = 0.5
+PHI  = (1 + math.sqrt(5)) / 2          # 1.6180339887...
+W    = 2/PHI**4 + PHI**(-1/PHI)/PHI**3 # 0.467134 — universal gap fraction
+N    = 294                               # brackets: Planck → Hubble
+J    = 10.6                             # eV — hopping integral
+L_P  = 1.616e-35                        # m — Planck length
+l0   = 9.3e-9                           # m — coherence patch (base length)
+H0   = 67.4                             # km/s/Mpc
+MPC  = 3.086e22                         # m
+AU   = 1.496e11                         # m
+KPC  = 3.086e19                         # m
+LY   = 9.461e15                         # m
+GYR  = 3.156e16                         # s
+YR   = 3.156e7                          # s
 
-# ─────────────────────────────────────────────────────────────
-# FIBONACCI TOOLS
-# ─────────────────────────────────────────────────────────────
+# Cosmological energy budget (from framework, χ²=2.42, p=0.49)
+OMEGA_B   = 0.04927   # baryonic matter    = 1/φ⁴ × (1-W²)
+OMEGA_DM  = 0.2580    # dark matter        = 1/φ³ × (1-W²)
+OMEGA_DE  = 0.6927    # dark energy        = 1/φ  × (1-W²)
+OMEGA_M   = 0.3073    # total matter
 
-_F = [1, 1]
-def _grow(n):
-    while _F[-1] < n:
-        _F.append(_F[-1] + _F[-2])
+# Key bracket positions
+BZ_MERCURY      = 218    # Mercury orbital radius  → l₀_stellar = 0.387 AU
+BZ_EARTH        = 220    # Earth (observer sector)
+BZ_OBSERVER     = 220    # σ₂ observer band center
+BZ_SIGMA15      = 239    # σ₁/σ₅ horizon bands
+BZ_PERP_DISC    = 257    # perpendicular disc boundary
+BZ_HUBBLE       = 294    # Hubble horizon / N_AAH root
+BZ_FOLD_CENTER  = 147    # center fold — F(8)=21, atomic scale
+SCALE_PER_FIB   = 294 / 16   # 18.375 brackets per Fibonacci index
+SPIRAL_TURNS    = 73.5   # Planck → Hubble
+HALF_TURN_RES   = 0.5    # current epoch residual (Hubble tension marker)
 
-def fib(k: int) -> int:
-    while len(_F) < k: _F.append(_F[-1]+_F[-2])
-    return _F[k-1]
+# Titius-Bode base (from bracket law, zero free params)
+L0_STELLAR_AU   = 0.387  # AU = L_P × φ^218
 
-def fib_index(n: int) -> int:
-    _grow(n)
-    for i, f in enumerate(_F):
-        if f == n: return i + 1
-        if f  > n: return -1
-    return -1
 
-def nearest_fib_floor(n: int) -> int:
-    if n <= 0: return 1
-    _grow(n)
-    result = 1
-    for f in _F:
-        if f <= n: result = f
-        else: break
-    return result
+# ══════════════════════════════════════════════════════════════════════════════
+# MATHEMATICAL TOOLS
+# ══════════════════════════════════════════════════════════════════════════════
 
-def zeckendorf(n: int) -> List[int]:
-    if n <= 0: return []
-    _grow(n)
+_FIB = [1, 1]
+
+def fib(k):
+    """k-th Fibonacci number (1-indexed: fib(1)=1, fib(2)=1, fib(3)=2...)."""
+    while len(_FIB) < k:
+        _FIB.append(_FIB[-1] + _FIB[-2])
+    return _FIB[k - 1]
+
+def zeckendorf(n):
+    """
+    Zeckendorf decomposition of n.
+    Returns list of Fibonacci indices (1-based) such that
+    n = Σ F(i) for i in result, no two consecutive.
+    """
+    if n <= 0:
+        return [1]
+    while _FIB[-1] < n:
+        _FIB.append(_FIB[-1] + _FIB[-2])
     result, rem = [], n
-    for i in range(len(_F)-1, -1, -1):
-        if _F[i] <= rem:
-            rem -= _F[i]; result.append(i+1)
-            if rem == 0: break
-    return result
+    for i in range(len(_FIB) - 1, -1, -1):
+        if _FIB[i] <= rem:
+            rem -= _FIB[i]
+            result.append(i + 1)
+            if rem == 0:
+                break
+    return result or [1]
 
-def zeck_valid(indices: List[int]) -> bool:
-    s = sorted(indices)
-    return all(s[i+1]-s[i] >= 2 for i in range(len(s)-1))
+def bracket(dist_m):
+    """Physical distance in metres → bracket position bz."""
+    if dist_m <= 0:
+        return 0
+    bz = math.log(max(dist_m, L_P * 10) / L_P) / math.log(PHI)
+    return max(1, min(N, round(bz)))
 
-def aah_bands(N: int) -> List[int]:
-    fi = fib_index(N)
-    if fi < 5: raise ValueError(f"N={N} must be Fibonacci with index ≥ 5")
-    a, b = fib(fi-3), fib(fi-4)
-    bands = [a, b, a, b, a]
-    assert sum(bands) == N
-    return bands
+def L(bz):
+    """Physical scale at bracket bz: L_P × φ^bz  [m]."""
+    return L_P * PHI**bz
 
-def bracket_abs(count: int) -> int:
+def H_local(bz):
+    """Local Hubble rate at bracket bz: H₀ × φ^(bz-N)  [s⁻¹]."""
+    return (H0 * 1e3 / MPC) * PHI**(bz - N)
+
+def v_gap(bz):
+    """Gap wall expansion velocity: H_local(bz) × L(bz)  [m/s]."""
+    return H_local(bz) * L(bz)
+
+def spiral_coords(bz, index, total, R_scale=1.0):
     """
-    ABSOLUTE bracket position for a given state count.
-    
-    Based on: F(k) ~ φ^k and L(n) = L_Planck × φⁿ
-    Therefore: state_count = F(k) maps to bracket n = k × (294/16)
-    
-    For non-Fibonacci counts, use the top Zeckendorf component.
-    
-    KEY RESULT: F(8)=21 → bracket 147 = exact center fold.
+    Convert bracket + index to 3D Fibonacci spiral coordinates.
+
+    bz:     bracket position (controls height along spiral axis)
+    index:  particle index (golden-angle azimuth spread)
+    total:  total number of particles (for normalization)
+    R_scale: radial scale factor
+
+    Returns (x, y, z) in dimensionless spiral units.
     """
-    fi = fib_index(count)
-    if fi < 0:
-        z = zeckendorf(count)
-        fi = z[0] if z else 1
-    return max(0, min(N_BRACKETS, round(fi * SCALE_PER_FIB)))
-
-
-# ─────────────────────────────────────────────────────────────
-# AXIS
-# ─────────────────────────────────────────────────────────────
-
-class Axis(Enum):
-    Z=0; X=1; Xr=2; Y=3
-
-    def rotate(self, n=1): return Axis((self.value+n)%4)
-
-    @property
-    def color(self):
-        return {Axis.Z:'#2196F3',Axis.X:'#4CAF50',
-                Axis.Xr:'#FF5722',Axis.Y:'#9C27B0'}[self]
-
-    @property
-    def label(self):
-        return {Axis.Z:'Our disc (Z)', Axis.X:'Mirror 1 (X) DM',
-                Axis.Xr:'Gravity (Xr)', Axis.Y:'Mirror 2 (Y) EM'}[self]
-
-
-# ─────────────────────────────────────────────────────────────
-# NODE TYPE
-# ─────────────────────────────────────────────────────────────
-
-class NT(Enum):
-    BONDING='bond'; ANTI='anti'; WALL='wall'; FOLD='fold'
-    OBSERVER='obs'; PAST='past'; FUTURE='fut'
-    PERP_N='pn';    PERP_F='pf'; ROTATED='rot'
-
-
-# ─────────────────────────────────────────────────────────────
-# SPIRAL COORDINATE
-# ─────────────────────────────────────────────────────────────
-
-@dataclass(frozen=True)
-class SC:
-    """Spiral coordinate: absolute bracket position + rotation state."""
-    bz:   int    # Absolute bracket on primary (z) axis
-    bp:   int    # Absolute bracket on perpendicular axis (0 = on primary)
-    axis: Axis
-    turn: int    # Completed spiral turns = nrot // 4
-    nrot: int    # Total 90° rotations from root
-
-    @property
-    def is_fold(self) -> bool:
-        """Fold: on the spiral diagonal, any turn > 0."""
-        return self.bp > 0 and abs(self.bz - self.bp) <= 4
-
-    @property
-    def near_center_fold(self) -> bool:
-        """Near the geometric center fold (bz ≈ 147)."""
-        return abs(self.bz - FOLD_CENTER) <= 10
-
-    @property
-    def angle_deg(self) -> float:
-        return (self.nrot % 4) * 90.0
-
-
-# ─────────────────────────────────────────────────────────────
-# NODE
-# ─────────────────────────────────────────────────────────────
-
-@dataclass
-class Node:
-    sc:          SC
-    depth:       int
-    count:       int
-    z_addr:      List[int]
-    nt:          NT
-    is_gap:      bool
-    is_rot_pt:   bool = False
-    parent_addr: Optional[List[int]] = None
-    children:    List['Node'] = field(default_factory=list)
-    gaps:        List['Node'] = field(default_factory=list)
-    rot_spawn:   Optional['Node'] = None
-    omega:       float = 0.0
-    acoustic:    float = 1.0
-
-    @property
-    def bz(self):   return self.sc.bz
-    @property
-    def bp(self):   return self.sc.bp
-    @property
-    def axis(self): return self.sc.axis
-    @property
-    def turn(self): return self.sc.turn
-    @property
-    def nrot(self): return self.sc.nrot
-    @property
-    def is_fold(self): return self.sc.is_fold
-
-    @property
-    def addr_str(self):
-        if not self.z_addr: return "Z[gap]"
-        return "Z[" + "+".join(f"F{i}={fib(i)}" for i in self.z_addr) + f"={self.count}]"
-
-    @property
-    def scale_str(self):
-        m = L_PLANCK * (PHI**self.bz)
-        if m < 1e-30: return f"{m/L_PLANCK:.1f} lP"
-        if m < 1e-12: return f"{m*1e15:.2f} fm"
-        if m < 1e-7:  return f"{m*1e9:.2f} nm"
-        if m < 1e-2:  return f"{m*1e6:.2f} μm"
-        if m < 1e4:   return f"{m:.1f} m"
-        if m < 1e16:  return f"{m/9.461e15:.3f} ly"
-        if m < 1e25:  return f"{m/3.086e22:.1f} Mpc"
-        return f"{m/8.8e26:.3f}×H"
-
-
-# ─────────────────────────────────────────────────────────────
-# CANTOR GRID v3b
-# ─────────────────────────────────────────────────────────────
-
-class CantorGrid:
-
-    def __init__(self, max_depth=7, verbose=False):
-        self.max_depth = max_depth
-        self.verbose   = verbose
-
-        self.nodes:      List[Node] = []
-        self.gaps:       List[Node] = []
-        self.folds:      List[Node] = []
-        self.observers:  List[Node] = []
-        self.rot_events: List[Tuple[Node,Node]] = []
-
-        # Sparse matrix: (bz, bp, turn) → Node
-        self.matrix: Dict[Tuple[int,int,int], Node] = {}
-
-        self.root = self._make_root()
-        self._assign_omega()
-
-    # ── helpers ─────────────────────────────────────────────
-
-    def _reg(self, nd: Node):
-        self.nodes.append(nd)
-        key = (nd.bz, nd.bp, nd.turn)
-        if key not in self.matrix:
-            self.matrix[key] = nd
-        if nd.is_fold and nd not in self.folds:
-            self.folds.append(nd)
-
-    def _bands(self, n: int) -> List[int]:
-        fi = fib_index(n)
-        if fi >= 5: return aah_bands(n)
-        z = zeckendorf(n)
-        return [fib(i) for i in z if fib(i) > 0]
-
-    def _nt_primary(self, bi: int, depth: int, pnt) -> NT:
-        if depth == 0: return NT.BONDING
-        if depth == 1:
-            return {1:NT.PAST,2:NT.OBSERVER,3:NT.FUTURE,
-                    4:NT.PERP_N,5:NT.PERP_F,0:NT.WALL}.get(bi, NT.WALL)
-        if pnt in (NT.OBSERVER, NT.PERP_N):
-            return NT.BONDING if bi==1 else NT.ANTI
-        return NT.BONDING if bi%2==1 else NT.ANTI
-
-    def _make_gap(self, bz: int, bp: int, depth: int,
-                  ref_count: int, nrot: int,
-                  parent_addr: List[int]) -> Node:
-        snapped = nearest_fib_floor(max(1, int(ref_count*W/(1-W))))
-        ax      = Axis(nrot % 4)
-        turn    = nrot // 4
-        sc      = SC(bz=bz, bp=bp, axis=ax, turn=turn, nrot=nrot)
-        g = Node(sc=sc, depth=depth, count=snapped, z_addr=[],
-                 nt=NT.WALL, is_gap=True, parent_addr=parent_addr)
-        self.gaps.append(g)
-        return g
-
-    # ── THE ROTATION EVENT ───────────────────────────────────
-
-    def _rotate(self, gap: Node, interior: Node) -> Optional[Node]:
-        """
-        Fibonacci spiral rotation (open helix):
-        
-        At every Cantor gap:
-          1. Interior state Z[F_k] on Axis A becomes the boundary
-          2. Boundary re-enters as interior on Axis A.rotate()
-          3. New position: (bz_new, bp_new) = (bz+1, bz+1) — fold diagonal
-          4. nrot increments → turn = nrot//4 increments every 4 rotations
-          5. Hubble cutoff: if bz_new > N_BRACKETS, the spiral terminates
-        
-        Because bracket positions are now ABSOLUTE (not relative to parent),
-        rotations at mid-range brackets (bz≈100-200) can chain 4+ times
-        before hitting the cutoff, producing genuine multi-turn spirals.
-        """
-        new_nrot = gap.nrot + 1
-        new_axis = Axis(new_nrot % 4)
-        new_turn = new_nrot // 4
-        new_bz   = gap.bz + 1   # One bracket advance per rotation
-
-        # Natural Hubble horizon cutoff
-        if new_bz > N_BRACKETS:
-            return None
-
-        new_bp = new_bz   # Fold diagonal: bz = bp
-
-        sc = SC(bz=new_bz, bp=new_bp, axis=new_axis,
-                turn=new_turn, nrot=new_nrot)
-
-        spawn = Node(sc=sc, depth=gap.depth,
-                     count=interior.count,
-                     z_addr=interior.z_addr[:],
-                     nt=NT.FOLD, is_gap=False, is_rot_pt=True,
-                     parent_addr=gap.z_addr)
-
-        key = (new_bz, new_bp, new_turn)
-        if key not in self.matrix:
-            self.matrix[key] = spawn
-        self.nodes.append(spawn)
-        if spawn not in self.folds:
-            self.folds.append(spawn)
-
-        self.rot_events.append((gap, spawn))
-
-        if self.verbose:
-            print(f"{'  '*gap.depth}🌀 {gap.axis.name}→{new_axis.name} "
-                  f"t={new_turn} bz={new_bz} nrot={new_nrot} {interior.z_addr}")
-
-        self._recurse_p(spawn, gap.depth+1)
-        return spawn
-
-    # ── root ─────────────────────────────────────────────────
-
-    def _make_root(self) -> Node:
-        bz_root = bracket_abs(N_AAH)   # = 294
-        sc   = SC(bz=bz_root, bp=0, axis=Axis.Z, turn=0, nrot=0)
-        root = Node(sc=sc, depth=0, count=N_AAH,
-                    z_addr=zeckendorf(N_AAH), nt=NT.BONDING, is_gap=False)
-        self._reg(root)
-        self._recurse_z(root, 1)
-        return root
-
-    # ── primary axis recursion ───────────────────────────────
-
-    def _recurse_z(self, parent: Node, depth: int):
-        if depth > self.max_depth or parent.count < 2 or parent.is_gap:
-            return
-
-        bands    = self._bands(parent.count)
-        children, gaps = [], []
-        prev = None
-
-        for bi, count in enumerate(bands, 1):
-            if count <= 0: continue
-
-            # ABSOLUTE bracket position — key fix
-            bz   = bracket_abs(count)
-            sc   = SC(bz=bz, bp=0, axis=Axis.Z, turn=0, nrot=0)
-            nt   = self._nt_primary(bi, depth, parent.nt)
-
-            child = Node(sc=sc, depth=depth, count=count,
-                         z_addr=zeckendorf(count), nt=nt,
-                         is_gap=False, parent_addr=parent.z_addr)
-
-            if nt == NT.OBSERVER:
-                self.observers.append(child)
-            self._reg(child)
-            children.append(child)
-
-            # Gap between this and previous band → rotation event
-            if prev is not None:
-                gap_bz = (bz + prev.bz) // 2   # Gap sits between the two bands
-                g = self._make_gap(gap_bz, 0, depth, count, 0, parent.z_addr)
-                gaps.append(g)
-
-                # 🌀 ROTATION: interior (prev) becomes boundary, re-enters on ⊥ axis
-                rot = self._rotate(g, prev)
-                if rot:
-                    g.rot_spawn  = rot
-                    g.is_rot_pt  = True
-
-            prev = child
-
-        parent.children = children
-        parent.gaps     = gaps
-        for ch in children:
-            self._recurse_z(ch, depth+1)
-
-    # ── perpendicular axis recursion ─────────────────────────
-
-    def _recurse_p(self, parent: Node, depth: int):
-        if depth > self.max_depth or parent.count < 2:
-            return
-        if parent.bz > N_BRACKETS:
-            return   # Hubble cutoff
-
-        bands    = self._bands(parent.count)
-        children, gaps = [], []
-        prev = None
-
-        for bi, count in enumerate(bands, 1):
-            if count <= 0: continue
-
-            # In perp branch: bp advances (absolute), bz fixed at rotation point
-            bp   = bracket_abs(count)
-            bz   = parent.bz
-            sc   = SC(bz=bz, bp=bp, axis=parent.axis,
-                      turn=parent.turn, nrot=parent.nrot)
-            nt   = NT.FOLD if abs(bz-bp) <= 4 and bp > 0 else NT.ROTATED
-
-            child = Node(sc=sc, depth=depth, count=count,
-                         z_addr=zeckendorf(count), nt=nt,
-                         is_gap=False, parent_addr=parent.z_addr)
-
-            key = (bz, bp, parent.turn)
-            if key not in self.matrix:
-                self.matrix[key] = child
-            self.nodes.append(child)
-            if child.is_fold and child not in self.folds:
-                self.folds.append(child)
-            children.append(child)
-
-            if prev is not None:
-                gap_bp = (bp + prev.bp) // 2
-                g = self._make_gap(bz, gap_bp, depth, count,
-                                   parent.nrot, parent.z_addr)
-                g.sc = SC(bz=bz, bp=gap_bp, axis=parent.axis,
-                          turn=parent.turn, nrot=parent.nrot)
-                gaps.append(g)
-
-                # Further rotation in perp branch — spiral continues ascending
-                rot = self._rotate(g, prev)
-                if rot:
-                    g.rot_spawn = rot
-                    g.is_rot_pt = True
-
-            prev = child
-
-        parent.children = children
-        parent.gaps     = gaps
-        for ch in children:
-            self._recurse_p(ch, depth+1)
-
-    # ── omega ────────────────────────────────────────────────
-
-    def _assign_omega(self):
-        A = math.sqrt(1-W**2)
-        for n in self.nodes:
-            if   n.nt == NT.OBSERVER: n.omega=(55/987)*A;         n.acoustic=A
-            elif n.nt == NT.PERP_N:   n.omega=(144/987)*A
-            elif n.nt == NT.PERP_F:   n.omega=(233/987)*(1/PHI)*A
-            elif n.nt == NT.FOLD:     n.omega=1/PHI**3
-            elif n.nt == NT.WALL:     n.omega=W/(1+W);             n.acoustic=A
-
-    # ── stats ────────────────────────────────────────────────
-
-    def stats(self) -> dict:
-        total = len(self.nodes)+len(self.gaps)
-        turns_dist = defaultdict(int)
-        for _, dst in self.rot_events:
-            turns_dist[dst.turn] += 1
-        return {
-            "spectral_nodes":    len(self.nodes),
-            "gap_nodes":         len(self.gaps),
-            "fold_nodes":        len(self.folds),
-            "center_fold_nodes": sum(1 for n in self.folds if n.sc.near_center_fold),
-            "rot_events":        len(self.rot_events),
-            "matrix_entries":    len(self.matrix),
-            "max_turn_reached":  max(turns_dist.keys(), default=0),
-            "turns_dist":        dict(sorted(turns_dist.items())),
-            "axes": {a.name: sum(1 for n in self.nodes if n.axis==a) for a in Axis},
-            "bracket_range":     (min(n.bz for n in self.nodes),
-                                  max(n.bz for n in self.nodes)),
-            "gap_fraction":      len(self.gaps)/total if total else 0,
-        }
-
-    def print_absolute_bracket_map(self):
-        """Show the absolute bracket positions — the key v3b result."""
-        print("\n" + "═"*65)
-        print("ABSOLUTE BRACKET MAPPING  (v3b fix)")
-        print(f"  F(k) = count → bz = k × {SCALE_PER_FIB:.3f} brackets")
-        print(f"  Center fold at bz = {FOLD_CENTER} = F(8)=21 states")
-        print("─"*65)
-        key_counts = [987,610,377,233,144,89,55,34,21,13,8,5,3,2,1]
-        for c in key_counts:
-            fi = fib_index(c) if fib_index(c)>0 else '?'
-            bz = bracket_abs(c)
-            marker = " ← CENTER FOLD" if abs(bz-FOLD_CENTER)<=2 else ""
-            label = {
-                987:"root (N_AAH)", 610:"our disc", 377:"perp disc",
-                233:"σ₁=σ₃=σ₅", 144:"σ₂=σ₄ (observer sector)",
-                89:"particle address",55:"baryons (Ω_b source)",
-                34:"nuclear",21:"atomic / CENTER FOLD",
-                13:"galactic",8:"stellar",5:"isospin",
-                3:"color/lepton",2:"muon/e",1:"quantum"
-            }.get(c,"")
-            print(f"  F({fi:2})={c:4d}  →  bz={bz:4d} {marker}  {label}")
-        print(f"\n  Zeckendorf(294) = {{233,55,5,1}}")
-        print(f"  Bracket 294 = F(13)+F(10)+F(5)+F(1) = "
-              f"{round(13*SCALE_PER_FIB)}+{round(10*SCALE_PER_FIB)}+"
-              f"{round(5*SCALE_PER_FIB)}+{round(1*SCALE_PER_FIB)}")
-
-    def print_spiral_chains(self, max_chains=5):
-        """Show multi-turn spiral rotation chains."""
-        print("\n" + "═"*65)
-        print(f"MULTI-TURN SPIRAL CHAINS (showing up to {max_chains})")
-        print("─"*65)
-
-        # Group rotation events by nrot depth chains
-        by_nrot = defaultdict(list)
-        for src, dst in self.rot_events:
-            by_nrot[dst.nrot].append((src, dst))
-
-        shown = 0
-        for nrot in sorted(by_nrot.keys()):
-            if shown >= max_chains: break
-            evs = by_nrot[nrot]
-            turn = nrot // 4
-            axis = Axis(nrot % 4)
-            print(f"  nrot={nrot:3d}  turn={turn}  axis={axis.name:3s}  "
-                  f"→ {len(evs)} events  "
-                  f"[bz range: {min(d.bz for _,d in evs)}"
-                  f"–{max(d.bz for _,d in evs)}]")
-            shown += 1
-        if len(by_nrot) > max_chains:
-            print(f"  ... {len(by_nrot)-max_chains} more nrot levels")
-
-    def cosmo(self):
-        A   = math.sqrt(1-W**2)
-        ob  = (55/987)*A
-        odm = (144/987)*A + (233/987)*(1/PHI)*A
-        om  = ob+odm; ode=1-om
-        c2  = (((ob-0.0493)/0.001)**2+((om-0.3153)/0.0073)**2
-               +((ode-0.6847)/0.0073)**2)
-        gr  = PHI**(-N_GRAVITY)
-        print("\n" + "═"*65)
-        print("COSMOLOGICAL DERIVATION — ZERO FREE PARAMETERS")
-        for nm,pv,ov,sg in [("Ω_b",ob,0.0493,0.001),("Ω_DM",odm,0.266,0.0073),
-                              ("Ω_m",om,0.3153,0.0073),("Ω_DE",ode,0.6847,0.0073)]:
-            print(f"  {nm:<7} {pv:.5f}  Planck {ov:.4f}±{sg:.4f}  {(pv-ov)/sg:+.2f}σ")
-        print(f"\n  χ² = {c2:.3f} (3 dof)  p≈{math.exp(-c2/2)*(1+c2/2):.3f}")
-        print(f"  Gravity: (1/φ)^{N_GRAVITY:.2f} = {gr:.3e}  "
-              f"err={abs(gr-8.10e-37)/8.10e-37*100:.2f}%")
-        print(f"  Spiral: {SPIRAL_TURNS} turns  residual={HALF_TURN_RESIDUAL}")
-
-
-# ─────────────────────────────────────────────────────────────
-# VISUALIZATION
-# ─────────────────────────────────────────────────────────────
-
-def make_figure(grid: CantorGrid, outpath: str):
-    A   = math.sqrt(1-W**2)
-    ob  = (55/987)*A
-    odm = (144/987)*A + (233/987)*(1/PHI)*A
-    om  = ob+odm; ode=1-om
-    c2  = (((ob-0.0493)/0.001)**2+((om-0.3153)/0.0073)**2
-           +((ode-0.6847)/0.0073)**2)
-    gr  = PHI**(-N_GRAVITY)
-    s   = grid.stats()
-
-    fig = plt.figure(figsize=(22,15), facecolor='#070710')
-    fig.suptitle(
-        'HUSMANN FRAMEWORK — FIBONACCI SPIRAL CANTOR GRID  (v3b)\n'
-        'Absolute bracket mapping: F(k)=count → bz=k×18.4 | '
-        'Fold at bz=147 = F(8)=21 states = geometric center | '
-        '73.5 spiral turns Planck→Hubble',
-        color='white', fontsize=12, fontweight='bold', y=0.99)
-
-    gs = fig.add_gridspec(3,3, hspace=0.42, wspace=0.32,
-                          left=0.06, right=0.97, top=0.92, bottom=0.06)
-    ax_mat   = fig.add_subplot(gs[:,0:2])
-    ax_diag  = fig.add_subplot(gs[0,2])
-    ax_turns = fig.add_subplot(gs[1,2])
-    ax_bmap  = fig.add_subplot(gs[2,2])
-
-    # ── Panel A: 2D Spiral Matrix ────────────────────────────
-    # Build density over full bracket range
-    all_nodes_nongap = [n for n in grid.nodes if not n.is_gap]
-    if not all_nodes_nongap:
-        ax_mat.text(0.5,0.5,'No nodes',ha='center',color='white',transform=ax_mat.transAxes)
-    else:
-        bz_all = [n.bz for n in all_nodes_nongap]
-        bp_all = [n.bp for n in all_nodes_nongap]
-        bz_max = max(bz_all)+5
-        bp_max = max(bp_all)+5 if bp_all else 10
-
-        density = np.zeros((bz_max+1, bp_max+1))
-        for n in all_nodes_nongap:
-            if n.bz<=bz_max and n.bp<=bp_max:
-                density[n.bz,n.bp] = max(density[n.bz,n.bp], n.count)
-
-        sub = density[:bz_max+1,:bp_max+1].T + 0.1
-        im  = ax_mat.imshow(sub, origin='lower', aspect='auto',
-                            extent=[0,bz_max,0,bp_max],
-                            cmap='inferno',
-                            norm=LogNorm(vmin=0.5, vmax=max(sub.max(),1)),
-                            interpolation='nearest', alpha=0.65)
-        cb = plt.colorbar(im, ax=ax_mat, fraction=0.02, pad=0.01)
-        cb.set_label('State count', color='#bbb', fontsize=8)
-        cb.ax.yaxis.set_tick_params(color='#bbb')
-        plt.setp(cb.ax.yaxis.get_ticklabels(), color='#bbb')
-
-        # Fold nodes colored by turn
-        max_turn = max((n.turn for n in grid.folds), default=0) or 1
-        cmap_t   = plt.cm.cool
-        for t in range(max_turn+1):
-            fn = [n for n in grid.folds if n.turn==t and n.bp<=bp_max]
-            if not fn: continue
-            fzs=[n.bz for n in fn]; fps=[n.bp for n in fn]
-            c_t = cmap_t(t/max_turn)
-            ax_mat.scatter(fzs, fps, color=c_t, s=70, zorder=7,
-                           marker='D', alpha=0.95,
-                           label=f'Fold t={t}' if t<=5 else None)
-
-        # Rotation events by axis
-        for ax_e in Axis:
-            evs = [(d.bz,d.bp) for _,d in grid.rot_events
-                   if d.axis==ax_e and d.bp<=bp_max]
-            if evs:
-                ezs,eps = zip(*evs)
-                ax_mat.scatter(ezs,eps,c=ax_e.color,s=20,zorder=5,
-                               marker='^',alpha=0.55,label=f'→{ax_e.name}')
-
-        # Connect fold nodes with spiral curve
-        sorted_folds = sorted(grid.folds, key=lambda n: (n.turn, n.bz))
-        if len(sorted_folds) > 1:
-            sfz = [n.bz for n in sorted_folds if n.bp<=bp_max]
-            sfp = [n.bp for n in sorted_folds if n.bp<=bp_max]
-            ax_mat.plot(sfz, sfp, '-', color='cyan', alpha=0.35, lw=1.5, zorder=4)
-
-        # Reference: y=x diagonal and center fold lines
-        diag_max = min(bz_max, bp_max)
-        ax_mat.plot([0,diag_max],[0,diag_max],'--',color='white',alpha=0.08,lw=0.7)
-        ax_mat.axvline(FOLD_CENTER, color='yellow', alpha=0.3, lw=1.2, ls=':',
-                       label=f'Center fold bz={FOLD_CENTER}')
-
-        ax_mat.set_xlim(0, bz_max)
-        ax_mat.set_ylim(0, bp_max)
-
-    ax_mat.set_xlabel('Absolute bracket nz (our axis: 0=Planck, 294=Hubble)',
-                      color='white', fontsize=11)
-    ax_mat.set_ylabel('Absolute bracket perp (⊥ axis per spiral wind)',
-                      color='white', fontsize=11)
-    ax_mat.set_title(
-        '2D Spectral Matrix — Absolute Bracket Positions\n'
-        '◈ = fold nodes (DM conduit, colored by spiral turn)  '
-        '△ = rotation events  --- = center fold bz=147',
-        color='white', fontsize=11)
-    ax_mat.tick_params(colors='white')
-    ax_mat.set_facecolor('#0c0c1a')
-    for sp in ax_mat.spines.values(): sp.set_color('#1a1a2e')
-    handles, labels = ax_mat.get_legend_handles_labels()
-    seen,h2,l2 = set(),[],[]
-    for h,l in zip(handles,labels):
-        if l and l not in seen: seen.add(l); h2.append(h); l2.append(l)
-    if h2:
-        ax_mat.legend(h2,l2,fontsize=7,facecolor='#111',labelcolor='white',
-                      loc='upper left',framealpha=0.85,ncol=2)
-
-    # Key physics annotations
-    ax_mat.annotate(
-        f'Center fold\nF(8)=21 states\nbz={FOLD_CENTER}',
-        xy=(FOLD_CENTER, FOLD_CENTER*0.5 if FOLD_CENTER*0.5 > 5 else 10),
-        xytext=(FOLD_CENTER+20, 30),
-        color='yellow', fontsize=8,
-        arrowprops=dict(arrowstyle='->', color='yellow', lw=0.8))
-
-    # Cosmo box
-    cosmo_txt = (
-        f"ZERO FREE PARAMETERS\n"
-        f"─────────────────────\n"
-        f"Ω_b  {ob:.5f} {(ob-0.0493)/0.001:+.2f}σ\n"
-        f"Ω_DM {odm:.4f} {(odm-0.266)/0.0073:+.2f}σ\n"
-        f"Ω_m  {om:.4f} {(om-0.3153)/0.0073:+.2f}σ\n"
-        f"Ω_DE {ode:.4f} {(ode-0.6847)/0.0073:+.2f}σ\n"
-        f"χ²={c2:.3f}  p≈{math.exp(-c2/2)*(1+c2/2):.2f}\n"
-        f"─────────────────────\n"
-        f"G: {gr:.3e}\n"
-        f"err: {abs(gr-8.10e-37)/8.10e-37*100:.2f}%\n"
-        f"─────────────────────\n"
-        f"Spiral: {SPIRAL_TURNS} turns\n"
-        f"Residual: {HALF_TURN_RESIDUAL} (Hubble ε)"
+    bz_min, bz_max = 218, 258
+    t = (bz - bz_min) / max(bz_max - bz_min, 1)   # 0→1
+    y = t * 2.0 - 1.0                               # −1→+1 vertical
+
+    # Golden angle distribution (sunflower / Vogel spiral)
+    angle_deg = (index * 137.508) % 360
+    angle_rad = angle_deg * math.pi / 180.0
+
+    # Spiral turn from bracket
+    turn  = bz / 4.0
+    theta = angle_rad + turn * 2 * math.pi
+
+    # Radius grows with bracket
+    r = R_scale * (0.15 + t * PHI)
+
+    x = r * math.cos(theta)
+    z = r * math.sin(theta)
+    return x, y, z
+
+
+def format_dist(d_m):
+    """Format a distance in metres as a human-readable string."""
+    if d_m < AU * 0.01:
+        return f"{d_m / AU * 1e6:.0f} μAU"
+    if d_m < AU * 100:
+        return f"{d_m / AU:.3f} AU"
+    if d_m < LY * 0.5:
+        return f"{d_m / LY * 1000:.1f} mly"
+    if d_m < LY * 2000:
+        return f"{d_m / LY:.1f} ly"
+    return f"{d_m / KPC:.0f} kpc"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PLANET DATABASE
+# ══════════════════════════════════════════════════════════════════════════════
+
+def build_planets():
+    """
+    Build the complete planet database with Zeckendorf addresses.
+    Returns list of dicts, sorted by bracket position then ESI descending.
+    """
+    raw = [
+        # ── Solar System ──────────────────────────────────────────────────
+        # name, dist_m, esi, type, note, system
+        ("Mercury",    0.387*AU, 0.60, "rocky",      "No atmosphere, 430°C day side",                         "Solar System"),
+        ("Venus",      0.723*AU, 0.44, "rocky",      "Runaway greenhouse — 465°C surface",                    "Solar System"),
+        ("Earth",      1.000*AU, 1.00, "rocky",      "Observer sector — φ-resonant home world",               "Solar System"),
+        ("Mars",       1.524*AU, 0.64, "rocky",      "Ancient rivers, thin CO₂ atmosphere",                  "Solar System"),
+        ("Ceres",      2.767*AU, 0.05, "dwarf",      "Ice mantle, possible subsurface water",                 "Solar System"),
+        ("Europa",     5.204*AU, 0.16, "moon",       "100 km deep liquid water ocean (Jupiter)",              "Solar System"),
+        ("Ganymede",   5.204*AU, 0.12, "moon",       "Largest moon, intrinsic magnetosphere",                 "Solar System"),
+        ("Callisto",   5.204*AU, 0.10, "moon",       "Ancient surface, possible deep ocean",                  "Solar System"),
+        ("Titan",      9.537*AU, 0.07, "moon",       "Dense N₂ atmosphere, hydrocarbon lakes (Saturn)",       "Solar System"),
+        ("Enceladus",  9.537*AU, 0.14, "moon",       "Active water plumes, organics confirmed",               "Solar System"),
+        ("Triton",    30.07*AU,  0.04, "moon",       "Retrograde orbit, N₂ geysers (Neptune)",               "Solar System"),
+        ("Pluto",     39.48*AU,  0.05, "dwarf",      "N₂ plains, water-ice mountains",                       "Solar System"),
+        # ── α Centauri ───────────────────────────────────────────────────
+        ("Proxima Cen b",   4.24*LY,  0.87, "rocky",       "Nearest exoplanet — M-dwarf flares concern",       "α Centauri"),
+        ("Proxima Cen c",   4.24*LY,  0.22, "super-earth", "Cold super-earth at 1.5 AU",                       "α Centauri"),
+        ("Proxima Cen d",   4.24*LY,  0.43, "rocky",       "Sub-earth, very close orbit",                      "α Centauri"),
+        # ── Barnard's Star ────────────────────────────────────────────────
+        ("Barnard b",       5.96*LY,  0.38, "super-earth", "Disputed cold super-earth",                        "Barnard's Star"),
+        # ── Wolf 359 ─────────────────────────────────────────────────────
+        ("Wolf 359 b",      7.86*LY,  0.31, "rocky",       "Hot rocky — active flare star",                    "Wolf 359"),
+        # ── Lalande 21185 ────────────────────────────────────────────────
+        ("Lalande 21185 b", 8.31*LY,  0.42, "super-earth", "Warm super-earth candidate",                       "Lalande 21185"),
+        ("Lalande 21185 c", 8.31*LY,  0.29, "super-earth", "Outer cold companion",                             "Lalande 21185"),
+        # ── Luyten's Star ────────────────────────────────────────────────
+        ("Luyten b",       12.2*LY,   0.90, "super-earth", "Best nearby M-dwarf HZ target",                    "Luyten's Star"),
+        ("Luyten c",       12.2*LY,   0.55, "super-earth", "Outer habitable zone edge",                        "Luyten's Star"),
+        # ── Teegarden's Star ─────────────────────────────────────────────
+        ("Teegarden b",    12.5*LY,   0.95, "rocky",       "Meridian's planet — φ-resonant hub. Patent 63/996,533",  "Teegarden's Star"),
+        ("Teegarden c",    12.5*LY,   0.68, "rocky",       "Outer companion — cooler habitable zone",          "Teegarden's Star"),
+        ("Ellie's Transit",12.5*LY,   0.95, "rocky",       "Named after Ellie May Husmann — φ-resonant relay node", "Teegarden's Star"),
+        # ── Ross 128 ─────────────────────────────────────────────────────
+        ("Ross 128 b",     11.0*LY,   0.86, "rocky",       "Quiet M-dwarf host — excellent candidate",         "Ross 128"),
+        # ── GJ 1061 ──────────────────────────────────────────────────────
+        ("GJ 1061 b",      12.0*LY,   0.37, "rocky",       "Hot inner world",                                  "GJ 1061"),
+        ("GJ 1061 c",      12.0*LY,   0.75, "rocky",       "Inner habitable zone — promising",                 "GJ 1061"),
+        ("GJ 1061 d",      12.0*LY,   0.82, "rocky",       "Outer habitable zone — best of system",            "GJ 1061"),
+        # ── Tau Ceti ─────────────────────────────────────────────────────
+        ("Tau Ceti e",     11.9*LY,   0.76, "super-earth", "Warm super-earth — active debris disk",            "Tau Ceti"),
+        ("Tau Ceti f",     11.9*LY,   0.68, "super-earth", "Cold super-earth — outer habitable zone",          "Tau Ceti"),
+        # ── Epsilon Eridani ───────────────────────────────────────────────
+        ("Epsilon Eri b",  10.5*LY,   0.18, "giant",       "Jupiter analog — moon search target",              "Epsilon Eridani"),
+        # ── GJ 514 ───────────────────────────────────────────────────────
+        ("GJ 514 b",       25.2*LY,   0.77, "super-earth", "Warm super-earth — Sun-like host",                 "GJ 514"),
+        # ── GJ 667 C ─────────────────────────────────────────────────────
+        ("GJ 667 Cb",      23.6*LY,   0.31, "super-earth", "Hot inner planet",                                 "GJ 667 C"),
+        ("GJ 667 Cc",      23.6*LY,   0.84, "super-earth", "Best candidate in triple-star system",             "GJ 667 C"),
+        ("GJ 667 Cd",      23.6*LY,   0.45, "super-earth", "Outer habitable zone edge",                        "GJ 667 C"),
+        ("GJ 667 Ce",      23.6*LY,   0.62, "super-earth", "Candidate — needs confirmation",                   "GJ 667 C"),
+        # ── Wolf 1061 ────────────────────────────────────────────────────
+        ("Wolf 1061 b",    14.1*LY,   0.15, "rocky",       "Too hot — inner orbit",                            "Wolf 1061"),
+        ("Wolf 1061 c",    14.1*LY,   0.78, "super-earth", "Habitable zone — dense atmosphere likely",         "Wolf 1061"),
+        ("Wolf 1061 d",    14.1*LY,   0.35, "super-earth", "Cold outer companion",                             "Wolf 1061"),
+        # ── Gliese 832 ───────────────────────────────────────────────────
+        ("Gliese 832 b",   16.1*LY,   0.02, "giant",       "Jupiter analog",                                   "Gliese 832"),
+        ("Gliese 832 c",   16.1*LY,   0.81, "super-earth", "Inner habitable zone edge — warm",                 "Gliese 832"),
+        # ── GJ 229 A ─────────────────────────────────────────────────────
+        ("GJ 229 Ac",      18.8*LY,   0.66, "rocky",       "Newly confirmed — quiet M dwarf",                  "GJ 229 A"),
+        # ── GJ 3323 ──────────────────────────────────────────────────────
+        ("GJ 3323 b",      17.4*LY,   0.28, "rocky",       "Hot rocky planet",                                 "GJ 3323"),
+        ("GJ 3323 c",      17.4*LY,   0.62, "rocky",       "Cooler — habitable zone edge",                     "GJ 3323"),
+        # ── GJ 357 ───────────────────────────────────────────────────────
+        ("GJ 357 b",       31.1*LY,   0.12, "rocky",       "Hot rocky — transit detected",                     "GJ 357"),
+        ("GJ 357 c",       31.1*LY,   0.60, "super-earth", "Habitable zone candidate",                         "GJ 357"),
+        ("GJ 357 d",       31.1*LY,   0.81, "super-earth", "Outer HZ — best in system",                        "GJ 357"),
+        # ── GJ 180 ───────────────────────────────────────────────────────
+        ("GJ 180 b",       38.9*LY,   0.61, "super-earth", "Warm outer super-earth",                           "GJ 180"),
+        ("GJ 180 c",       38.9*LY,   0.76, "super-earth", "Inner habitable zone",                             "GJ 180"),
+        # ── GJ 163 ───────────────────────────────────────────────────────
+        ("GJ 163 b",       49.0*LY,   0.28, "super-earth", "Hot inner world",                                  "GJ 163"),
+        ("GJ 163 c",       49.0*LY,   0.73, "super-earth", "Warm super-earth in habitable zone",               "GJ 163"),
+        ("GJ 163 d",       49.0*LY,   0.17, "super-earth", "Cold outer companion",                             "GJ 163"),
+        # ── LHS 1140 ─────────────────────────────────────────────────────
+        ("LHS 1140 b",     41.4*LY,   0.86, "super-earth", "Dense rocky — excellent HZ target",                "LHS 1140"),
+        ("LHS 1140 c",     41.4*LY,   0.44, "rocky",       "Hot inner companion",                              "LHS 1140"),
+        # ── GJ 1132 ──────────────────────────────────────────────────────
+        ("GJ 1132 b",      41.0*LY,   0.22, "rocky",       "Hot rocky — secondary atmosphere detected",        "GJ 1132"),
+        # ── HD 40307 ─────────────────────────────────────────────────────
+        ("HD 40307 g",     41.8*LY,   0.79, "super-earth", "Outer HZ super-earth — 7× Earth mass",            "HD 40307"),
+        # ── HD 85512 ─────────────────────────────────────────────────────
+        ("HD 85512 b",     36.4*LY,   0.77, "super-earth", "Inner HZ edge — high albedo needed",              "HD 85512"),
+        # ── 55 Cancri ────────────────────────────────────────────────────
+        ("55 Cnc f",       41.0*LY,   0.22, "giant",       "Gas giant in HZ — moon search target",             "55 Cancri"),
+        ("55 Cnc e",       41.0*LY,   0.02, "lava",        "Lava world — extreme tidal heating",               "55 Cancri"),
+        # ── Gliese 436 ───────────────────────────────────────────────────
+        ("Gliese 436 b",   32.0*LY,   0.11, "ice-giant",   "Hot Neptune — burning ice exotic world",           "Gliese 436"),
+        # ── TRAPPIST-1 ───────────────────────────────────────────────────
+        ("TRAPPIST-1 b",   39.5*LY,   0.30, "rocky",       "Inner hot rocky",                                  "TRAPPIST-1"),
+        ("TRAPPIST-1 c",   39.5*LY,   0.55, "rocky",       "Warm — Venus analog likely",                       "TRAPPIST-1"),
+        ("TRAPPIST-1 d",   39.5*LY,   0.90, "rocky",       "Inner HZ edge — excellent temperature",            "TRAPPIST-1"),
+        ("TRAPPIST-1 e",   39.5*LY,   0.85, "rocky",       "Most Earth-like — ocean surface candidate",        "TRAPPIST-1"),
+        ("TRAPPIST-1 f",   39.5*LY,   0.68, "rocky",       "Outer HZ — possible ice cover",                    "TRAPPIST-1"),
+        ("TRAPPIST-1 g",   39.5*LY,   0.52, "rocky",       "Cold outer — possible icy world",                  "TRAPPIST-1"),
+        ("TRAPPIST-1 h",   39.5*LY,   0.15, "rocky",       "Very cold outer world",                            "TRAPPIST-1"),
+        # ── LP 890-9 ─────────────────────────────────────────────────────
+        ("LP 890-9 b",    100.0*LY,   0.37, "rocky",       "Hot inner rocky",                                  "LP 890-9"),
+        ("LP 890-9 c",    100.0*LY,   0.88, "rocky",       "SPECULOOS-2c — well-characterized HZ target",     "LP 890-9"),
+        # ── TOI-700 ──────────────────────────────────────────────────────
+        ("TOI-700 b",     101.0*LY,   0.22, "rocky",       "Inner hot rocky",                                  "TOI-700"),
+        ("TOI-700 c",     101.0*LY,   0.43, "rocky",       "Warm inner world",                                 "TOI-700"),
+        ("TOI-700 d",     101.0*LY,   0.86, "rocky",       "Earth-size in HZ — TESS discovery",                "TOI-700"),
+        ("TOI-700 e",     101.0*LY,   0.93, "rocky",       "Excellent — inner HZ Earth-size",                  "TOI-700"),
+        # ── TOI-715 ──────────────────────────────────────────────────────
+        ("TOI-715 b",     137.0*LY,   0.87, "rocky",       "Earth-size in conservative habitable zone",        "TOI-715"),
+        # ── TOI-1231 ─────────────────────────────────────────────────────
+        ("TOI-1231 b",     90.0*LY,   0.34, "sub-Neptune", "Warm mini-Neptune — atmosphere study target",      "TOI-1231"),
+        # ── TOI-1452 ─────────────────────────────────────────────────────
+        ("TOI-1452 b",    100.0*LY,   0.72, "rocky",       "Water world candidate — density evidence",         "TOI-1452"),
+        # ── K2-18 ────────────────────────────────────────────────────────
+        ("K2-18 b",       124.0*LY,   0.73, "hycean",      "Hycean world — water vapor confirmed JWST",        "K2-18"),
+        # ── K2-72 ────────────────────────────────────────────────────────
+        ("K2-72 e",       217.0*LY,   0.78, "rocky",       "Temperate rocky — K2 survey",                      "K2-72"),
+        # ── K2-155 ───────────────────────────────────────────────────────
+        ("K2-155 d",      203.0*LY,   0.71, "rocky",       "Super-earth in HZ — bright host star",             "K2-155"),
+        # ── Kepler survey ────────────────────────────────────────────────
+        ("Kepler-22 b",   620.0*LY,   0.72, "super-earth", "First confirmed HZ super-earth",                   "Kepler-22"),
+        ("Kepler-62 e",  1200.0*LY,   0.83, "super-earth", "Water world candidate — 1.6 R⊕",                  "Kepler-62"),
+        ("Kepler-62 f",  1200.0*LY,   0.67, "super-earth", "Outer HZ — possible snowball world",               "Kepler-62"),
+        ("Kepler-186 f",  561.0*LY,   0.62, "rocky",       "First confirmed Earth-size in HZ",                 "Kepler-186"),
+        ("Kepler-296 e",  736.0*LY,   0.79, "super-earth", "Binary star system HZ candidate",                  "Kepler-296"),
+        ("Kepler-296 f",  736.0*LY,   0.72, "super-earth", "Companion to 296e — outer orbit",                  "Kepler-296"),
+        ("Kepler-438 b",  473.0*LY,   0.88, "rocky",       "Highest ESI Kepler planet — flare star host",     "Kepler-438"),
+        ("Kepler-440 b",  851.0*LY,   0.84, "super-earth", "Super-earth in habitable zone",                    "Kepler-440"),
+        ("Kepler-442 b", 1206.0*LY,   0.84, "super-earth", "Best Kepler candidate by ESI overall",             "Kepler-442"),
+        ("Kepler-452 b", 1402.0*LY,   0.83, "rocky",       "Earth's cousin — 5 Gyr old G-type star",          "Kepler-452"),
+        ("Kepler-1229 b", 770.0*LY,   0.73, "rocky",       "Earth-size in habitable zone",                     "Kepler-1229"),
+        ("Kepler-1544 b",1694.0*LY,   0.70, "super-earth", "Outer HZ super-earth",                             "Kepler-1544"),
+        ("Kepler-1652 b",1124.0*LY,   0.79, "rocky",       "Rocky in HZ — K-type host star",                   "Kepler-1652"),
+        ("Kepler-283 c", 1741.0*LY,   0.71, "super-earth", "Inner HZ rocky world",                             "Kepler-283"),
+        ("Kepler-174 d", 1320.0*LY,   0.64, "super-earth", "Outer HZ edge",                                    "Kepler-174"),
+        ("Kepler-61 b",  1090.0*LY,   0.73, "super-earth", "Warm super-earth — active star",                   "Kepler-61"),
+        ("Kepler-1410 b",1476.0*LY,   0.76, "super-earth", "Cool HZ super-earth",                              "Kepler-1410"),
+        # ── Special / directly imaged ────────────────────────────────────
+        ("HR 8799 e",     129.0*LY,   0.02, "giant",       "Directly imaged gas giant",                        "HR 8799"),
+        ("Beta Pic b",     63.4*LY,   0.02, "giant",       "Directly imaged — young system",                   "Beta Pictoris"),
+    ]
+
+    planets = []
+    for i, (name, dist_m, esi, ptype, note, system) in enumerate(raw):
+        bz   = bracket(dist_m)
+        z    = zeckendorf(max(1, bz))
+        z_v  = [fib(k) for k in z]
+        z_compact = "{" + ", ".join(f"F{k}" for k in z) + "}"
+        z_full    = "{" + ", ".join(f"F{k}={fib(k)}" for k in z) + "}"
+
+        # Spectral sector from ESI
+        if esi >= 0.80:
+            sector = "σ₂ observer"
+        elif esi >= 0.60:
+            sector = "σ₃ future"
+        elif esi >= 0.40:
+            sector = "σ₁ past"
+        else:
+            sector = "outer bands"
+
+        # Habitable zone tiers
+        if esi >= 0.90:
+            tier = "PRIME"
+        elif esi >= 0.80:
+            tier = "Habitable"
+        elif esi >= 0.60:
+            tier = "Marginal"
+        elif esi >= 0.40:
+            tier = "Hostile"
+        else:
+            tier = "Extreme"
+
+        # Spiral coordinates
+        x, y, z_pos = spiral_coords(bz, i, len(raw))
+
+        planets.append({
+            "name":      name,
+            "dist_m":    dist_m,
+            "dist_str":  format_dist(dist_m),
+            "esi":       esi,
+            "type":      ptype,
+            "note":      note,
+            "system":    system,
+            "bz":        bz,
+            "turn":      bz / 4.0,
+            "z_indices": z,
+            "z_vals":    z_v,
+            "z_compact": z_compact,
+            "z_full":    z_full,
+            "sector":    sector,
+            "tier":      tier,
+            "x":         x,
+            "y":         y,
+            "z_pos":     z_pos,
+            "index":     i,
+        })
+
+    return sorted(planets, key=lambda p: (p["bz"], -p["esi"]))
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# COLOR SYSTEM
+# ══════════════════════════════════════════════════════════════════════════════
+
+TIER_COLORS = {
+    "PRIME":     "#00ff88",
+    "Habitable": "#33dd66",
+    "Marginal":  "#99bb44",
+    "Hostile":   "#dd9933",
+    "Extreme":   "#884422",
+}
+
+TYPE_MARKERS = {
+    "rocky":       "o",
+    "super-earth": "o",
+    "hycean":      "o",
+    "giant":       "s",
+    "ice-giant":   "D",
+    "sub-Neptune": "^",
+    "moon":        "v",
+    "dwarf":       "h",
+    "lava":        "*",
+}
+
+SECTOR_COLORS = {
+    "σ₂ observer": "#4488ff",
+    "σ₃ future":   "#44cc88",
+    "σ₁ past":     "#cc8844",
+    "outer bands": "#884444",
+}
+
+DARK = "#030810"
+GRID = "#0a1428"
+TEXT = "#8aacf0"
+DIM  = "#2a3860"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 1 — MAIN SPIRAL MAP  (2D projection of Fibonacci helix)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_spiral_map(planets, ax=None, standalone=True):
+    """
+    Main universe map: all worlds on the Fibonacci spiral.
+    X axis = bracket position (bz).
+    Y axis = golden-angle azimuth component.
+    Color  = ESI tier.
+    Size   = ESI value.
+    """
+    if standalone:
+        fig, ax = plt.subplots(figsize=(20, 10), facecolor=DARK)
+        ax.set_facecolor(DARK)
+    
+    # Background: bracket scale bands
+    band_data = [
+        (218, 220, "#0a1830", "Mercury–Earth\nbz 218–220"),
+        (220, 228, "#081420", "Solar system\nbz 220–228"),
+        (228, 245, "#06100e", "Nearby stars\nbz 228–245"),
+        (245, 257, "#040c18", "Deep survey\nbz 245–257"),
+    ]
+    for blo, bhi, col, lbl in band_data:
+        ax.axvspan(blo, bhi, color=col, alpha=0.7, zorder=0)
+        ax.text((blo + bhi) / 2, 3.5, lbl, ha='center', va='top',
+                color=DIM, fontsize=6.5, fontfamily='monospace')
+
+    # Key bracket lines
+    for bz_k, lbl_k, col_k in [
+        (218, "Mercury\nbz=218", "#ffffff"),
+        (220, "Earth\nbz=220",   "#4488ff"),
+        (239, "σ₁/σ₅\nbz=239",  "#663333"),
+        (248, "Teegarden\nbz=248","#00ffaa"),
+        (257, "Perp disc\nbz=257","#334444"),
+    ]:
+        ax.axvline(bz_k, color=col_k, alpha=0.25, lw=0.8, zorder=1)
+        ax.text(bz_k, 3.55, lbl_k, ha='center', va='top',
+                color=col_k, fontsize=6.5, alpha=0.7, fontfamily='monospace')
+
+    # Fibonacci spiral guide (theoretical positions)
+    bz_range = np.linspace(218, 258, 400)
+    for i, theta_base in enumerate(np.linspace(0, 2 * math.pi, 6, endpoint=False)):
+        r_vals = 0.3 + (bz_range - 218) / (258 - 218) * PHI
+        y_vals = r_vals * np.sin(bz_range / 4.0 * 2 * math.pi + theta_base)
+        ax.plot(bz_range, y_vals * 0.6, '-', color='#1a2840',
+                alpha=0.3, lw=0.6, zorder=1)
+
+    # Plot all planets
+    for p in planets:
+        color   = TIER_COLORS[p["tier"]]
+        marker  = TYPE_MARKERS.get(p["type"], "o")
+        size    = 20 + p["esi"] * 140
+        alpha   = 0.5 + p["esi"] * 0.5
+
+        # Y position: azimuthal component of spiral
+        y_pos = math.sin(p["index"] * 137.508 * math.pi / 180 +
+                         p["turn"] * 2 * math.pi) * (0.3 + (p["bz"] - 218) / 40 * 0.8)
+
+        ax.scatter(p["bz"], y_pos, s=size, c=color, marker=marker,
+                   alpha=alpha, zorder=4, edgecolors='none')
+
+        # Label for notable worlds
+        notable = {"Earth", "Teegarden b", "Ellie's Transit", "Luyten b",
+                   "TRAPPIST-1 e", "TOI-700 e", "LP 890-9 c",
+                   "Kepler-442 b", "K2-18 b", "Proxima Cen b",
+                   "LHS 1140 b", "Ross 128 b", "TOI-715 b"}
+        if p["name"] in notable:
+            offset_y = 0.12 * (1 if y_pos >= 0 else -1)
+            ax.annotate(
+                p["name"],
+                (p["bz"], y_pos),
+                xytext=(p["bz"] + 0.3, y_pos + offset_y),
+                fontsize=6, color=color, fontfamily='monospace',
+                arrowprops=dict(arrowstyle='-', color=color, alpha=0.3, lw=0.5),
+                zorder=5
+            )
+
+    # Glow effect for prime worlds
+    for p in planets:
+        if p["tier"] == "PRIME":
+            y_pos = math.sin(p["index"] * 137.508 * math.pi / 180 +
+                             p["turn"] * 2 * math.pi) * (0.3 + (p["bz"] - 218) / 40 * 0.8)
+            ax.scatter(p["bz"], y_pos, s=600, c=TIER_COLORS["PRIME"],
+                       alpha=0.06, zorder=3, edgecolors='none')
+
+    # Legend
+    legend_elements = [
+        mpatches.Patch(facecolor=TIER_COLORS["PRIME"],    label='ESI ≥ 0.90 — PRIME'),
+        mpatches.Patch(facecolor=TIER_COLORS["Habitable"],label='ESI 0.80–0.89 — Habitable'),
+        mpatches.Patch(facecolor=TIER_COLORS["Marginal"], label='ESI 0.60–0.79 — Marginal'),
+        mpatches.Patch(facecolor=TIER_COLORS["Hostile"],  label='ESI 0.40–0.59 — Hostile'),
+        mpatches.Patch(facecolor=TIER_COLORS["Extreme"],  label='ESI < 0.40 — Extreme'),
+        Line2D([0],[0], marker='o', color='w', label='Rocky / super-earth',
+               markerfacecolor='white', markersize=6),
+        Line2D([0],[0], marker='s', color='w', label='Gas giant',
+               markerfacecolor='white', markersize=6),
+        Line2D([0],[0], marker='D', color='w', label='Ice giant / sub-Neptune',
+               markerfacecolor='white', markersize=6),
+    ]
+    ax.legend(handles=legend_elements, loc='lower right', fontsize=7,
+              facecolor='#0a1020', labelcolor='white', framealpha=0.85,
+              edgecolor='#1a2840')
+
+    ax.set_xlim(216, 260)
+    ax.set_ylim(-3.8, 3.8)
+    ax.set_xlabel('Bracket position  bz  [log_φ(distance / L_Planck)]',
+                  color=TEXT, fontsize=9)
+    ax.set_ylabel('Spiral azimuth (projection)', color=TEXT, fontsize=9)
+    ax.set_title(
+        f'HUSMANN UNIVERSE — {len(planets)} Worlds on the Fibonacci Spiral\n'
+        f'r(bz) = L_P × φ^bz   |   Golden-angle azimuth   |   '
+        f'Color = ESI habitability tier   |   Size ∝ ESI',
+        color='white', fontsize=10, fontweight='bold'
     )
-    ax_mat.text(0.013,0.015,cosmo_txt,transform=ax_mat.transAxes,
-                fontsize=7.5,color='#e0e0e0',fontfamily='monospace',va='bottom',
-                bbox=dict(boxstyle='round,pad=0.5',facecolor='#080812',
-                          alpha=0.93,edgecolor='#2a2a50'))
+    ax.tick_params(colors=TEXT, labelsize=8)
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
 
-    # ── Panel B: Fold density along bz ───────────────────────
-    fold_by_bz    = defaultdict(int)
-    fold_turn_by_bz = defaultdict(list)
-    for n in grid.folds:
-        fold_by_bz[n.bz]   += n.count
-        fold_turn_by_bz[n.bz].append(n.turn)
+    n_prime    = sum(1 for p in planets if p["tier"] == "PRIME")
+    n_habitable= sum(1 for p in planets if p["tier"] in ("PRIME", "Habitable"))
+    n_marginal = sum(1 for p in planets if p["tier"] == "Marginal")
+    ax.text(0.01, 0.01,
+            f'{n_prime} PRIME  ·  {n_habitable} Habitable  ·  '
+            f'{n_marginal} Marginal  ·  '
+            f'bz = {min(p["bz"] for p in planets)}–{max(p["bz"] for p in planets)}  ·  '
+            f'W = {W:.4f}  ·  φ = {PHI:.4f}',
+            transform=ax.transAxes, color=DIM, fontsize=7.5,
+            fontfamily='monospace')
 
-    if fold_by_bz:
-        ns = sorted(fold_by_bz.keys())
-        dens  = [fold_by_bz[b] for b in ns]
-        t_avg = [sum(fold_turn_by_bz[b])/len(fold_turn_by_bz[b]) for b in ns]
-        sc2 = ax_diag.scatter(ns, dens, c=t_avg, cmap='cool',
-                              s=45, zorder=4, alpha=0.92)
-        plt.colorbar(sc2,ax=ax_diag,label='Avg turn').ax.yaxis.set_tick_params(color='#bbb')
-        if len(ns) > 1:
-            ax_diag.plot(ns, dens, '-', color='cyan', alpha=0.25, lw=1)
-
-    ax_diag.axvline(FOLD_CENTER, color='yellow', lw=1.5, ls='--',
-                    label=f'Center bz={FOLD_CENTER}')
-    ax_diag.axvline(N_BRACKETS,  color='#ff9800',lw=1,  ls=':',
-                    label=f'Hubble bz={N_BRACKETS}')
-    ax_diag.set_xlabel('Bracket bz', color='white', fontsize=9)
-    ax_diag.set_ylabel('State count on fold', color='white', fontsize=9)
-    ax_diag.set_title('Fold Spiral Density\n(Dark Matter Conduit)', color='white', fontsize=10)
-    ax_diag.tick_params(colors='white')
-    ax_diag.set_facecolor('#0c0c1a')
-    for sp in ax_diag.spines.values(): sp.set_color('#1a1a2e')
-    ax_diag.legend(fontsize=7,facecolor='#111',labelcolor='white')
-
-    # ── Panel C: Rotation events by turn ─────────────────────
-    turns_dist = defaultdict(lambda: defaultdict(int))
-    for _, dst in grid.rot_events:
-        turns_dist[dst.turn][dst.axis] += 1
-
-    all_turns = sorted(turns_dist.keys())
-    if all_turns:
-        x = np.arange(len(all_turns))
-        w = 0.2
-        for i, ax_e in enumerate(Axis):
-            counts = [turns_dist[t].get(ax_e,0) for t in all_turns]
-            if any(counts):
-                ax_turns.bar(x+i*w, counts, w, color=ax_e.color,
-                             alpha=0.8, label=ax_e.name)
-        ax_turns.set_xticks(x+w*1.5)
-        ax_turns.set_xticklabels([f't={t}' for t in all_turns],
-                                  color='white', fontsize=8)
-    ax_turns.set_xlabel('Spiral turn', color='white', fontsize=9)
-    ax_turns.set_ylabel('Rotation events', color='white', fontsize=9)
-    ax_turns.set_title('Rotation Events by Turn & Axis',color='white',fontsize=10)
-    ax_turns.tick_params(colors='white')
-    ax_turns.set_facecolor('#0c0c1a')
-    for sp in ax_turns.spines.values(): sp.set_color('#1a1a2e')
-    ax_turns.legend(fontsize=7,facecolor='#111',labelcolor='white')
-    ax_turns.text(0.97,0.95,
-                  f"Max turn: {s['max_turn_reached']}\n"
-                  f"Total: {s['rot_events']} events\n"
-                  f"Open spiral ✓",
-                  transform=ax_turns.transAxes,ha='right',va='top',
-                  color='white',fontsize=7.5,fontfamily='monospace',
-                  bbox=dict(facecolor='#111',alpha=0.8,edgecolor='#333'))
-
-    # ── Panel D: Absolute bracket map (key v3b result) ────────
-    key_counts = [987,610,377,233,144,89,55,34,21,13,8,5,3,2,1]
-    key_labels = ['F16=987\nHubble','F15=610\nOur disc','F14=377\nPerp disc',
-                  'F13=233\nσ₁σ₃σ₅','F12=144\nObserver',
-                  'F11=89\nParticle','F10=55\nBaryons',
-                  'F9=34\nNuclear','F8=21\nFOLD CENTER',
-                  'F7=13\nGalactic','F6=8\nStellar',
-                  'F5=5\nIsospin','F4=3\nColor',
-                  'F3=2\nMuon','F1=1\nQuantum']
-    key_bz  = [bracket_abs(c) for c in key_counts]
-    colors  = ['#FF5722' if abs(b-FOLD_CENTER)<=5 else '#2196F3' for b in key_bz]
-
-    bars = ax_bmap.barh(range(len(key_bz)), key_bz,
-                        color=colors, alpha=0.8, height=0.7)
-    ax_bmap.axvline(FOLD_CENTER, color='yellow', lw=1.5, ls='--', alpha=0.8)
-    ax_bmap.axvline(N_BRACKETS,  color='#ff9800', lw=1, ls=':', alpha=0.7)
-    ax_bmap.set_yticks(range(len(key_labels)))
-    ax_bmap.set_yticklabels(key_labels, color='white', fontsize=7)
-    ax_bmap.set_xlabel('Absolute bracket bz', color='white', fontsize=9)
-    ax_bmap.set_title('Absolute Bracket Map\n(Key v3b fix — uniform distribution)',
-                      color='white', fontsize=10)
-    ax_bmap.tick_params(colors='white')
-    ax_bmap.set_facecolor('#0c0c1a')
-    for sp in ax_bmap.spines.values(): sp.set_color('#1a1a2e')
-    ax_bmap.text(FOLD_CENTER+3, len(key_counts)//2,
-                 f'Center\nbz={FOLD_CENTER}', color='yellow', fontsize=7)
-
-    # ── Footer ───────────────────────────────────────────────
-    fig.text(0.5, 0.005,
-             f'Unity: 1/φ+1/φ³+1/φ⁴={1/PHI+1/PHI**3+1/PHI**4:.10f}  |  '
-             f'Spiral: Z→X→Xr→Y→Z(+φ⁴) open helix {SPIRAL_TURNS} turns  |  '
-             f'v3b fix: absolute bracket mapping F(k)→bz=k×{SCALE_PER_FIB:.2f}  |  '
-             f'Thomas Husmann March 2026',
-             ha='center',va='bottom',color='#555',fontsize=7.5)
-
-    plt.savefig(outpath, dpi=160, bbox_inches='tight', facecolor='#070710')
-    print(f"Saved: {outpath}")
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig1_spiral_map.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
 
 
-# ─────────────────────────────────────────────────────────────
-# SELF-TESTS
-# ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 2 — FULL BRACKET SCALE BAR  (Planck to Hubble)
+# ══════════════════════════════════════════════════════════════════════════════
 
-def run_tests():
-    A = math.sqrt(1-W**2)
-    results = []
+def fig_bracket_scale(planets, ax=None, standalone=True):
+    """
+    Full bracket hierarchy from bz=1 (Planck) to bz=294 (Hubble).
+    Shows where every physical scale sits.
+    """
+    if standalone:
+        fig, ax = plt.subplots(figsize=(22, 6), facecolor=DARK)
+        ax.set_facecolor(DARK)
 
-    def t(name, got, exp, tol=0.1, exact=False):
-        g,e = float(got),float(exp)
-        ok = abs(g-e)<1e-9 if exact else (abs(g-e)/abs(e)<tol/100 if e else abs(g-e)<tol/100)
-        results.append((name,ok))
-        err = abs(g-e)/abs(e)*100 if e else 0
-        print(f"  {'✓' if ok else '✗'}  {name:<50}  {g:.8g}  Δ={err:.3f}%")
+    # Background bands by physical domain
+    domains = [
+        (1,   50,  "#05080f", "Quantum / QCD"),
+        (50,  100, "#060a10", "Nuclear"),
+        (100, 147, "#070c12", "Atomic → molecular"),
+        (147, 180, "#080e14", "Nano → micro"),
+        (180, 210, "#090f16", "Macro → planetary"),
+        (210, 240, "#0a1018", "Stellar / solar system"),
+        (240, 270, "#0b111a", "Galactic"),
+        (270, 294, "#0c121c", "Cosmic web → Hubble"),
+    ]
+    for blo, bhi, col, lbl in domains:
+        ax.axvspan(blo, bhi, color=col, alpha=1.0, zorder=0)
+        ax.text((blo + bhi) / 2, 0.88, lbl, ha='center', va='top',
+                transform=ax.get_xaxis_transform(),
+                color=DIM, fontsize=6.5, fontfamily='monospace')
 
-    print("\n"+"═"*72)
-    print("SELF-TESTS — Husmann Cantor Grid v3b (Absolute Bracket Mapping)")
-    print("═"*72)
+    # Horizontal separator
+    ax.axhline(0, color='#1a2840', lw=0.8, zorder=1)
 
-    print("\n[1] Foundations")
-    t("φ²=φ+1",                          PHI**2,   PHI+1,   exact=True)
-    t("1/φ+1/φ³+1/φ⁴=1",                 1/PHI+1/PHI**3+1/PHI**4, 1.0, exact=True)
-    t("π=4atan(1/φ)+4atan(1/φ³)",         4*math.atan(1/PHI)+4*math.atan(1/PHI**3),
-                                           math.pi, exact=True)
+    # Key scale markers
+    key_scales = [
+        (1,   "L_Planck\n1.6×10⁻³⁵ m",  0.5),
+        (50,  "QCD\n~1 fm",               0.5),
+        (100, "Nuclear\n~1 pm",           0.5),
+        (147, "Atomic\nFold center",      0.7),
+        (180, "Baryonic\nF10=55",         0.5),
+        (200, "km scale",                 0.3),
+        (210, "Earth radius",             0.3),
+        (218, "Mercury\n0.387 AU",        0.7),
+        (220, "Earth\n1 AU",              0.9),
+        (228, "Pluto\n40 AU",             0.5),
+        (239, "σ₁/σ₅\nhorizon",          0.7),
+        (245, "Void scale\n~3 ly",        0.5),
+        (257, "Perp disc\n~1.4 kly",      0.6),
+        (270, "Supercluster\n~140 kpc",   0.5),
+        (294, "Hubble\n14.5 Gpc",         0.9),
+    ]
 
-    print("\n[2] Spiral constants")
-    t("N/4=73.5 turns",                   SPIRAL_TURNS, 73.5,   exact=True)
-    t("Half-turn residual=0.5",           HALF_TURN_RESIDUAL, 0.5, exact=True)
-    t("φ⁴ per turn",                      PHI**4,  6.854102, tol=0.001)
-    t("4 rots = axis identity",           Axis.Z.rotate(4).value, 0, exact=True)
-    t("Zeckendorf(294) top=F(13)=233",    fib(zeckendorf(294)[0]), 233, exact=True)
+    for bz_k, lbl, height in key_scales:
+        col = "#4488ff" if bz_k in (220, 294) else \
+              "#00ffaa" if bz_k == 147 else \
+              "#ff4488" if bz_k == 239 else TEXT
+        ax.axvline(bz_k, color=col, alpha=0.5, lw=1.0, zorder=2)
+        ax.text(bz_k, height, lbl, ha='center', va='bottom',
+                transform=ax.get_xaxis_transform(),
+                color=col, fontsize=6, alpha=0.8, fontfamily='monospace')
 
-    print("\n[3] Absolute bracket mapping (KEY v3b test)")
-    t("F(16)=987 → bz=294",               bracket_abs(987), 294, exact=True)
-    t("F(8)=21 → bz=147 (center fold)",   bracket_abs(21),  round(8*SCALE_PER_FIB), tol=1)
-    t("F(1)=1 → bz≈18 (Planck end)",      bracket_abs(1),   round(1*SCALE_PER_FIB), tol=1)
-    t("F(12)=144 → bz≈220",               bracket_abs(144), round(12*SCALE_PER_FIB), tol=1)
-    center_fold_bz = bracket_abs(21)
-    t("Center fold within ±5 of N/2=147", abs(center_fold_bz-147), 0, tol=4)
+    # Planet ticks along bottom
+    for p in planets:
+        color = TIER_COLORS[p["tier"]]
+        size  = 4 + p["esi"] * 10
+        ax.scatter(p["bz"], -0.3, s=size, c=color, alpha=0.7,
+                   zorder=4, marker='|')
 
-    print("\n[4] Band structure N=987")
-    bands = aah_bands(987)
-    t("Sum=987",    sum(bands),    987, exact=True)
-    t("σ₁=σ₃=σ₅=233", bands[0],  233, exact=True)
-    t("σ₂=σ₄=144",    bands[1],  144, exact=True)
-    t("Our disc=610",  sum(bands[:3]), 610, exact=True)
-    t("Perp disc=377", sum(bands[3:]), 377, exact=True)
-    t("610/377=φ",     610/377,   PHI, tol=0.02)
+    # Fibonacci index lines (bz = k × 18.375)
+    for k in range(1, 17):
+        bz_fib = k * SCALE_PER_FIB
+        ax.axvline(bz_fib, color='#1a2840', alpha=0.5, lw=0.5,
+                   ls='--', zorder=1)
+        if 200 <= bz_fib <= 294:
+            ax.text(bz_fib, 0.02, f'F({k})', ha='center', va='bottom',
+                    transform=ax.get_xaxis_transform(),
+                    color='#1a3060', fontsize=5.5)
 
-    print("\n[5] Sub-fold cascade")
-    for a,b,s in [(89,55,144),(34,21,55),(13,8,21),(5,3,8),(3,2,5),(2,1,3)]:
-        t(f"{a}+{b}={s}", a+b, s, exact=True)
+    ax.set_xlim(0, 295)
+    ax.set_ylim(-1, 1)
+    ax.set_yticks([])
+    ax.set_xlabel('Bracket position bz  =  log_φ(distance / L_Planck)',
+                  color=TEXT, fontsize=9)
+    ax.set_title(
+        'COMPLETE BRACKET HIERARCHY — Planck Scale to Hubble Horizon\n'
+        f'L(bz) = L_P × φ^bz   |   N = {N} brackets   |   '
+        f'Scale per Fibonacci index = {SCALE_PER_FIB:.3f}   |   '
+        f'Fold center at bz = {BZ_FOLD_CENTER}   |   '
+        f'Ticks = planet positions (color = ESI tier)',
+        color='white', fontsize=10, fontweight='bold'
+    )
+    ax.tick_params(colors=TEXT, labelsize=8)
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
 
-    print("\n[6] Wall fraction")
-    t("W≈0.467134",   W,              0.467134, tol=0.01)
-    t("√(1-W²)≈0.884",math.sqrt(1-W**2), 0.884187, tol=0.01)
-
-    print("\n[7] Cosmological parameters")
-    ob  = (55/987)*A
-    odm = (144/987)*A+(233/987)*(1/PHI)*A
-    om  = ob+odm; ode=1-om
-    c2  = (((ob-0.0493)/0.001)**2+((om-0.3153)/0.0073)**2
-           +((ode-0.6847)/0.0073)**2)
-    t("Ω_b=0.04927",  ob,  0.04927, tol=0.1)
-    t("Ω_m=0.3073",   om,  0.3073,  tol=0.5)
-    t("Ω_DE=0.6927",  ode, 0.6927,  tol=0.5)
-    t("χ²=2.42",      c2,  2.42,    tol=2.0)
-
-    print("\n[8] Gravity")
-    ng=N_BRACKETS/2+55*W; gp=PHI**(-ng)
-    t("n_grav=172.69",    ng, 172.69,   tol=0.1)
-    t("(1/φ)^172.69≈8.12e-37", gp, 8.12e-37, tol=1.0)
-
-    print("\n[9] Black hole geometry")
-    t("e=√(1-1/φ)=1/φ",  math.sqrt(1-1/PHI), 1/PHI, exact=True)
-
-    p = sum(1 for _,ok in results if ok)
-    total = len(results)
-    print(f"\n{'═'*72}")
-    print(f"RESULT: {p}/{total} passed {'✓ ALL PASS' if p==total else ''}")
-    if p<total:
-        for nm,ok in results:
-            if not ok: print(f"  FAILED: {nm}")
-    print("═"*72)
-    return p, total
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig2_bracket_scale.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
 
 
-# ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 3 — ESI DISTRIBUTION
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_esi_distribution(planets, ax=None, standalone=True):
+    """ESI histogram with sector overlays and tier annotations."""
+    if standalone:
+        fig, ax = plt.subplots(figsize=(12, 6), facecolor=DARK)
+        ax.set_facecolor(DARK)
+
+    esi_vals = [p["esi"] for p in planets]
+    bins     = np.linspace(0, 1, 26)
+    counts, edges = np.histogram(esi_vals, bins=bins)
+    centers = (edges[:-1] + edges[1:]) / 2
+
+    # Color bars by tier
+    tier_ranges = [
+        (0.00, 0.40, TIER_COLORS["Extreme"],   "Extreme"),
+        (0.40, 0.60, TIER_COLORS["Hostile"],   "Hostile"),
+        (0.60, 0.80, TIER_COLORS["Marginal"],  "Marginal"),
+        (0.80, 0.90, TIER_COLORS["Habitable"], "Habitable"),
+        (0.90, 1.00, TIER_COLORS["PRIME"],     "PRIME"),
+    ]
+
+    bar_colors = []
+    for c in centers:
+        for lo, hi, col, _ in tier_ranges:
+            if lo <= c < hi:
+                bar_colors.append(col)
+                break
+        else:
+            bar_colors.append(TEXT)
+
+    bars = ax.bar(centers, counts, width=edges[1]-edges[0]-0.004,
+                  color=bar_colors, alpha=0.85, edgecolor='none')
+
+    # Vertical tier boundaries
+    for thresh, lbl in [(0.40, "Hostile"), (0.60, "Marginal"),
+                        (0.80, "Habitable"), (0.90, "PRIME")]:
+        ax.axvline(thresh, color='white', alpha=0.2, lw=1, ls='--')
+        ax.text(thresh, counts.max() * 0.95, lbl,
+                ha='center', va='top', color='white',
+                fontsize=7, alpha=0.6, fontfamily='monospace')
+
+    # Earth and Teegarden b markers
+    for name, col, lbl in [("Earth", "#4488ff", "Earth\nESI 1.00"),
+                             ("Teegarden b", "#00ffaa", "Teegarden b\nESI 0.95"),
+                             ("Ellie's Transit", "#ffaa00", "Ellie's Transit\nESI 0.95")]:
+        p = next((x for x in planets if x["name"] == name), None)
+        if p:
+            ax.axvline(p["esi"], color=col, alpha=0.6, lw=1.5)
+            ax.text(p["esi"] - 0.01, counts.max() * 0.6, lbl,
+                    ha='right', va='bottom', color=col, fontsize=6.5,
+                    fontfamily='monospace')
+
+    # Stats
+    n_prime = sum(1 for p in planets if p["esi"] >= 0.90)
+    n_hab   = sum(1 for p in planets if p["esi"] >= 0.80)
+    n_marg  = sum(1 for p in planets if p["esi"] >= 0.60)
+    ax.text(0.02, 0.97,
+            f'Total: {len(planets)} worlds\n'
+            f'PRIME (≥0.90): {n_prime}\n'
+            f'Habitable (≥0.80): {n_hab}\n'
+            f'Marginal (≥0.60): {n_marg}',
+            transform=ax.transAxes, va='top', ha='left',
+            color=TEXT, fontsize=8, fontfamily='monospace',
+            bbox=dict(boxstyle='round,pad=0.4', facecolor='#0a1020',
+                      alpha=0.8, edgecolor='#1a2840'))
+
+    ax.set_xlabel('Earth Similarity Index (ESI)', color=TEXT, fontsize=9)
+    ax.set_ylabel('Number of worlds', color=TEXT, fontsize=9)
+    ax.set_title(
+        'ESI Distribution — 98 Worlds  ·  '
+        'Spectral sector: σ₂ observer (≥0.80) / σ₃ future (≥0.60) / σ₁ past (≥0.40)',
+        color='white', fontsize=10, fontweight='bold'
+    )
+    ax.tick_params(colors=TEXT, labelsize=8)
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
+
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig3_esi_distribution.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 4 — TITIUS-BODE VS SOLAR SYSTEM
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_titius_bode(ax=None, standalone=True):
+    """
+    Predicted orbital radii r(k) = 0.387 AU × φ^k vs actual solar system.
+    Zero free parameters.
+    """
+    if standalone:
+        fig, ax = plt.subplots(figsize=(13, 7), facecolor=DARK)
+        ax.set_facecolor(DARK)
+
+    solar = [
+        ("Mercury", 0.387, "☿"),
+        ("Venus",   0.723, "♀"),
+        ("Earth",   1.000, "⊕"),
+        ("Mars",    1.524, "♂"),
+        ("Ceres",   2.767, "⚳"),
+        ("Jupiter", 5.203, "♃"),
+        ("Saturn",  9.537, "♄"),
+        ("Uranus",  19.19, "⛢"),
+        ("Neptune", 30.07, "♆"),
+        ("Pluto",   39.48, "♇"),
+    ]
+
+    # Predicted: r(k) = L0 × φ^k
+    k_vals = np.arange(0, 15)
+    r_pred = [L0_STELLAR_AU * PHI**k for k in k_vals]
+
+    # Plot predicted radii
+    for k, rp in zip(k_vals, r_pred):
+        ax.axhline(rp, color='#ff4488', alpha=0.35, lw=1.0, ls='--')
+        ax.text(10.5, rp, f'φ^{k} = {rp:.3f} AU', va='center',
+                color='#ff4488', fontsize=6.5, alpha=0.7, fontfamily='monospace')
+
+    # Plot actual planets
+    planet_colors = ['#cccccc','#ffdd88','#4488ff','#cc4422',
+                     '#888888','#ddaa44','#ddcc88','#66bbff','#3366ff','#aaaaaa']
+    for i, (name, r_actual, symbol) in enumerate(solar):
+        # Find nearest predicted
+        nearest_k = min(k_vals, key=lambda k: abs(r_pred[k] - r_actual))
+        r_near    = r_pred[nearest_k]
+        err       = abs(r_actual - r_near) / r_actual * 100
+        col       = planet_colors[i]
+
+        ax.scatter(i, r_actual, s=120, c=col, zorder=5, marker='o')
+        ax.scatter(i, r_near,   s=80,  c='#ff4488', zorder=4, marker='D', alpha=0.7)
+        ax.plot([i, i], [r_actual, r_near], '-', color=col, alpha=0.4, lw=1.5)
+        ax.text(i, r_actual * 1.08, f'{symbol}\n{name}\n({err:.0f}% Δ)',
+                ha='center', va='bottom', color=col,
+                fontsize=7, fontfamily='monospace')
+
+    ax.set_yscale('log')
+    ax.set_xticks(range(len(solar)))
+    ax.set_xticklabels([s[0][:3] for s in solar], color=TEXT, fontsize=8)
+    ax.set_ylabel('Orbital radius (AU, log scale)', color=TEXT, fontsize=9)
+    ax.set_xlim(-0.5, 10.5)
+    ax.set_ylim(0.2, 100)
+
+    legend_el = [
+        Line2D([0],[0], marker='o', color='w', label='Actual orbit',
+               markerfacecolor='white', markersize=7),
+        Line2D([0],[0], marker='D', color='w', label=f'Predicted: 0.387 AU × φ^k',
+               markerfacecolor='#ff4488', markersize=7),
+    ]
+    ax.legend(handles=legend_el, loc='upper left', fontsize=8,
+              facecolor='#0a1020', labelcolor='white',
+              framealpha=0.85, edgecolor='#1a2840')
+
+    ax.set_title(
+        'Titius-Bode Law — Zero Free Parameters\n'
+        f'r(k) = L_P × φ^bz_Mercury × φ^k  =  0.387 AU × φ^k  '
+        f'  |  bz_Mercury = {BZ_MERCURY}  |  Mean error ≈ 11%  |  '
+        f'l₀ = {L0_STELLAR_AU} AU from bracket law alone',
+        color='white', fontsize=10, fontweight='bold'
+    )
+    ax.tick_params(colors=TEXT, labelsize=8)
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
+
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig4_titius_bode.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 5 — ZECKENDORF ADDRESS HEATMAP
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_zeckendorf_heatmap(planets, ax=None, standalone=True):
+    """
+    Heatmap: which Fibonacci indices appear in each planet's Zeckendorf address.
+    Rows = planets (sorted by bz), columns = Fibonacci indices F1–F16.
+    """
+    if standalone:
+        fig, ax = plt.subplots(figsize=(16, 14), facecolor=DARK)
+        ax.set_facecolor(DARK)
+
+    max_fib = 16
+    matrix  = np.zeros((len(planets), max_fib))
+    labels  = []
+
+    for row, p in enumerate(planets):
+        for k in p["z_indices"]:
+            if 1 <= k <= max_fib:
+                matrix[row, k - 1] = p["esi"]
+        esi_bar = "█" * round(p["esi"] * 8) + "░" * (8 - round(p["esi"] * 8))
+        labels.append(f"{p['name'][:22]:22s} {esi_bar} {p['esi']:.2f}")
+
+    cmap = LinearSegmentedColormap.from_list(
+        'z_heat', ["#030810", "#0a1840", "#1a3880", "#2255cc",
+                   "#33aa66", "#00ff88"])
+
+    im = ax.imshow(matrix, cmap=cmap, aspect='auto', vmin=0, vmax=1,
+                   interpolation='nearest')
+
+    # Fibonacci index labels on x axis
+    fib_labels = [f"F{k}\n={fib(k)}" for k in range(1, max_fib + 1)]
+    ax.set_xticks(range(max_fib))
+    ax.set_xticklabels(fib_labels, color=TEXT, fontsize=7, fontfamily='monospace')
+
+    ax.set_yticks(range(len(planets)))
+    ax.set_yticklabels(labels, color=TEXT, fontsize=5.5, fontfamily='monospace')
+
+    # Key Fibonacci column markers
+    for k, col, lbl in [(7, "#4488ff", "F8=21\nAtom"),
+                         (9, "#44cc88", "F10=55\nBaryons"),
+                         (11, "#cc44cc","F12=144\nObserver"),
+                         (12, "#cc8844","F13=233\nσ₁/σ₅")]:
+        ax.axvline(k - 0.5, color=col, alpha=0.3, lw=1.2)
+
+    plt.colorbar(im, ax=ax, label='ESI value', shrink=0.4,
+                 pad=0.01).ax.yaxis.set_tick_params(color=TEXT)
+
+    ax.set_xlabel('Fibonacci index k  (address component F_k)',
+                  color=TEXT, fontsize=9)
+    ax.set_ylabel('World (sorted by bracket position bz)', color=TEXT, fontsize=9)
+    ax.set_title(
+        'Zeckendorf Address Heatmap — 98 Worlds\n'
+        'Brightness = ESI value   |   '
+        'Each row: set of Fibonacci numbers summing to bracket position bz   |   '
+        'F10=55 (baryonic band) and F12=144 (observer sector) most populated',
+        color='white', fontsize=10, fontweight='bold'
+    )
+    ax.tick_params(colors=TEXT, labelsize=6)
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
+
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig5_zeckendorf_heatmap.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIGURE 6 — COSMIC WEB SCHEMATIC (gap → structure mapping)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_cosmic_web(ax=None, standalone=True):
+    """
+    2D Cantor gap structure showing void/filament/wall/cluster emergence.
+    Also shows the snowplow mechanism and density amplification.
+    """
+    if standalone:
+        fig, ax = plt.subplots(figsize=(12, 12), facecolor=DARK)
+        ax.set_facecolor(DARK)
+
+    np.random.seed(42)
+    W_eff = W
+
+    # Simulate 4-iteration 2D Cantor gap structure
+    def cantor_gaps_1d(lo, hi, depth, level=0):
+        if depth == 0:
+            return []
+        span = hi - lo
+        gc   = (lo + hi) / 2
+        ghw  = span * W_eff / 2
+        result = [(gc, ghw, level)]
+        result += cantor_gaps_1d(lo, gc - ghw, depth - 1, level + 1)
+        result += cantor_gaps_1d(gc + ghw, hi, depth - 1, level + 1)
+        return result
+
+    gaps_x = cantor_gaps_1d(0, 1, 4)
+    gaps_y = cantor_gaps_1d(0, 1, 4)
+
+    # Draw voids (gap interiors) — dark
+    for gc, ghw, lv in gaps_x:
+        alpha = max(0.05, 0.4 - lv * 0.08)
+        ax.fill_betweenx([0, 1], gc - ghw, gc + ghw,
+                          color='#000008', alpha=alpha, zorder=1)
+    for gc, ghw, lv in gaps_y:
+        alpha = max(0.05, 0.4 - lv * 0.08)
+        ax.fill_between([0, 1], gc - ghw, gc + ghw,
+                         color='#000008', alpha=alpha, zorder=1)
+
+    # Draw gap walls (filaments) — bright lines
+    for gc, ghw, lv in gaps_x:
+        col   = ['#3366aa', '#2255cc', '#1144ee', '#0033ff'][min(lv, 3)]
+        alpha = max(0.2, 0.7 - lv * 0.15)
+        lw    = max(0.5, 2.0 - lv * 0.4)
+        for xw in [gc - ghw, gc + ghw]:
+            ax.axvline(xw, color=col, alpha=alpha, lw=lw, zorder=2)
+    for gc, ghw, lv in gaps_y:
+        col   = ['#3366aa', '#2255cc', '#1144ee', '#0033ff'][min(lv, 3)]
+        alpha = max(0.2, 0.7 - lv * 0.15)
+        lw    = max(0.5, 2.0 - lv * 0.4)
+        for yw in [gc - ghw, gc + ghw]:
+            ax.axhline(yw, color=col, alpha=alpha, lw=lw, zorder=2)
+
+    # Mark fold nodes (wall intersections) as cluster seeds
+    node_count = 0
+    for gcx, ghwx, lvx in gaps_x[:6]:
+        for gcy, ghwy, lvy in gaps_y[:6]:
+            for xw in [gcx - ghwx, gcx + ghwx]:
+                for yw in [gcy - ghwy, gcy + ghwy]:
+                    size  = max(20, 120 - (lvx + lvy) * 25)
+                    alpha = max(0.3, 0.9 - (lvx + lvy) * 0.1)
+                    ax.scatter(xw, yw, s=size, c='#ffffff',
+                               alpha=alpha, zorder=5)
+                    if lvx + lvy <= 1:
+                        ax.scatter(xw, yw, s=size * 4, c='#aaddff',
+                                   alpha=0.1, zorder=4)
+                    node_count += 1
+
+    # Labels and annotations
+    annots = [
+        (0.50, 0.50, "VOID\n(expanding gap interior\n= dark energy propagating)",
+         "#000820", 'white', 11),
+        (0.18, 0.50, "WALL / SHEET\n(2D gap boundary\n= baryons trapped)",
+         None, '#4488ff', 9),
+        (0.50, 0.18, "FILAMENT\n(1D wall intersection\n= baryons + dark matter)",
+         None, '#6699cc', 9),
+    ]
+    for x, y, txt, fc, col, fs in annots:
+        bbox = dict(boxstyle='round,pad=0.3', facecolor=fc, alpha=0.7,
+                    edgecolor='none') if fc else None
+        ax.text(x, y, txt, ha='center', va='center',
+                color=col, fontsize=fs, fontfamily='monospace',
+                bbox=bbox, zorder=6)
+
+    # Galaxy cluster annotation at a prominent node
+    gcx0, ghwx0, _ = gaps_x[0]
+    gcy0, ghwy0, _ = gaps_y[0]
+    xnode = gcx0 - ghwx0
+    ynode = gcy0 - ghwy0
+    ax.annotate("GALAXY CLUSTER\n(0D fold node\n= max density)",
+                xy=(xnode, ynode), xytext=(xnode + 0.15, ynode + 0.15),
+                color='white', fontsize=8.5, fontfamily='monospace',
+                arrowprops=dict(arrowstyle='->', color='white', lw=1.2),
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='#1a2040',
+                          edgecolor='white', alpha=0.8),
+                zorder=7)
+
+    # Snowplow arrow
+    ax.annotate("", xy=(0.25, 0.72), xytext=(0.50, 0.72),
+                arrowprops=dict(arrowstyle='->', color='#ff4488',
+                                lw=2, mutation_scale=12))
+    ax.text(0.375, 0.74, "Snowplow\nv_gap = H₀·L_P·φ^(2bz-N)",
+            ha='center', va='bottom', color='#ff4488',
+            fontsize=7.5, fontfamily='monospace', zorder=7)
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title(
+        'COSMIC WEB = 2D Cantor Gap Structure  ·  bz = 245\n'
+        'Voids (gap interior) → Sheets (2D walls) → Filaments (1D intersections) → '
+        'Clusters (0D fold nodes)\n'
+        f'W = {W:.4f} gap fraction   |   '
+        f'Snowplow amplification: 1.75× per Cantor iteration   |   '
+        f'5 iterations → 100× cluster density contrast',
+        color='white', fontsize=9.5, fontweight='bold'
+    )
+    for sp in ax.spines.values():
+        sp.set_color('#1a2840')
+
+    if standalone:
+        plt.tight_layout()
+        out = 'output_fig6_cosmic_web.png'
+        plt.savefig(out, dpi=150, facecolor=DARK, bbox_inches='tight')
+        plt.close()
+        print(f"  Saved: {out}")
+    return ax
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MASTER FIGURE — ALL SIX PANELS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def fig_master(planets):
+    """Render all six panels in a single large figure."""
+    fig = plt.figure(figsize=(28, 36), facecolor=DARK)
+    fig.suptitle(
+        'HUSMANN DECOMPOSITION FRAMEWORK — UNIVERSE VISUALIZATION\n'
+        f'AAH Hamiltonian α=1/φ, V=2J   ·   W={W:.4f}   ·   φ={PHI:.6f}   ·   '
+        f'N={N} brackets   ·   χ²=2.42 (3 dof)   ·   '
+        f'Ω_b={OMEGA_B:.3f}  Ω_DM={OMEGA_DM:.3f}  Ω_DE={OMEGA_DE:.3f}',
+        color='white', fontsize=13, fontweight='bold', y=0.995
+    )
+
+    gs = gridspec.GridSpec(4, 2, figure=fig,
+                           hspace=0.35, wspace=0.28,
+                           left=0.06, right=0.97,
+                           top=0.975, bottom=0.02)
+
+    print("  Panel 1: Spiral map...")
+    ax1 = fig.add_subplot(gs[0, :])
+    fig_spiral_map(planets, ax=ax1, standalone=False)
+
+    print("  Panel 2: Bracket scale bar...")
+    ax2 = fig.add_subplot(gs[1, :])
+    fig_bracket_scale(planets, ax=ax2, standalone=False)
+
+    print("  Panel 3: ESI distribution...")
+    ax3 = fig.add_subplot(gs[2, 0])
+    fig_esi_distribution(planets, ax=ax3, standalone=False)
+
+    print("  Panel 4: Titius-Bode...")
+    ax4 = fig.add_subplot(gs[2, 1])
+    fig_titius_bode(ax=ax4, standalone=False)
+
+    print("  Panel 5: Zeckendorf heatmap...")
+    ax5 = fig.add_subplot(gs[3, 0])
+    fig_zeckendorf_heatmap(planets, ax=ax5, standalone=False)
+
+    print("  Panel 6: Cosmic web...")
+    ax6 = fig.add_subplot(gs[3, 1])
+    fig_cosmic_web(ax=ax6, standalone=False)
+
+    fig.text(0.5, 0.004,
+        f'Thomas Husmann · Husmann Decomposition Framework · March 2026   ·   '
+        f'{len(planets)} worlds indexed   ·   '
+        f'l₀ = {L0_STELLAR_AU} AU = L_P × φ^{BZ_MERCURY} (Mercury orbit, zero free params)   ·   '
+        f'v_gap(bz) = H₀·L_P·φ^(2bz-N)   ·   '
+        f'github.com/thusmann5327/Unified_Theory_Physics',
+        ha='center', va='bottom', color=DIM, fontsize=7.5
+    )
+
+    out = '/mnt/user-data/outputs/UNIVERSE_master.png'
+    plt.savefig(out, dpi=130, bbox_inches='tight', facecolor=DARK)
+    plt.close()
+    print(f"  Saved master: {out}")
+    return out
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TEXT REPORT
+# ══════════════════════════════════════════════════════════════════════════════
+
+def print_universe_report(planets):
+    """Print a compact text report of all worlds and key framework numbers."""
+
+    def esi_bar(esi):
+        n = round(esi * 12)
+        return "█" * n + "░" * (12 - n)
+
+    print("\n" + "="*80)
+    print("HUSMANN UNIVERSE REPORT")
+    print("="*80)
+    print(f"φ = {PHI:.8f}   W = {W:.6f}   N = {N}   l₀ = {L0_STELLAR_AU} AU")
+    print(f"Unity: 1/φ + 1/φ³ + 1/φ⁴ = {1/PHI + 1/PHI**3 + 1/PHI**4:.8f}")
+    print(f"Spiral turns Planck→Hubble: {SPIRAL_TURNS}  (half-turn residual: {HALF_TURN_RES})")
+    print(f"Titius-Bode: r(k) = {L0_STELLAR_AU} AU × φ^k  (bz_Mercury = {BZ_MERCURY})")
+    print(f"Snowplow amplification (1 iter): {2*W/(1-W):.3f}×")
+    print()
+
+    # Summary stats
+    by_tier = {}
+    for p in planets:
+        by_tier.setdefault(p["tier"], []).append(p)
+
+    print(f"{'Tier':12s} {'Count':6s}")
+    print("-"*20)
+    for tier in ["PRIME", "Habitable", "Marginal", "Hostile", "Extreme"]:
+        n = len(by_tier.get(tier, []))
+        print(f"{tier:12s} {n:6d}")
+    print(f"{'TOTAL':12s} {len(planets):6d}")
+    print()
+
+    # Full table
+    print(f"{'#':4s} {'Name':22s} {'System':18s} {'bz':4s} "
+          f"{'Zeckendorf':22s} {'ESI':6s} {'Tier':10s} {'Dist':12s}")
+    print("-"*105)
+
+    for i, p in enumerate(planets, 1):
+        z_compact = "{" + ",".join(f"F{k}" for k in p["z_indices"]) + "}"
+        print(f"{i:4d} {p['name'][:22]:22s} {p['system'][:18]:18s} "
+              f"{p['bz']:4d} {z_compact:22s} {p['esi']:5.2f}  "
+              f"{p['tier']:10s} {p['dist_str']}")
+
+    print()
+    print("KEY FRAMEWORK RESULTS:")
+    print(f"  χ² = 2.42 (3 dof, p=0.49) — cosmological energy budget")
+    print(f"  G×m_p²/(k_e×e²) = (1/φ)^172.69 = 8.12×10⁻³⁷ (measured 8.10×10⁻³⁷, 0.22% error)")
+    print(f"  Black hole eccentricity: e = √(1−1/φ) = 1/φ = 0.6180 (exact)")
+    print(f"  c = 2Jl₀/ℏ = {2*J*1.6e-19*l0/(1.055e-34):.4e} m/s  (actual 3.00×10⁸)")
+    print(f"  π = 4·arctan(1/φ) + 4·arctan(1/φ³) (exact identity)")
+    print(f"  Titius-Bode mean error: 11% (zero free parameters)")
+    print(f"  Simulation: σ 0.722→3.509 (4.86×), void 21%→79%, 100% peak-wall alignment")
+    print("="*80)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # MAIN
-# ─────────────────────────────────────────────────────────────
-
-def main():
-    print("\n"+"█"*72)
-    print("  HUSMANN CANTOR GRID v3b — ABSOLUTE BRACKET MAPPING")
-    print("  F(k)=count → bz=k×18.375 | Center fold at bz=147=F(8)=21 states")
-    print(f"  {SPIRAL_TURNS} spiral turns | residual {HALF_TURN_RESIDUAL} | open helix")
-    print("█"*72)
-
-    p, total = run_tests()
-
-    print(f"\n\nBuilding grid (depth={7})...")
-    grid = CantorGrid(max_depth=7, verbose=False)
-    s = grid.stats()
-
-    print(f"\nGrid statistics:")
-    for k,v in s.items():
-        if k not in ('turns_dist','axes'): print(f"  {k:<26}: {v}")
-    print(f"  turns_dist               : {s['turns_dist']}")
-    print(f"  axes                     : {s['axes']}")
-
-    # Verify all wall counts are Fibonacci
-    from collections import Counter
-    cnt = Counter(g.count for g in grid.gaps)
-    all_fib = all(fib_index(c)>0 for c in cnt)
-    print(f"\n  Wall counts Fibonacci: {all_fib} ✓")
-    print(f"  Distinct values: {sorted(cnt.keys())}")
-
-    grid.print_absolute_bracket_map()
-    grid.print_spiral_chains(max_chains=8)
-    grid.cosmo()
-
-    print(f"\n\nGenerating figure...")
-    make_figure(grid, "/mnt/user-data/outputs/husmann_spiral_v3b.png")
-
-    print(f"\n{'█'*72}")
-    print(f"  {p}/{total} tests passed")
-    print(f"  max_turn_reached = {s['max_turn_reached']} "
-          f"({'spiral winding ✓' if s['max_turn_reached']>0 else 'STILL 0 — check bracket distribution'})")
-    print(f"  {s['fold_nodes']} fold nodes | {s['center_fold_nodes']} near center bz={FOLD_CENTER}")
-    print(f"  {s['rot_events']} rotation events across {len(s['turns_dist'])} turn levels")
-    print(f"  Loops closed: NO — Fibonacci spiral is open by construction")
-    print("█"*72+"\n")
-
+# ══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    print("UNIVERSE.py — Husmann Decomposition Framework")
+    print(f"φ={PHI:.6f}  W={W:.6f}  N={N}")
+    print()
+
+    # Build planet database
+    print("Building planet database...")
+    planets = build_planets()
+    print(f"  {len(planets)} worlds indexed")
+    print(f"  bz range: {min(p['bz'] for p in planets)}–{max(p['bz'] for p in planets)}")
+    print(f"  PRIME targets: {sum(1 for p in planets if p['tier']=='PRIME')}")
+    print()
+
+    # Parse arguments
+    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+
+    if mode == "report":
+        print_universe_report(planets)
+
+    elif mode == "spiral":
+        print("Generating spiral map...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_spiral_map(planets)
+
+    elif mode == "scale":
+        print("Generating bracket scale bar...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_bracket_scale(planets)
+
+    elif mode == "esi":
+        print("Generating ESI distribution...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_esi_distribution(planets)
+
+    elif mode == "tb":
+        print("Generating Titius-Bode comparison...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_titius_bode()
+
+    elif mode == "zeck":
+        print("Generating Zeckendorf heatmap...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_zeckendorf_heatmap(planets)
+
+    elif mode == "web":
+        print("Generating cosmic web schematic...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        fig_cosmic_web()
+
+    else:  # "all" — master figure
+        print("Generating master figure (all 6 panels)...")
+        os.makedirs('/mnt/user-data/outputs', exist_ok=True)
+        print_universe_report(planets)
+        out = fig_master(planets)
+        print(f"\nDone. Output: {out}")
+        print("Usage: python3 UNIVERSE.py [all|report|spiral|scale|esi|tb|zeck|web]")
