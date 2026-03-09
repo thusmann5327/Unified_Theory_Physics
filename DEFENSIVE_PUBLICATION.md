@@ -46,8 +46,6 @@ All other material in this repository — including any device architectures, nu
 
 The following provisional and design applications were filed **before** this disclosure and protect specific device architectures. These are **not** affected:
 
-[Keep your full table exactly as you had it — it is accurate and helpful.]
-
 ---
 
 ## What This Means For Builders
