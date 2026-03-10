@@ -584,6 +584,112 @@ def render_axes_diagram():
 
 app = Flask(__name__)
 
+# ═══ Image cache — render once, serve forever ═══
+IMG_CACHE = {}
+
+def get_cached_image(key, render_fn, *args, **kwargs):
+    """Render an image once and cache it in memory."""
+    if key not in IMG_CACHE:
+        print(f"  [cache] Rendering {key}...")
+        IMG_CACHE[key] = render_fn(*args, **kwargs)
+        print(f"  [cache] {key} done ({len(IMG_CACHE[key])//1024}KB)")
+    return IMG_CACHE[key]
+
+
+# ═══ API endpoints — AJAX image/data delivery ═══
+
+@app.route("/api/image/<name>")
+def api_image(name):
+    """Return a cached PNG image as base64 JSON."""
+    renderers = {
+        'cantor':    lambda: get_cached_image('cantor', render_cantor_bar),
+        'overlap':   lambda: get_cached_image('overlap', render_sigma3_overlap),
+        '3d':        lambda: get_cached_image('3d', render_3d_backbone, 22, 38),
+        '3d_top':    lambda: get_cached_image('3d_top', render_3d_backbone, 85, 0),
+        '3d_side':   lambda: get_cached_image('3d_side', render_3d_backbone, 0, 90),
+        'voids':     lambda: get_cached_image('voids', render_void_comparison),
+        'axes':      lambda: get_cached_image('axes', render_axes_diagram),
+    }
+    if name not in renderers:
+        return json.dumps({"error": "unknown image"}), 404
+    b64 = renderers[name]()
+    return json.dumps({"image": b64, "key": name})
+
+
+@app.route("/api/data/<name>")
+def api_data(name):
+    """Return computed data as JSON for a specific section."""
+    sec = SECTORS
+    if name == "constants":
+        return json.dumps({
+            "J_eV": f"{J_EV:.3f}", "l0_nm": f"{L0*1e9:.3f}", "W": f"{W:.6f}",
+            "c_derived": f"{2*J_J*L0/HBAR:.0f}", "W2": f"{W2:.6f}", "W4": f"{W4:.6f}",
+        })
+    elif name == "budget":
+        return json.dumps({
+            "Ob": f"{OMB:.5f}", "Odm": f"{OMDM:.5f}", "Ode": f"{OMDE:.5f}",
+            "Ob_err": f"{abs(OMB-0.04860)/0.04860*100:.2f}",
+            "Odm_err": f"{abs(OMDM-0.26070)/0.26070*100:.2f}",
+            "Ode_err": f"{abs(OMDE-0.68890)/0.68890*100:.2f}",
+            "s3w": f"{sec['s3w']:.5f}",
+            "s3w_err": f"{abs(sec['s3w']-0.04860)/0.04860*100:.2f}",
+        })
+    elif name == "spectrum":
+        return json.dumps({
+            "n55_bands": len(BANDS_55), "n55_gaps": len(GAPS_55),
+            "n233_bands": len(BANDS_233), "n233_gaps": len(GAPS_233),
+        })
+    elif name == "sigma3":
+        return json.dumps({
+            "n_w4": f"{len(W4_PTS):,}", "s3_bands": len(sec['s3b']),
+            "s3_gaps": len(sec['s3g']), "s3_edges": len(S3_EDGES_E),
+            "sv_ratio": f"{SV_RATIO:.4f}",
+            "sv_err": f"{abs(SV_RATIO-PHI)/PHI*100:.2f}",
+            "wL_w": f"{sec['wL']['w']:.4f}", "wR_w": f"{sec['wR']['w']:.4f}",
+            "wall_ratio": f"{sec['wL']['w']/sec['wR']['w']:.6f}",
+        })
+    elif name == "voids":
+        rows = _build_void_rows()
+        kp, ka, ke, _, _ = predict_kbc_void()
+        return json.dumps({
+            "void_rows": rows,
+            "kbc_physical": f"{kp:,.0f}", "kbc_apparent": f"{ka:,.0f}",
+            "kbc_err": f"{ke*100:.1f}%",
+            "lorentz_w": f"{LORENTZ_W:.6f}", "h0_local": f"{H0_LOCAL:.1f}",
+            "h0_err": f"{abs(H0_LOCAL-H0_SHOES)/H0_SHOES*100:.1f}%",
+            "W": f"{W:.6f}",
+        })
+    return json.dumps({"error": "unknown data"}), 404
+
+
+def _build_void_rows():
+    """Generate void table HTML rows using composite engine."""
+    voids = [
+        ("σ₂/σ₄ DM walls",30000), ("Sloan Great Wall",1380), ("KBC Void",2000),
+        ("CMB Cold Spot",1800), ("Dipole Repeller",600), ("BOSS Great Wall",1000),
+        ("Boötes Void",250), ("Local Void",150), ("Sculptor Void",100),
+    ]
+    rows = ""
+    for name, obs in voids:
+        if name == "σ₂/σ₄ DM walls":
+            pred = GAP_FRACS[0][0] * UNIVERSE_DIAMETER_MLY
+            err = abs(pred-obs)/obs*100; method="V1/V2"; detail="σ₂/σ₄"
+        elif name == "KBC Void":
+            _, pred, err_f, method, detail = predict_kbc_void()
+            err = err_f * 100
+        else:
+            pred, err_f, method, frac, detail = predict_void(name, obs)
+            err = err_f * 100
+        ec = "match" if err < 3 else ("" if err < 10 else "warn")
+        is_comp = ('+' in method or '−' in method or 'correction' in method)
+        meth_style = ' style="color:#44ff88"' if is_comp else ''
+        rows += (f'<tr><td>{name}</td><td class="num">{obs:,}</td>'
+                 f'<td class="num">{pred:,.0f}</td>'
+                 f'<td class="num"{meth_style}>{method}</td>'
+                 f'<td class="num {ec}">{err:.1f}%</td>'
+                 f'<td style="color:var(--dim)">{detail}</td></tr>\n')
+    return rows
+
 HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -739,7 +845,7 @@ footer a { color:var(--gold); text-decoration:none; }
   <h2>The Cantor Spectrum — Zeckendorf Build Order</h2>
   <div class="eq">Zeckendorf(294) = {233, 55, 5, 1} = F(13) + F(10) + F(5) + F(1)</div>
   <p style="color:var(--dim); margin:10px 0;">Each Fibonacci term is a resolution level. The address of the universe IS its construction manual.</p>
-  <img class="img-full" src="data:image/png;base64,{{img_cantor}}" alt="Cantor spectrum at three Zeckendorf resolutions">
+  <div class="ajax-img" data-src="cantor" style="min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering Cantor spectrum...</div>
   <div class="grid3" style="margin-top:20px;">
     <div class="card"><h3>N = 5</h3><p style="color:var(--dim)">1 band · 0 gaps<br>The undivided whole</p></div>
     <div class="card"><h3>N = 55</h3><p style="color:var(--dim)">{{n55_bands}} bands · {{n55_gaps}} gaps<br>Superclusters + DM walls</p></div>
@@ -753,7 +859,7 @@ footer a { color:var(--gold); text-decoration:none; }
   <h2>Three Icosahedral Backbone Axes</h2>
   <div class="eq">S = (0,1,φ), (φ,0,1), (1,φ,0) / √(2+φ) &nbsp;&nbsp;|&nbsp;&nbsp; All angles = 63.4° = arccos(1/√5)</div>
   <div class="img-pair">
-    <img src="data:image/png;base64,{{img_axes}}" alt="Three backbone axes">
+    <div class="ajax-img" data-src="axes" style="min-height:300px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering axes...</div>
     <div>
       <div class="card" style="margin-bottom:15px;">
         <h3><span class="tag tag-de">S₁</span> Dark Energy Backbone</h3>
@@ -780,8 +886,8 @@ footer a { color:var(--gold); text-decoration:none; }
   <h2>Our Observable Universe — σ₃ Center Plane</h2>
   <p style="color:var(--dim); margin-bottom:5px;">The entangled state between gravitational collapse (σ₁) and dark energy expansion (σ₅). P|ψ₀⟩ = |ψ₀⟩.</p>
   <div class="img-pair">
-    <img src="data:image/png;base64,{{img_overlap}}" alt="σ₃ fold overlap — our universe">
-    <img src="data:image/png;base64,{{img_3d}}" alt="3D backbone with W⁴ matter">
+    <div class="ajax-img" data-src="overlap" style="min-height:300px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering σ₃ overlap...</div>
+    <div class="ajax-img" data-src="3d" style="min-height:300px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering 3D backbone...</div>
   </div>
   <div class="grid2" style="margin-top:20px;">
     <div class="card">
@@ -811,15 +917,15 @@ footer a { color:var(--gold); text-decoration:none; }
   <div class="num">Part VI</div>
   <h2>Cosmic Void Predictions — The Rosetta Stone</h2>
   <p style="color:var(--dim); margin-bottom:5px;">The same 34 gap fractions applied to any scale predict structural void sizes. Zero free parameters.</p>
-  <img class="img-full" src="data:image/png;base64,{{img_voids}}" alt="Predicted vs observed cosmic voids">
+  <div class="ajax-img" data-src="voids" style="min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering void predictions...</div>
   <div class="card" style="margin-top:20px;">
     <h3>Predicted vs Observed — Full Table</h3>
     <table>
       <thead>
         <tr><th>Structure</th><th>Observed (Mly)</th><th>Predicted (Mly)</th><th>Method</th><th>Error</th><th>Sector</th></tr>
       </thead>
-      <tbody>
-        {{void_rows|safe}}
+      <tbody id="void-tbody">
+        <tr><td colspan="6" style="text-align:center;color:var(--dim);padding:20px;">⏳ Computing composite predictions...</td></tr>
       </tbody>
     </table>
     <p style="color:var(--dim); font-size:0.85em; margin-top:10px;">
@@ -834,27 +940,27 @@ footer a { color:var(--gold); text-decoration:none; }
   <div class="num">Part VI-B</div>
   <h2>The KBC Void Identity — W = δ and the Hubble Tension</h2>
   <p style="color:var(--dim); margin-bottom:10px;">We live inside the KBC Void. Its density contrast IS the wall fraction W. This resolves the Hubble tension.</p>
-  <div class="grid2">
+  <div class="grid2" id="kbc-grid">
     <div class="card">
       <h3>W = δ<sub>KBC</sub></h3>
       <table>
         <tr><td>Wall fraction W</td><td class="num gold">{{W}}</td></tr>
         <tr><td>KBC δ (Keenan+ 2013)</td><td class="num">0.46 ± 0.06</td></tr>
         <tr><td>Match</td><td class="num match">0.12σ</td></tr>
-        <tr><td>Physical diameter (V7, σ₃)</td><td class="num gold">{{kbc_physical}} Mly</td></tr>
-        <tr><td>Apparent diameter (H₀ corrected)</td><td class="num gold">{{kbc_apparent}} Mly</td></tr>
+        <tr><td>Physical diameter (V7, σ₃)</td><td class="num gold" id="kbc-phys">⏳</td></tr>
+        <tr><td>Apparent diameter (H₀ corrected)</td><td class="num gold" id="kbc-app">⏳</td></tr>
         <tr><td>Observed</td><td class="num">2,000 Mly</td></tr>
-        <tr><td>Size error after correction</td><td class="num match">{{kbc_err}}</td></tr>
+        <tr><td>Size error after correction</td><td class="num match" id="kbc-err">⏳</td></tr>
       </table>
     </div>
     <div class="card">
       <h3>Hubble Tension Resolution</h3>
       <table>
         <tr><td>H₀ (Planck background)</td><td class="num">67.4 km/s/Mpc</td></tr>
-        <tr><td>Lorentz factor √(1−W²)</td><td class="num gold">{{lorentz_w}}</td></tr>
-        <tr><td>H₀ predicted (local)</td><td class="num gold">{{h0_local}} km/s/Mpc</td></tr>
+        <tr><td>Lorentz factor √(1−W²)</td><td class="num gold" id="kbc-lorentz">⏳</td></tr>
+        <tr><td>H₀ predicted (local)</td><td class="num gold" id="kbc-h0">⏳</td></tr>
         <tr><td>H₀ observed (SH0ES)</td><td class="num">73.04 ± 1.04</td></tr>
-        <tr><td>Deviation</td><td class="num">{{h0_err}}</td></tr>
+        <tr><td>Deviation</td><td class="num" id="kbc-h0err">⏳</td></tr>
       </table>
       <p style="color:var(--dim); font-size:0.85em; margin-top:8px;">
         The observer in σ₃ necessarily measures δ = W because W is the gap fraction at every bracket level.
@@ -870,8 +976,8 @@ footer a { color:var(--gold); text-decoration:none; }
   <h2>3D Backbone — Multiple Angles</h2>
   <p style="color:var(--dim);">4,913 W⁴ matter points inside the σ₃ center plane. Gold = baryonic matter. Discs = Cantor fold planes.</p>
   <div class="img-pair">
-    <img src="data:image/png;base64,{{img_3d_top}}" alt="Top view">
-    <img src="data:image/png;base64,{{img_3d_side}}" alt="Side view">
+    <div class="ajax-img" data-src="3d_top" style="min-height:300px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering top view...</div>
+    <div class="ajax-img" data-src="3d_side" style="min-height:300px;display:flex;align-items:center;justify-content:center;color:var(--dim);">⏳ Rendering side view...</div>
   </div>
 </div>
 
@@ -920,68 +1026,104 @@ footer a { color:var(--gold); text-decoration:none; }
   <p style="margin-top:10px; color:#444;">The observer does not exist despite the tension between collapse and expansion.<br>The observer exists <em>because</em> of it.</p>
 </footer>
 
+<!-- ═══ PROGRESS BAR ═══ -->
+<div id="progress-bar" style="position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:9999;transition:width 0.3s ease;width:0%;"></div>
+<div id="progress-label" style="position:fixed;top:6px;right:16px;font-size:11px;color:var(--dgold);z-index:9999;font-family:'JetBrains Mono',monospace;"></div>
+
+<!-- ═══ AJAX PROGRESSIVE LOADER ═══ -->
+<script>
+(function() {
+  // Image loading queue — sequential to avoid hammering the server
+  const imageQueue = ['cantor', 'axes', 'overlap', '3d', 'voids', '3d_top', '3d_side'];
+  const totalSteps = imageQueue.length + 1; // +1 for void data
+  let completed = 0;
+
+  function updateProgress(label) {
+    completed++;
+    const pct = Math.round((completed / totalSteps) * 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = label + ' (' + pct + '%)';
+    if (completed >= totalSteps) {
+      setTimeout(function() {
+        document.getElementById('progress-bar').style.opacity = '0';
+        document.getElementById('progress-label').style.opacity = '0';
+      }, 1200);
+    }
+  }
+
+  // Load void data (composites + KBC)
+  function loadVoidData() {
+    return fetch('/api/data/voids')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        // Populate void table
+        document.getElementById('void-tbody').innerHTML = d.void_rows;
+
+        // Populate KBC Hubble section
+        var el;
+        el = document.getElementById('kbc-phys');  if (el) el.textContent = d.kbc_physical + ' Mly';
+        el = document.getElementById('kbc-app');   if (el) el.textContent = d.kbc_apparent + ' Mly';
+        el = document.getElementById('kbc-err');   if (el) el.textContent = d.kbc_err;
+        el = document.getElementById('kbc-lorentz'); if (el) el.textContent = d.lorentz_w;
+        el = document.getElementById('kbc-h0');    if (el) el.textContent = d.h0_local + ' km/s/Mpc';
+        el = document.getElementById('kbc-h0err'); if (el) el.textContent = d.h0_err;
+
+        updateProgress('Void predictions');
+      })
+      .catch(function(e) { console.error('Void data error:', e); });
+  }
+
+  // Load a single image via AJAX
+  function loadImage(key) {
+    return fetch('/api/image/' + key)
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        // Find all placeholder divs for this image
+        var placeholders = document.querySelectorAll('.ajax-img[data-src="' + key + '"]');
+        placeholders.forEach(function(ph) {
+          var img = document.createElement('img');
+          img.src = 'data:image/png;base64,' + d.image;
+          img.alt = key;
+          img.className = 'img-full';
+          img.style.opacity = '0';
+          img.style.transition = 'opacity 0.5s ease';
+          ph.parentNode.replaceChild(img, ph);
+          // Fade in
+          requestAnimationFrame(function() {
+            img.style.opacity = '1';
+          });
+        });
+        updateProgress(key);
+      })
+      .catch(function(e) { console.error('Image error for ' + key + ':', e); });
+  }
+
+  // Sequential loader — one at a time so server isn't overwhelmed
+  async function loadAll() {
+    // Step 1: Load void data first (fast, no image rendering)
+    await loadVoidData();
+
+    // Step 2: Load images one by one
+    for (const key of imageQueue) {
+      await loadImage(key);
+    }
+  }
+
+  // Start loading after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadAll);
+  } else {
+    loadAll();
+  }
+})();
+</script>
+
 </body></html>"""
 
 
 @app.route("/")
 def index():
     sec = SECTORS
-    # Void comparison data — using composite prediction engine
-    voids = [
-        ("σ₂/σ₄ DM walls",    30000),
-        ("Sloan Great Wall",    1380),
-        ("KBC Void",            2000),
-        ("CMB Cold Spot",       1800),
-        ("Dipole Repeller",      600),
-        ("BOSS Great Wall",     1000),
-        ("Boötes Void",          250),
-        ("Local Void",           150),
-        ("Sculptor Void",        100),
-    ]
-    void_rows = ""
-    for name, obs in voids:
-        if name == "σ₂/σ₄ DM walls":
-            # DM walls use the fixed top gap fraction
-            pred = GAP_FRACS[0][0] * UNIVERSE_DIAMETER_MLY
-            err = abs(pred-obs)/obs*100
-            method = "V1/V2"
-            detail = "σ₂/σ₄"
-        elif name == "KBC Void":
-            # KBC uses the redshift-space corrected prediction
-            phys, pred, err_f, method, detail = predict_kbc_void()
-            err = err_f * 100
-        else:
-            pred, err_f, method, frac, detail = predict_void(name, obs)
-            err = err_f * 100
-        ec = "match" if err < 3 else ("" if err < 10 else "warn")
-        # Color composite methods green
-        is_comp = ('+' in method or '−' in method or 'correction' in method)
-        meth_style = ' style="color:#44ff88"' if is_comp else ''
-        void_rows += (f'<tr><td>{name}</td><td class="num">{obs:,}</td>'
-                      f'<td class="num">{pred:,.0f}</td>'
-                      f'<td class="num"{meth_style}>{method}</td>'
-                      f'<td class="num {ec}">{err:.1f}%</td>'
-                      f'<td style="color:var(--dim)">{detail}</td></tr>\n')
-
-    # KBC Void / Hubble tension values
-    kbc_phys, kbc_app, kbc_err_f, _, _ = predict_kbc_void()
-
-    # Render all images
-    print("  Rendering Cantor bars...")
-    img_cantor = render_cantor_bar()
-    print("  Rendering σ₃ overlap...")
-    img_overlap = render_sigma3_overlap()
-    print("  Rendering 3D perspective...")
-    img_3d = render_3d_backbone(22, 38)
-    print("  Rendering 3D top...")
-    img_3d_top = render_3d_backbone(85, 0)
-    print("  Rendering 3D side...")
-    img_3d_side = render_3d_backbone(0, 90)
-    print("  Rendering void comparison...")
-    img_voids = render_void_comparison()
-    print("  Rendering axes diagram...")
-    img_axes = render_axes_diagram()
-
     return render_template_string(HTML,
         compute_time=f"{COMPUTE_TIME*1000:.0f}",
         J_eV=f"{J_EV:.3f}", l0_nm=f"{L0*1e9:.3f}", W=f"{W:.6f}",
@@ -1002,16 +1144,6 @@ def index():
         sv_err=f"{abs(SV_RATIO-PHI)/PHI*100:.2f}",
         wL_w=f"{sec['wL']['w']:.4f}", wR_w=f"{sec['wR']['w']:.4f}",
         wall_ratio=f"{sec['wL']['w']/sec['wR']['w']:.6f}",
-        void_rows=void_rows,
-        kbc_physical=f"{kbc_phys:,.0f}",
-        kbc_apparent=f"{kbc_app:,.0f}",
-        kbc_err=f"{kbc_err_f*100:.1f}%",
-        lorentz_w=f"{LORENTZ_W:.6f}",
-        h0_local=f"{H0_LOCAL:.1f}",
-        h0_err=f"{abs(H0_LOCAL-H0_SHOES)/H0_SHOES*100:.1f}%",
-        img_cantor=img_cantor, img_overlap=img_overlap,
-        img_3d=img_3d, img_3d_top=img_3d_top, img_3d_side=img_3d_side,
-        img_voids=img_voids, img_axes=img_axes,
     )
 
 
