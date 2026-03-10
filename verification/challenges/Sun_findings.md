@@ -188,9 +188,9 @@ The current `render_equilibrium_frame(t)` places matter particles via uniform ra
 | Oblate √φ from e = 1/φ | (prior work) | exact proof |
 | Self-referential equilibrium (zero external constants) | ★ (direction) | ★ (derivation) |
 | omega_lattice from spectrum | ★ (identified issue) | ★ (fix) |
-| H₀ from φ² + 1/φ comoving factor | | ★ |
+| H₀ from φ² + 1/φ comoving factor |(request simplification) | ★ |
 | chi_BH = W√(1−W²) | | ★ |
-| Solar Fibonacci ladder (r = R_Merc × φ^k) | | ★ |
+| Solar Fibonacci ladder (r = R_Merc × φ^k) | (requested eval)| ★ |
 | Photosphere at cos(1/φ) wall position | ★ (wall insight) | ★ (scan + identification) |
 | Sun = dual-wall bubble with corona gap | ★ | ★ |
 | cos(α) matter distribution for equilibrium | ★ (question) | ★ (implication) |
