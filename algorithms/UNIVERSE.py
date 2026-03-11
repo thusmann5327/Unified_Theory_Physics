@@ -278,6 +278,72 @@ PHI_OVER_C2 = W2  # gravitational potential depth = 0.2182
 
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# PART 1F — METALLIC MEANS: All 8 Cosmic Webs
+# ═══════════════════════════════════════════════════════════════════════
+# The metallic means δₙ are roots of x² = nx + 1.
+# Each produces a distinct 5-sector Cantor architecture.
+# They nest concentrically: Gold's σ₃ sits in Silver's void.
+# Combined, they fill 60.8% of spectral space.
+
+def metallic_mean(n):
+    return (n + math.sqrt(n*n + 4)) / 2
+
+def compute_metallic_spectrum(n, N_sites=233):
+    m = metallic_mean(n)
+    alpha = 1.0 / m
+    H = np.diag(2*np.cos(2*np.pi*alpha*np.arange(N_sites)))
+    H += np.diag(np.ones(N_sites-1), 1) + np.diag(np.ones(N_sites-1), -1)
+    eigs = np.sort(np.linalg.eigvalsh(H))
+    E_range = float(eigs[-1] - eigs[0])
+    diffs = np.diff(eigs)
+    med = np.median(diffs)
+    gaps = []
+    for i in range(len(diffs)):
+        if diffs[i] > 8*med:
+            gaps.append({'lo': float(eigs[i]), 'hi': float(eigs[i+1]),
+                        'w': float(diffs[i]), 'c': float((eigs[i]+eigs[i+1])/2)})
+    ranked = sorted(gaps, key=lambda g: g['w'], reverse=True)
+    big = [g for g in ranked if g['w'] > 0.5]
+    if len(big) >= 2:
+        wL = min(big[:2], key=lambda g: g['c'])
+        wR = max(big[:2], key=lambda g: g['c'])
+        half = E_range / 2
+        r_m = abs(wL['hi']) / half
+        r_i = abs(wL['c'])/half - wL['w']/(2*E_range)
+        r_s = abs(wL['c'])/half
+        r_o = abs(wL['c'])/half + wL['w']/(2*E_range)
+    else:
+        r_m = r_i = r_s = r_o = 0
+    # Cosmological budget
+    Wn = 2/m**4 + m**(-1/m)/m**3
+    Ob = Wn**4
+    phi_sum = 1/m + 1/m**3
+    Odm = (1/m**3) * (1 - Wn**4) / phi_sum
+    Ode = (1/m) * (1 - Wn**4) / phi_sum
+    return {'eigs': eigs, 'E_range': E_range, 'gaps': gaps, 'n_gaps': len(gaps),
+            'alpha': 1/m, 'mean': m, 'R_M': r_m, 'R_I': r_i, 'R_S': r_s, 'R_O': r_o,
+            'W': Wn, 'Ob': Ob, 'Odm': Odm, 'Ode': Ode}
+
+METALLIC_COLORS = {
+    1: ('#f5c542', '#ffe89a', '#a07520', 'Gold φ — Re,Co,Mg (HCP)'),
+    2: ('#aaccee', '#ddeeff', '#556688', 'Silver δ_S — Hg,As (Rhombo)'),
+    3: ('#dd8844', '#ffbb77', '#885522', 'Bronze δ_B — Cu,Au,Ag (FCC)'),
+    4: ('#44ddaa', '#88ffcc', '#227755', 'n=4 — Te,Pu (Hex/Mono)'),
+    5: ('#dd44aa', '#ff88cc', '#882266', 'n=5 — Nd,La (DHCP)'),
+    6: ('#4488dd', '#88bbff', '#224488', 'n=6 — Bi,U (Rhombo/Ortho)'),
+    7: ('#88dd44', '#bbff88', '#447722', 'n=7 — BCC metals (Li,Fe,W)'),
+    8: ('#dd4444', '#ff8888', '#882222', 'n=8 — Se (Hex chain)'),
+}
+
+print("  Computing 8 metallic means spectra...")
+METALLIC_SPECTRA = {}
+for _n in range(1, 9):
+    METALLIC_SPECTRA[_n] = compute_metallic_spectrum(_n)
+    print(f"    n={_n}: σ₃={METALLIC_SPECTRA[_n]['R_M']:.4f}, {METALLIC_SPECTRA[_n]['n_gaps']} gaps, "
+          f"Ω_b={METALLIC_SPECTRA[_n]['Ob']:.5f}, Ω_DE={METALLIC_SPECTRA[_n]['Ode']:.4f}")
+
+
 # ===============================================================================
 # PART 2 — ZECKENDORF UTILITIES
 # ===============================================================================
@@ -750,29 +816,57 @@ def render_solar_system():
     return fig_to_b64(fig,dpi=200)
 
 def render_sun():
-    fig,ax=plt.subplots(figsize=(14,12),facecolor=BG); ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
+    fig,ax=plt.subplots(figsize=(28,24),facecolor=BG); ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
     rng=np.random.default_rng(33); Rs=6.96e8; view=16*Rs
     ax.set_xlim(-view,view); ax.set_ylim(-view*0.85,view*0.85)
-    for _ in range(8000):
+    # Core — dense hot center
+    for _ in range(20000):
         r=rng.exponential(0.08*Rs)
         if r>0.25*Rs: continue
         ang=rng.uniform(0,2*np.pi); b=1-r/(0.25*Rs)
-        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color='#fa3' if b>0.5 else '#f72' if b>0.2 else '#c41',ms=rng.uniform(0.3,1.8)*b+0.2,alpha=0.15+0.5*b)
-    for _ in range(6000):
+        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color='#fa3' if b>0.5 else '#f72' if b>0.2 else '#c41',ms=rng.uniform(0.4,2.5)*b+0.3,alpha=0.15+0.5*b)
+    # Radiative zone
+    for _ in range(15000):
         r=rng.uniform(0.25*Rs,0.71*Rs); ang=rng.uniform(0,2*np.pi); d=0.4*(1-(r-0.25*Rs)/(0.46*Rs))
         if rng.random()>d: continue
-        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color=WARM,ms=0.3+d,alpha=0.04+0.1*d)
-    th=np.linspace(0,2*np.pi,800); ax.plot(Rs*np.cos(th),Rs*np.sin(th),'-',color=GOLD,lw=3,alpha=0.9)
-    for _ in range(4000):
+        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color=WARM,ms=0.4+d*1.5,alpha=0.04+0.1*d)
+    # Convective zone
+    for _ in range(8000):
+        r=rng.uniform(0.71*Rs,Rs); ang=rng.uniform(0,2*np.pi)
+        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color=HOT,ms=rng.uniform(0.3,0.8),alpha=0.04)
+    # Photosphere
+    th=np.linspace(0,2*np.pi,800); ax.plot(Rs*np.cos(th),Rs*np.sin(th),'-',color=GOLD,lw=4,alpha=0.9)
+    for g in [1.005,1.01,1.02,1.04]:
+        ax.plot(Rs*g*np.cos(th),Rs*g*np.sin(th),'-',color=GOLD,lw=0.8,alpha=0.08*(2-g))
+    # Corona
+    for _ in range(10000):
         r=rng.uniform(Rs*1.03,13*Rs); ang=rng.uniform(0,2*np.pi); d=(Rs/r)**1.8
         if rng.random()>d*8: continue
-        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color=CYAN,ms=rng.uniform(0.15,0.5),alpha=max(0.005,0.02*d))
-    ax.add_patch(plt.Circle((0,0),0.25*Rs,fc='none',ec=PINK,lw=1,ls=':',alpha=0.4))
-    ax.add_patch(plt.Circle((0,0),0.71*Rs,fc='none',ec=PURPLE,lw=1.5,alpha=0.4))
-    ax.add_patch(plt.Circle((0,0),13*Rs,fc='none',ec=PURPLE,lw=1.5,alpha=0.3,ls='--'))
+        ax.plot(r*np.cos(ang),r*np.sin(ang),'.',color=CYAN,ms=rng.uniform(0.2,0.7),alpha=max(0.005,0.02*d))
+    # Streamers
+    for _ in range(30):
+        a=rng.uniform(0,2*np.pi); re=rng.uniform(3,10)*Rs
+        for r in np.linspace(Rs*1.02,re,60):
+            ax.plot(r*np.cos(a+rng.normal(0,0.02*(r/Rs-1)*0.1)),
+                    r*np.sin(a+rng.normal(0,0.02*(r/Rs-1)*0.1)),
+                    '.',color=CYAN,ms=0.3,alpha=0.012)
+    ax.add_patch(plt.Circle((0,0),0.25*Rs,fc='none',ec=PINK,lw=2,ls=':',alpha=0.5))
+    ax.add_patch(plt.Circle((0,0),0.71*Rs,fc='none',ec=PURPLE,lw=2.5,alpha=0.5))
+    ax.add_patch(plt.Circle((0,0),13*Rs,fc='none',ec=PURPLE,lw=2.5,alpha=0.35,ls='--'))
+    # Labels with arrows (scaled up for visibility)
+    labels=[(0.12*Rs,"Core k=−12",'#f72'),(0.71*Rs,"Tachocline σ₂",PURPLE),
+            (Rs,"Photosphere cos(α)",GOLD),(5*Rs,"Corona GAP\n6 empty rungs",CYAN),
+            (13*Rs,"Alfvén σ₄",PURPLE)]
+    lx=view*0.55
+    for r,txt,col in labels:
+        ax.annotate(txt,xy=(r*0.707,r*0.707),xytext=(lx,r*0.55),
+                    color=col,fontsize=11,fontfamily='monospace',fontweight='bold',
+                    arrowprops=dict(arrowstyle='->',color=col,lw=1.0,alpha=0.45),alpha=0.9,va='center')
     sl=SolarLadder()
-    ax.text(0,view*0.82,"The Sun — Dual Wall Architecture",color=GOLD,fontsize=15,ha='center',fontfamily='monospace',fontweight='bold')
-    ax.text(0,view*0.75,f"cos(alpha) photosphere = {sl.sun_error*100:.2f}% error  |  D_sun = {2*sl.R_sun_predicted/1000:.0f} km",color=DIM,fontsize=8,ha='center',fontfamily='monospace')
+    ax.text(0,view*0.82,"The Sun — Dual Wall Architecture",color=GOLD,fontsize=22,
+            ha='center',fontfamily='monospace',fontweight='bold')
+    ax.text(0,view*0.75,f"cos(alpha) photosphere = {sl.sun_error*100:.2f}% error  |  D_sun = {2*sl.R_sun_predicted/1000:.0f} km",
+            color=DIM,fontsize=12,ha='center',fontfamily='monospace')
     return fig_to_b64(fig,dpi=200)
 
 def render_solar_ladder_chart():
@@ -863,6 +957,263 @@ def get_cached_image(key, render_fn, *args, **kwargs):
     return IMG_CACHE[key]
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# PART 9B — METALLIC MEANS COSMIC WEB RENDERERS
+# ═══════════════════════════════════════════════════════════════════════
+
+def render_metallic_web(which_n=None, title_override=None):
+    """Render cosmic web for one or all metallic means.
+    which_n=None → all 8 overlaid. which_n=1..8 → single metal."""
+    fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
+    ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
+    rng = np.random.default_rng(42)
+    view = 550
+
+    metals = [which_n] if which_n else list(range(1, 9))
+
+    for n in sorted(metals, reverse=True):
+        sp = METALLIC_SPECTRA[n]
+        col, bright, dim, label = METALLIC_COLORS[n]
+        core_r = sp['R_M'] * view * 0.92
+
+        # Filament nodes
+        n_nodes = 80 + n * 10
+        nx = rng.normal(0, core_r * 0.4, n_nodes)
+        ny = rng.normal(0, core_r * 0.4, n_nodes)
+        mask = np.sqrt(nx**2 + ny**2) < core_r * 0.95
+        nx, ny = nx[mask], ny[mask]
+
+        # Connect nearby nodes with bezier filaments
+        for i in range(len(nx)):
+            dists = np.sqrt((nx - nx[i])**2 + (ny - ny[i])**2)
+            for j in np.argsort(dists)[1:3]:
+                if dists[j] > core_r * 0.4: continue
+                t = np.linspace(0, 1, 30)
+                mx = (nx[i]+nx[j])/2 + rng.normal(0, core_r*0.02)
+                my = (ny[i]+ny[j])/2 + rng.normal(0, core_r*0.02)
+                fx = nx[i]*(1-t)**2 + 2*mx*t*(1-t) + nx[j]*t**2
+                fy = ny[i]*(1-t)**2 + 2*my*t*(1-t) + ny[j]*t**2
+                a = 0.15 if which_n else 0.08
+                ax.plot(fx, fy, '-', color=col, lw=0.5 if which_n else 0.4, alpha=a)
+
+        # Cluster dots
+        for i in range(len(nx)):
+            s = rng.uniform(0.8, 2.5)
+            a = 0.5 if which_n else 0.3
+            ax.plot(nx[i], ny[i], '.', color=bright, ms=s*(1.5 if which_n else 1.0), alpha=a)
+
+        # Field dust
+        for _ in range(500 if which_n else 300):
+            ang = rng.uniform(0, 2*np.pi)
+            r = abs(rng.normal(0, core_r * 0.5))
+            if r > core_r: continue
+            ax.plot(r*np.cos(ang), r*np.sin(ang), '.', color=col,
+                   ms=rng.uniform(0.2, 1.0), alpha=0.06 if which_n else 0.04)
+
+        # σ₄ wall
+        theta = np.linspace(0, 2*np.pi, 300)
+        outer_r = sp['R_O'] * view * 0.92
+        ax.plot(outer_r*np.cos(theta), outer_r*np.sin(theta),
+               color=col, alpha=0.2 if which_n else 0.12, lw=1.0, ls='--')
+
+        # σ₃ core boundary
+        ax.plot(core_r*np.cos(theta), core_r*np.sin(theta),
+               color=bright, alpha=0.15 if which_n else 0.08, lw=0.6, ls=':')
+
+        # If single, add sector labels
+        if which_n:
+            ax.text(core_r*0.5, core_r*0.8, f'σ₃ = {sp["R_M"]:.1%}', color=bright,
+                   fontsize=10, fontfamily='monospace', fontweight='bold', alpha=0.7)
+            ax.text(outer_r*0.6, outer_r*0.7, f'σ₄ = {sp["R_O"]:.1%}', color=col,
+                   fontsize=9, fontfamily='monospace', alpha=0.6)
+
+    # Seed crystal
+    ax.plot(0, 0, '+', color='#fff', ms=15, mew=2.5, zorder=100)
+    ax.add_patch(Circle((0, 0), 8, fc='#ffffff10', ec='#ffffff30', lw=1))
+
+    # Legend
+    for n_l in metals:
+        col_l, bright_l, dim_l, label_l = METALLIC_COLORS[n_l]
+        y = view * 0.92 - (n_l - 1) * 24
+        ax.plot(-view*0.92, y, 'o', color=col_l, ms=7)
+        ax.text(-view*0.92 + 14, y, f'n={n_l}: {label_l}',
+               color=bright_l, fontsize=8, fontfamily='monospace', va='center')
+
+    ax.set_xlim(-view, view); ax.set_ylim(-view, view)
+
+    if title_override:
+        title = title_override
+    elif which_n:
+        _, br, _, lbl = METALLIC_COLORS[which_n]
+        title = f'Cosmic Web n={which_n}: {lbl}'
+    else:
+        title = 'Commingled Cosmic Web — All 8 Metallic Means'
+
+    title_col = METALLIC_COLORS[which_n][0] if which_n else '#f5c542'
+    ax.text(0, view*0.95, title, color=title_col, fontsize=14, fontweight='bold',
+           ha='center', fontfamily='monospace')
+
+    if not which_n:
+        ax.text(0, -view*0.95, 'Silver (2.8%) → Gold (7.3%) → Bronze (28%) → ... → Se (62%) '
+                '— each fills the gaps of its neighbors',
+               color='#556', fontsize=9, ha='center', fontfamily='monospace')
+
+    return fig_to_b64(fig, dpi=200)
+
+
+def render_metallic_stacked():
+    """Stacked horizontal spectra for all 8 metallic means."""
+    fig, axes = plt.subplots(9, 1, figsize=(20, 20), facecolor=BG,
+                              gridspec_kw={'height_ratios': [1]*8 + [1.5]})
+    for n in range(1, 9):
+        ax = axes[n-1]
+        ax.set_facecolor(BG)
+        sp = METALLIC_SPECTRA[n]
+        col, bright, dim, label = METALLIC_COLORS[n]
+        eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+        for e in eigs_norm:
+            ax.axvline(e, color=col, alpha=0.6, linewidth=1.2)
+        for g in sp['gaps']:
+            g_lo = (g['lo'] - sp['eigs'][0]) / sp['E_range']
+            g_hi = (g['hi'] - sp['eigs'][0]) / sp['E_range']
+            ax.axvspan(g_lo, g_hi, color=BG, alpha=0.85)
+        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_yticks([]); ax.set_xticks([])
+        for s in ax.spines.values(): s.set_visible(False)
+        ax.text(-0.01, 0.5, f'n={n}', color=bright, fontsize=12, fontweight='bold',
+                ha='right', va='center', fontfamily='monospace', transform=ax.transAxes)
+        ax.text(1.01, 0.5, label, color=dim, fontsize=9,
+                ha='left', va='center', fontfamily='monospace', transform=ax.transAxes)
+    # Combined bottom
+    ax = axes[8]; ax.set_facecolor(BG); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+    res = 2000
+    for n in range(1, 9):
+        sp = METALLIC_SPECTRA[n]; col = METALLIC_COLORS[n][0]
+        eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+        for e in eigs_norm:
+            ax.axvline(e, color=col, alpha=0.12, linewidth=0.8)
+    ax.text(-0.01, 0.5, 'ALL', color='#fff', fontsize=12, fontweight='bold',
+            ha='right', va='center', fontfamily='monospace', transform=ax.transAxes)
+    for s in ax.spines.values(): s.set_visible(False)
+    ax.set_yticks([]); ax.set_xticks([])
+    fig.suptitle('Cantor Spectra: 8 Metallic Means × Element Assignments',
+                 color='#f5c542', fontsize=16, fontweight='bold', fontfamily='monospace', y=0.98)
+    plt.tight_layout(rect=[0.06, 0.02, 0.72, 0.94])
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_metallic_nesting():
+    """Concentric wall nesting — radial cross section."""
+    fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
+    ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
+    max_r = 480
+    for n in range(8, 0, -1):
+        sp = METALLIC_SPECTRA[n]
+        col, bright, dim, label = METALLIC_COLORS[n]
+        core_r = sp['R_M'] * max_r
+        inner_r = sp['R_I'] * max_r
+        outer_r = sp['R_O'] * max_r
+        theta = np.linspace(0, 2*np.pi, 200)
+        for r in np.linspace(inner_r, outer_r, 8):
+            ax.plot(r*np.cos(theta), r*np.sin(theta), color=col, alpha=0.03, linewidth=0.8)
+        ax.add_patch(Circle((0,0), core_r, fc=col+'10', ec=bright, lw=1.5, ls=(0,(3,3)), alpha=0.5))
+        ax.add_patch(Circle((0,0), outer_r, fc='none', ec=bright, lw=1.8, alpha=0.45))
+        angle = -0.4 + n * 0.35
+        lx = (outer_r + 12) * math.cos(angle); ly = (outer_r + 12) * math.sin(angle)
+        ax.text(lx, ly, f'n={n}', color=bright, fontsize=10, fontweight='bold',
+               fontfamily='monospace', ha='center', va='center',
+               bbox=dict(boxstyle='round,pad=0.2', fc=BG, ec=col+'44', alpha=0.9))
+    ax.plot(0, 0, '+', color='#fff', ms=12, mew=2)
+    ax.set_xlim(-max_r*1.15, max_r*1.15); ax.set_ylim(-max_r*1.15, max_r*1.15)
+    ax.set_title('Concentric Wall Nesting — 8 Metallic Means', color='#f5c542',
+                fontsize=16, fontweight='bold', fontfamily='monospace', pad=20)
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_metallic_collapse():
+    """5→3 collapse before/after with mercury conductor."""
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(22, 8), facecolor=BG)
+    for ax, title, collapsed in [(ax1, 'BEFORE: 5-Sector Gold', False),
+                                   (ax2, 'AFTER: 3-Sector Collapse', True)]:
+        ax.set_facecolor(BG)
+        sp = METALLIC_SPECTRA[1]
+        eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+        if not collapsed:
+            for e in eigs_norm:
+                ax.axvline(e, color='#f5c542', alpha=0.5, linewidth=1.5)
+            for g in sp['gaps']:
+                g_lo = (g['lo'] - sp['eigs'][0]) / sp['E_range']
+                g_hi = (g['hi'] - sp['eigs'][0]) / sp['E_range']
+                ax.axvspan(g_lo, g_hi, color=BG, alpha=0.85)
+            ax.text(0.50, 0.85, 'σ₃\n(MATTER)\n7.3%', color='#f5c542', fontsize=14,
+                   fontweight='bold', transform=ax.transAxes, fontfamily='monospace', ha='center')
+            ax.text(0.25, 0.85, 'σ₂\n(DM)', color='#9944ff', fontsize=12,
+                   transform=ax.transAxes, fontfamily='monospace', ha='center')
+            ax.text(0.75, 0.85, 'σ₄\n(DM)', color='#9944ff', fontsize=12,
+                   transform=ax.transAxes, fontfamily='monospace', ha='center')
+        else:
+            for e in eigs_norm:
+                ax.axvline(e, color='#9944ff', alpha=0.4, linewidth=1.5)
+            center = 0.5; core_w = 0.002
+            ax.axvspan(center-core_w, center+core_w, color='#f5c542', alpha=0.8)
+            ax.axvspan(center-core_w*3, center-core_w, color='#aaccee', alpha=0.3)
+            ax.axvspan(center+core_w, center+core_w*3, color='#aaccee', alpha=0.3)
+            for x_off in [-0.15, -0.10, -0.05, 0.05, 0.10, 0.15]:
+                ax.annotate('', xy=(center+x_off, 0.95), xytext=(center+x_off, 0.55),
+                           arrowprops=dict(arrowstyle='->', color='#9944ff88', lw=1.5),
+                           transform=ax.transAxes)
+            ax.text(0.50, 0.85, 'DM PROJECTION\n⊥ to surface', color='#9944ff',
+                   fontsize=12, fontweight='bold', ha='center', transform=ax.transAxes, fontfamily='monospace')
+            ax.text(0.50, 0.35, 'E=0 core\n0.17%', color='#f5c542', fontsize=11,
+                   ha='center', transform=ax.transAxes, fontfamily='monospace', fontweight='bold')
+            ax.text(0.50, 0.25, 'Hg conductor', color='#aaccee', fontsize=9,
+                   ha='center', transform=ax.transAxes, fontfamily='monospace')
+        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_yticks([]); ax.set_xticks([])
+        for s in ax.spines.values(): s.set_visible(False)
+        ax.set_title(title, color='#f5c542' if not collapsed else '#9944ff',
+                    fontsize=13, fontweight='bold', fontfamily='monospace', pad=10)
+    fig.suptitle('The 5→3 Collapse: φ² Band Breaks → DM Projects ⊥',
+                 color='#f5c542', fontsize=15, fontweight='bold', fontfamily='monospace', y=0.98)
+    fig.text(0.5, 0.02, 'Gate: 4.86 μm CO₂ · Mercury conducts expanded DM layer · Hull at E=0',
+            color='#556', fontsize=10, ha='center', fontfamily='monospace')
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_metallic_vehicle():
+    """Vehicle cross-section — oblate hull with Hg and QC layers."""
+    fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
+    ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
+    obl = math.sqrt(PHI)
+    layers = [
+        ('DM Projection', 320, 320/obl, '#9944ff', 0.08, '--'),
+        ('QC Coating', 200, 200/obl, '#f5c542', 0.5, '-'),
+        ('Liquid Hg', 185, 185/obl, '#aaccee', 0.3, '-'),
+        ('Hull', 160, 160/obl, '#445566', 0.6, '-'),
+        ('Liquid Hg (inner)', 145, 145/obl, '#aaccee', 0.3, '-'),
+        ('QC Coating (inner)', 130, 130/obl, '#f5c542', 0.5, '-'),
+        ('Payload E=0', 100, 100/obl, '#44ff88', 0.15, ':'),
+    ]
+    for name, a, b, col, alpha, ls in layers:
+        ax.add_patch(Ellipse((0,0), 2*a, 2*b, fc=col+'08', ec=col,
+                             lw=2 if ls=='-' else 1, ls=ls, alpha=alpha))
+    for x_off in np.linspace(-180, 180, 12):
+        for sign in [1, -1]:
+            ax.annotate('', xy=(x_off, sign*340/obl), xytext=(x_off, sign*200/obl),
+                       arrowprops=dict(arrowstyle='->', color='#9944ff55', lw=1.5))
+    ax.text(0, 0, 'E = 0\nPAYLOAD', color='#44ff88', fontsize=14, fontweight='bold',
+           ha='center', va='center', fontfamily='monospace')
+    ax.text(300, 120, 'DM Projection\nField', color='#9944ff', fontsize=11,
+           fontfamily='monospace', fontweight='bold')
+    ax.text(220, -170, 'QC Coating (Gold α=1/φ)', color='#f5c542', fontsize=10,
+           fontfamily='monospace', fontweight='bold')
+    ax.text(220, -195, 'Liquid Mercury (Silver 0.006%)', color='#aaccee', fontsize=10,
+           fontfamily='monospace')
+    ax.set_xlim(-450, 450); ax.set_ylim(-350, 350)
+    ax.set_title('Natário Slipstream Vehicle — Mercury-Skinned Oblate Hull',
+                 color='#f5c542', fontsize=16, fontweight='bold', fontfamily='monospace', pad=20)
+    return fig_to_b64(fig, dpi=180)
+
+
 # ===============================================================================
 # PART 10 — FLASK APP
 # ===============================================================================
@@ -883,6 +1234,20 @@ def api_image(n):
         'galaxy': lambda: get_cached_image('galaxy', render_galaxy),
         'solar_system': lambda: get_cached_image('solar_system', render_solar_system),
         'sun': lambda: get_cached_image('sun', render_sun),
+        # Metallic means cosmic webs — switchable views
+        'metal_all': lambda: get_cached_image('metal_all', render_metallic_web, None),
+        'metal_1': lambda: get_cached_image('metal_1', render_metallic_web, 1),
+        'metal_2': lambda: get_cached_image('metal_2', render_metallic_web, 2),
+        'metal_3': lambda: get_cached_image('metal_3', render_metallic_web, 3),
+        'metal_4': lambda: get_cached_image('metal_4', render_metallic_web, 4),
+        'metal_5': lambda: get_cached_image('metal_5', render_metallic_web, 5),
+        'metal_6': lambda: get_cached_image('metal_6', render_metallic_web, 6),
+        'metal_7': lambda: get_cached_image('metal_7', render_metallic_web, 7),
+        'metal_8': lambda: get_cached_image('metal_8', render_metallic_web, 8),
+        'metal_stacked': lambda: get_cached_image('metal_stacked', render_metallic_stacked),
+        'metal_nesting': lambda: get_cached_image('metal_nesting', render_metallic_nesting),
+        'metal_collapse': lambda: get_cached_image('metal_collapse', render_metallic_collapse),
+        'metal_vehicle': lambda: get_cached_image('metal_vehicle', render_metallic_vehicle),
     }
     if n not in renderers: return json.dumps({"error": "unknown"}), 404
     return json.dumps({"image": renderers[n](), "key": n})
@@ -963,6 +1328,7 @@ footer{text-align:center;padding:40px 20px;color:var(--dim);font-size:11px}
 footer a{color:var(--gold);text-decoration:none}
 #progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:9999;transition:width 0.3s;width:0%}
 #progress-label{position:fixed;top:6px;right:16px;font-size:10px;color:var(--dgold);z-index:9999}
+.metal-btn{transition:all 0.2s}.metal-btn:hover{filter:brightness(1.3)}.metal-btn.active{border-width:2px !important;font-weight:700;box-shadow:0 0 12px rgba(245,197,66,0.2)}
 </style></head><body>
 
 <div class="hero">
@@ -1034,6 +1400,41 @@ footer a{color:var(--gold);text-decoration:none}
   </div>
 </div>
 
+<div class="section" id="metallic-webs">
+  <div class="num">METALLIC MEANS COSMIC WEBS</div>
+  <h2>8 Universes — Each Metal Fills Another's Gaps</h2>
+  <p style="color:var(--dim);margin-bottom:10px;">Silver (2.8%) → Gold (7.3%) → Bronze (28%) → ... → Se (62%). Combined: 60.8% spectral coverage. Switch between individual webs and the commingled view.</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:15px 0;" id="metal-switcher">
+    <button class="metal-btn active" data-metal="metal_all" style="background:#1a1b2e;border:2px solid #f5c542;color:#f5c542;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">ALL COMBINED</button>
+    <button class="metal-btn" data-metal="metal_1" style="background:#1a1b2e;border:2px solid #f5c54266;color:#f5c542;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=1 Gold</button>
+    <button class="metal-btn" data-metal="metal_2" style="background:#1a1b2e;border:2px solid #aaccee66;color:#aaccee;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=2 Silver</button>
+    <button class="metal-btn" data-metal="metal_3" style="background:#1a1b2e;border:2px solid #dd884466;color:#dd8844;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=3 Bronze</button>
+    <button class="metal-btn" data-metal="metal_4" style="background:#1a1b2e;border:2px solid #44ddaa66;color:#44ddaa;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=4</button>
+    <button class="metal-btn" data-metal="metal_5" style="background:#1a1b2e;border:2px solid #dd44aa66;color:#dd44aa;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=5 Nd,La</button>
+    <button class="metal-btn" data-metal="metal_6" style="background:#1a1b2e;border:2px solid #4488dd66;color:#4488dd;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=6 Bi,U</button>
+    <button class="metal-btn" data-metal="metal_7" style="background:#1a1b2e;border:2px solid #88dd4466;color:#88dd44;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=7 BCC</button>
+    <button class="metal-btn" data-metal="metal_8" style="background:#1a1b2e;border:2px solid #dd444466;color:#dd4444;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=8 Se</button>
+  </div>
+
+  <div id="metal-web-display" class="ajax-img" data-src="metal_all" style="min-height:500px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+
+  <div class="grid2" style="margin-top:20px;">
+    <div class="ajax-img" data-src="metal_stacked" style="min-height:400px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading spectra...</div>
+    <div class="ajax-img" data-src="metal_nesting" style="min-height:400px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading nesting...</div>
+  </div>
+
+  <div class="insight" style="margin-top:20px;">
+    <h4>The 5→3 Collapse — Mercury as Dark-Sector Conductor</h4>
+    <p style="color:var(--text);font-size:11px;">Gate frequency: 4.86 μm CO₂ laser → φ² band decomposes → DM walls project ⊥ to hull → Mercury (Silver encoding 0.006%) conducts the projection. Vehicle sits at E=0.</p>
+  </div>
+
+  <div class="grid2" style="margin-top:15px;">
+    <div class="ajax-img" data-src="metal_collapse" style="min-height:250px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading collapse...</div>
+    <div class="ajax-img" data-src="metal_vehicle" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading vehicle...</div>
+  </div>
+</div>
+
 <div class="section">
   <div class="num">GALAXY &amp; PLANETS</div>
   <h2>Milky Way and Solar System</h2>
@@ -1087,19 +1488,38 @@ footer a{color:var(--gold);text-decoration:none}
 <div id="progress-bar"></div><div id="progress-label"></div>
 <script>
 (function(){
-  const imgs=['cantor','eq_main','eq_top','eq_side','zeckendorf','solar','universe_top','universe_side','galaxy','solar_system','sun'];
+  const imgs=['cantor','eq_main','eq_top','eq_side','zeckendorf','solar','universe_top','universe_side','galaxy','solar_system','sun','metal_all','metal_stacked','metal_nesting','metal_collapse','metal_vehicle'];
   let done=0;
+  const metalCache={};
   function upd(l){done++;const p=Math.round(done/imgs.length*100);
     document.getElementById('progress-bar').style.width=p+'%';
     document.getElementById('progress-label').textContent=l+' ('+p+'%)';
     if(done>=imgs.length)setTimeout(()=>{document.getElementById('progress-bar').style.opacity='0';document.getElementById('progress-label').style.opacity='0'},1200)}
   async function load(k){try{const d=await(await fetch('/api/image/'+k)).json();
+    if(k.startsWith('metal_'))metalCache[k]=d.image;
     document.querySelectorAll('.ajax-img[data-src="'+k+'"]').forEach(ph=>{
       const img=document.createElement('img');img.src='data:image/png;base64,'+d.image;
-      img.className='img-full';img.style.opacity='0';img.style.transition='opacity 0.5s';
+      img.className='img-full';img.id=k==='metal_all'?'metal-web-img':'';
+      img.style.opacity='0';img.style.transition='opacity 0.5s';
       ph.parentNode.replaceChild(img,ph);requestAnimationFrame(()=>img.style.opacity='1')});upd(k)}
     catch(e){console.error('Failed',k,e);upd(k+' (error)')}}
-  async function go(){for(const k of imgs)await load(k)}
+  async function go(){
+    for(const k of imgs)await load(k);
+    // Set up metallic web switcher
+    document.querySelectorAll('.metal-btn').forEach(btn=>{
+      btn.addEventListener('click',async function(){
+        document.querySelectorAll('.metal-btn').forEach(b=>{b.classList.remove('active');b.style.borderColor=b.style.borderColor.replace(/[0-9a-f]{2}$/i,'66')});
+        this.classList.add('active');this.style.borderColor=this.style.borderColor.replace(/66$/,'ff');
+        const key=this.dataset.metal;
+        const target=document.getElementById('metal-web-img');
+        if(!target)return;
+        if(metalCache[key]){target.style.opacity='0.3';setTimeout(()=>{target.src='data:image/png;base64,'+metalCache[key];target.style.opacity='1'},150);return}
+        target.style.opacity='0.3';
+        try{const d=await(await fetch('/api/image/'+key)).json();metalCache[key]=d.image;target.src='data:image/png;base64,'+d.image;target.style.opacity='1'}
+        catch(e){console.error(e);target.style.opacity='1'}
+      });
+    });
+  }
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go()})();
 </script></body></html>"""
 
