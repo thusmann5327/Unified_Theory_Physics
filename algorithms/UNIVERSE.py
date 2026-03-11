@@ -976,7 +976,15 @@ def get_cached_image(key, render_fn, *args, **kwargs):
 
 def render_metallic_web(which_n=None, title_override=None):
     """Render cosmic web for one or all metallic means.
-    which_n=None → all 8 overlaid. which_n=1..8 → single metal."""
+    which_n=None → all 8 overlaid. which_n=1..8 → single metal.
+
+    Design improvements from zeckybot.py:
+    - Dual distribution (normal + uniform) for better coverage
+    - Filament sparkle (dots along bezier curves)
+    - Cluster halos (multiple dots per node)
+    - "You are here" Milky Way marker
+    - Better boundary styling
+    """
     fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
     ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
     rng = np.random.default_rng(42)
@@ -989,71 +997,112 @@ def render_metallic_web(which_n=None, title_override=None):
         col, bright, dim, label = METALLIC_COLORS[n]
         core_r = sp['R_M'] * view * 0.92
 
-        # Filament nodes
-        n_nodes = 80 + n * 10
-        nx = rng.normal(0, core_r * 0.4, n_nodes)
-        ny = rng.normal(0, core_r * 0.4, n_nodes)
+        # Dual distribution: clustered center + uniform spread (zeckybot pattern)
+        n_nodes = 120 + n * 15 if which_n else 80 + n * 8
+        nx_center = rng.normal(0, core_r * 0.3, n_nodes // 2)
+        ny_center = rng.normal(0, core_r * 0.3, n_nodes // 2)
+        nx_spread = rng.uniform(-core_r * 0.85, core_r * 0.85, n_nodes // 2)
+        ny_spread = rng.uniform(-core_r * 0.85, core_r * 0.85, n_nodes // 2)
+        nx = np.concatenate([nx_center, nx_spread])
+        ny = np.concatenate([ny_center, ny_spread])
         mask = np.sqrt(nx**2 + ny**2) < core_r * 0.95
         nx, ny = nx[mask], ny[mask]
 
-        # Connect nearby nodes with bezier filaments
+        # Connect to nearest neighbors with bezier filaments
+        n_connect = 4 if which_n else 2  # Fewer connections for combined view
+        t_steps = 40 if which_n else 25  # Fewer points for combined view
+        t = np.linspace(0, 1, t_steps)
+
         for i in range(len(nx)):
             dists = np.sqrt((nx - nx[i])**2 + (ny - ny[i])**2)
-            for j in np.argsort(dists)[1:3]:
-                if dists[j] > core_r * 0.4: continue
-                t = np.linspace(0, 1, 30)
-                mx = (nx[i]+nx[j])/2 + rng.normal(0, core_r*0.02)
-                my = (ny[i]+ny[j])/2 + rng.normal(0, core_r*0.02)
+            for j in np.argsort(dists)[1:n_connect+1]:
+                if dists[j] > core_r * 0.35: continue
+                mx = (nx[i]+nx[j])/2 + rng.normal(0, core_r*0.015)
+                my = (ny[i]+ny[j])/2 + rng.normal(0, core_r*0.015)
                 fx = nx[i]*(1-t)**2 + 2*mx*t*(1-t) + nx[j]*t**2
                 fy = ny[i]*(1-t)**2 + 2*my*t*(1-t) + ny[j]*t**2
-                a = 0.15 if which_n else 0.08
-                ax.plot(fx, fy, '-', color=col, lw=0.5 if which_n else 0.4, alpha=a)
+                a = 0.12 if which_n else 0.05
+                ax.plot(fx, fy, '-', color=col, lw=0.5 if which_n else 0.3, alpha=a)
 
-        # Cluster dots
-        for i in range(len(nx)):
-            s = rng.uniform(0.8, 2.5)
-            a = 0.5 if which_n else 0.3
-            ax.plot(nx[i], ny[i], '.', color=bright, ms=s*(1.5 if which_n else 1.0), alpha=a)
+                # Filament sparkle (reduced for combined view)
+                if which_n:
+                    for k in range(0, len(t), 4):
+                        spark_x = fx[k] + rng.normal(0, core_r*0.004)
+                        spark_y = fy[k] + rng.normal(0, core_r*0.004)
+                        ax.plot(spark_x, spark_y, '.', color=bright, ms=rng.uniform(0.3, 1.5), alpha=0.35)
+                elif rng.random() > 0.7:  # Only 30% chance for combined
+                    k = len(t)//2  # Just one sparkle at midpoint
+                    ax.plot(fx[k], fy[k], '.', color=bright, ms=0.8, alpha=0.15)
 
-        # Field dust
-        for _ in range(500 if which_n else 300):
-            ang = rng.uniform(0, 2*np.pi)
-            r = abs(rng.normal(0, core_r * 0.5))
-            if r > core_r: continue
-            ax.plot(r*np.cos(ang), r*np.sin(ang), '.', color=col,
-                   ms=rng.uniform(0.2, 1.0), alpha=0.06 if which_n else 0.04)
+        # Cluster halos (optimized with scatter for combined view)
+        if which_n:
+            # Full detail for single metal view
+            for i in range(len(nx)):
+                size = rng.uniform(0.6, 2.2)
+                n_halo = int(35 * size)
+                for _ in range(n_halo):
+                    halo_x = nx[i] + rng.normal(0, core_r * 0.008 * size)
+                    halo_y = ny[i] + rng.normal(0, core_r * 0.008 * size)
+                    halo_col = bright if rng.random() > 0.3 else col
+                    ax.plot(halo_x, halo_y, '.', color=halo_col,
+                           ms=rng.uniform(0.3, 1.5 * size), alpha=rng.uniform(0.15, 0.5))
+        else:
+            # Efficient batch scatter for combined view
+            all_halo_x, all_halo_y = [], []
+            for i in range(len(nx)):
+                size = rng.uniform(0.5, 1.5)
+                n_halo = int(8 * size)  # Reduced count
+                all_halo_x.extend(nx[i] + rng.normal(0, core_r * 0.006 * size, n_halo))
+                all_halo_y.extend(ny[i] + rng.normal(0, core_r * 0.006 * size, n_halo))
+            ax.scatter(all_halo_x, all_halo_y, c=bright, s=rng.uniform(0.3, 2, len(all_halo_x)),
+                      alpha=0.15, linewidths=0)
 
-        # σ₄ wall
+        # σ₄ outer wall (improved styling)
         theta = np.linspace(0, 2*np.pi, 300)
         outer_r = sp['R_O'] * view * 0.92
-        ax.plot(outer_r*np.cos(theta), outer_r*np.sin(theta),
-               color=col, alpha=0.2 if which_n else 0.12, lw=1.0, ls='--')
+        inner_r = sp['R_I'] * view * 0.92
+        ax.add_patch(Circle((0, 0), outer_r, fc='none', ec=col,
+                           lw=1.2 if which_n else 0.8, ls='--', alpha=0.2 if which_n else 0.08))
+
+        # σ₂ inner wall
+        ax.add_patch(Circle((0, 0), inner_r, fc='none', ec=dim+'88',
+                           lw=0.8, alpha=0.12 if which_n else 0.06))
 
         # σ₃ core boundary
-        ax.plot(core_r*np.cos(theta), core_r*np.sin(theta),
-               color=bright, alpha=0.15 if which_n else 0.08, lw=0.6, ls=':')
+        ax.add_patch(Circle((0, 0), core_r, fc='none', ec=bright,
+                           lw=0.8 if which_n else 0.5, ls=':', alpha=0.15 if which_n else 0.08))
 
-        # If single, add sector labels
+        # Sector labels for single metal
         if which_n:
-            ax.text(core_r*0.5, core_r*0.8, f'σ₃ = {sp["R_M"]:.1%}', color=bright,
-                   fontsize=10, fontfamily='monospace', fontweight='bold', alpha=0.7)
-            ax.text(outer_r*0.6, outer_r*0.7, f'σ₄ = {sp["R_O"]:.1%}', color=col,
-                   fontsize=9, fontfamily='monospace', alpha=0.6)
+            ax.text(core_r*0.45, core_r*0.75, f'σ₃ = {sp["R_M"]:.1%}', color=bright,
+                   fontsize=11, fontfamily='monospace', fontweight='bold', alpha=0.8)
+            ax.text(outer_r*0.55, outer_r*0.65, f'σ₄ = {sp["R_O"]:.1%}', color=col,
+                   fontsize=10, fontfamily='monospace', alpha=0.7)
 
-    # Seed crystal
-    ax.plot(0, 0, '+', color='#fff', ms=15, mew=2.5, zorder=100)
-    ax.add_patch(Circle((0, 0), 8, fc='#ffffff10', ec='#ffffff30', lw=1))
+    # Seed crystal at center
+    ax.plot(0, 0, '+', color=GOLD, ms=15, mew=2.5, alpha=0.7, zorder=100)
+    ax.add_patch(Circle((0, 0), 10, fc='#ffffff08', ec='#ffffff20', lw=1))
+
+    # "You are here" marker (zeckybot pattern) - for Gold (n=1) or all-metals view
+    if which_n == 1 or which_n is None:
+        mw_r = view * 0.35  # Milky Way position
+        mw_ang = 0.75
+        mw_x, mw_y = mw_r * math.cos(mw_ang), mw_r * math.sin(mw_ang)
+        ax.plot(mw_x, mw_y, '*', color=GREEN, ms=10, mec='#fff', mew=0.6, zorder=50)
+        ax.text(mw_x + 15, mw_y + 10, "You are here", color=GREEN, fontsize=8,
+               fontfamily='monospace', fontweight='bold', alpha=0.9)
 
     # Legend
     for n_l in metals:
         col_l, bright_l, dim_l, label_l = METALLIC_COLORS[n_l]
         y = view * 0.92 - (n_l - 1) * 24
-        ax.plot(-view*0.92, y, 'o', color=col_l, ms=7)
-        ax.text(-view*0.92 + 14, y, f'n={n_l}: {label_l}',
+        ax.plot(-view*0.90, y, 'o', color=col_l, ms=8, mec=bright_l, mew=0.5)
+        ax.text(-view*0.90 + 16, y, f'n={n_l}: {label_l}',
                color=bright_l, fontsize=8, fontfamily='monospace', va='center')
 
     ax.set_xlim(-view, view); ax.set_ylim(-view, view)
 
+    # Title
     if title_override:
         title = title_override
     elif which_n:
@@ -1062,90 +1111,197 @@ def render_metallic_web(which_n=None, title_override=None):
     else:
         title = 'Commingled Cosmic Web — All 8 Metallic Means'
 
-    title_col = METALLIC_COLORS[which_n][0] if which_n else '#f5c542'
-    ax.text(0, view*0.95, title, color=title_col, fontsize=14, fontweight='bold',
+    title_col = METALLIC_COLORS[which_n][0] if which_n else GOLD
+    ax.text(0, view*0.95, title, color=title_col, fontsize=15, fontweight='bold',
            ha='center', fontfamily='monospace')
 
-    if not which_n:
-        ax.text(0, -view*0.95, 'Silver (2.8%) → Gold (7.3%) → Bronze (28%) → ... → Se (62%) '
-                '— each fills the gaps of its neighbors',
+    # Subtitle with computed values (zeckybot pattern)
+    if which_n:
+        sp = METALLIC_SPECTRA[which_n]
+        ax.text(0, view*0.89, f'δ_{which_n}={sp["mean"]:.4f}  σ₃={sp["R_M"]:.4f}  '
+               f'Ω_b={sp["Ob"]:.4f}  {sp["n_gaps"]} gaps',
+               color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    else:
+        ax.text(0, -view*0.95, f'Combined coverage: {SPECTRAL_COVERAGE:.0%} — '
+                'Silver (2.8%) → Gold (7.3%) → Bronze (28%) → ... → Se (62%)',
                color='#556', fontsize=9, ha='center', fontfamily='monospace')
 
     return fig_to_b64(fig, dpi=200)
 
 
 def render_metallic_stacked():
-    """Stacked horizontal spectra for all 8 metallic means."""
-    fig, axes = plt.subplots(9, 1, figsize=(20, 20), facecolor=BG,
-                              gridspec_kw={'height_ratios': [1]*8 + [1.5]})
+    """Stacked horizontal spectra for all 8 metallic means.
+
+    Improved design:
+    - Band fills with gradient effect
+    - Clearer gap regions with subtle highlighting
+    - Better combined row visualization
+    - Right-side info panel with key metrics
+    """
+    fig, axes = plt.subplots(9, 1, figsize=(22, 18), facecolor=BG,
+                              gridspec_kw={'height_ratios': [1]*8 + [1.8], 'hspace': 0.08})
+
+    # Individual spectra rows
     for n in range(1, 9):
         ax = axes[n-1]
         ax.set_facecolor(BG)
         sp = METALLIC_SPECTRA[n]
         col, bright, dim, label = METALLIC_COLORS[n]
         eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+
+        # Draw band fill (not just lines)
+        ax.barh(0, 1, height=1, left=0, color=col+'15', edgecolor='none')
         for e in eigs_norm:
-            ax.axvline(e, color=col, alpha=0.6, linewidth=1.2)
+            ax.axvline(e, color=col, alpha=0.7, linewidth=1.0)
+
+        # Highlight gaps with darker background
         for g in sp['gaps']:
             g_lo = (g['lo'] - sp['eigs'][0]) / sp['E_range']
             g_hi = (g['hi'] - sp['eigs'][0]) / sp['E_range']
-            ax.axvspan(g_lo, g_hi, color=BG, alpha=0.85)
+            ax.axvspan(g_lo, g_hi, color='#0a0b14', alpha=0.92)
+            # Gap center marker
+            ax.plot((g_lo + g_hi)/2, 0.5, '|', color=dim, ms=6, alpha=0.3)
+
         ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_yticks([]); ax.set_xticks([])
         for s in ax.spines.values(): s.set_visible(False)
+
+        # Left label
         ax.text(-0.01, 0.5, f'n={n}', color=bright, fontsize=12, fontweight='bold',
                 ha='right', va='center', fontfamily='monospace', transform=ax.transAxes)
-        ax.text(1.01, 0.5, label, color=dim, fontsize=9,
+        # Right label with key metrics
+        ax.text(1.01, 0.5, f'{label.split("—")[0].strip()}', color=bright, fontsize=9,
                 ha='left', va='center', fontfamily='monospace', transform=ax.transAxes)
-    # Combined bottom
-    ax = axes[8]; ax.set_facecolor(BG); ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-    res = 2000
-    for n in range(1, 9):
-        sp = METALLIC_SPECTRA[n]; col = METALLIC_COLORS[n][0]
+        ax.text(1.15, 0.5, f'σ₃={sp["R_M"]:.1%}', color=dim, fontsize=8,
+                ha='left', va='center', fontfamily='monospace', transform=ax.transAxes)
+        ax.text(1.24, 0.5, f'{sp["n_gaps"]} gaps', color='#445', fontsize=7,
+                ha='left', va='center', fontfamily='monospace', transform=ax.transAxes)
+
+    # Combined bottom row with all metals overlaid
+    ax = axes[8]; ax.set_facecolor('#0a0b14')
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+
+    # Layer all spectra with varying opacity
+    for n in range(8, 0, -1):  # Draw from back to front
+        sp = METALLIC_SPECTRA[n]
+        col = METALLIC_COLORS[n][0]
         eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+        alpha_base = 0.08 + 0.02 * (9 - n)  # Gold more visible
         for e in eigs_norm:
-            ax.axvline(e, color=col, alpha=0.12, linewidth=0.8)
-    ax.text(-0.01, 0.5, 'ALL', color='#fff', fontsize=12, fontweight='bold',
+            ax.axvline(e, color=col, alpha=alpha_base, linewidth=0.7)
+
+    # Add coverage indicator bar at bottom
+    ax.barh(-0.08, SPECTRAL_COVERAGE, height=0.08, left=0,
+           color=GREEN+'cc', edgecolor=GREEN)
+    ax.barh(-0.08, 1 - SPECTRAL_COVERAGE, height=0.08, left=SPECTRAL_COVERAGE,
+           color='#330000', edgecolor='#550000')
+
+    ax.text(-0.01, 0.5, 'ALL', color='#fff', fontsize=13, fontweight='bold',
             ha='right', va='center', fontfamily='monospace', transform=ax.transAxes)
-    ax.text(1.01, 0.5, f'Combined: {SPECTRAL_COVERAGE:.0%} filled', color='#44cc88', fontsize=9,
+    ax.text(1.01, 0.5, f'Combined: {SPECTRAL_COVERAGE:.0%} filled', color=GREEN, fontsize=10,
             ha='left', va='center', fontfamily='monospace', fontweight='bold', transform=ax.transAxes)
+    ax.text(1.01, 0.25, f'{100-SPECTRAL_COVERAGE*100:.0%} universal voids', color='#884444', fontsize=8,
+            ha='left', va='center', fontfamily='monospace', transform=ax.transAxes)
+
     for s in ax.spines.values(): s.set_visible(False)
-    ax.set_yticks([]); ax.set_xticks([])
-    fig.suptitle('Cantor Spectra: 8 Metallic Means × Element Assignments',
-                 color='#f5c542', fontsize=16, fontweight='bold', fontfamily='monospace', y=0.98)
-    fig.text(0.39, 0.955, f'AAH Hamiltonian at α = 1/δ_n, V = 2J, D = {D} — Bands fill each other\'s gaps',
-             color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    ax.set_yticks([])
+
+    # X-axis labels on combined row
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
-    ax.set_xticklabels(['E_min', '25%', '50%', '75%', 'E_max'], color='#556', fontsize=8, fontfamily='monospace')
-    ax.tick_params(axis='x', colors='#333')
-    plt.tight_layout(rect=[0.06, 0.02, 0.72, 0.94])
+    ax.set_xticklabels(['E_min', '25%', '50%', '75%', 'E_max'],
+                      color='#667', fontsize=9, fontfamily='monospace')
+    ax.tick_params(axis='x', colors='#445', length=4)
+
+    # Title and subtitle
+    fig.suptitle('Cantor Spectra: 8 Metallic Means × Element Assignments',
+                 color=GOLD, fontsize=17, fontweight='bold', fontfamily='monospace', y=0.98)
+    fig.text(0.42, 0.955, f'AAH Hamiltonian at α = 1/δ_n, V = 2J, D = {D} — Bands fill each other\'s gaps',
+             color='#556', fontsize=10, ha='center', fontfamily='monospace')
+
+    plt.tight_layout(rect=[0.04, 0.02, 0.78, 0.94])
     return fig_to_b64(fig, dpi=180)
 
 
 def render_metallic_nesting():
-    """Concentric wall nesting — radial cross section."""
+    """Concentric wall nesting — radial cross section.
+
+    Improved design:
+    - Gradient fills between walls
+    - Clearer σ₂/σ₃/σ₄ region distinctions
+    - Better label positioning with connecting lines
+    - Central seed crystal visualization
+    """
     fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
     ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
     max_r = 480
+
+    # Draw from outermost to innermost for proper layering
     for n in range(8, 0, -1):
         sp = METALLIC_SPECTRA[n]
         col, bright, dim, label = METALLIC_COLORS[n]
         core_r = sp['R_M'] * max_r
         inner_r = sp['R_I'] * max_r
+        shell_r = sp['R_S'] * max_r
         outer_r = sp['R_O'] * max_r
-        theta = np.linspace(0, 2*np.pi, 200)
-        for r in np.linspace(inner_r, outer_r, 8):
-            ax.plot(r*np.cos(theta), r*np.sin(theta), color=col, alpha=0.03, linewidth=0.8)
-        ax.add_patch(Circle((0,0), core_r, fc=col+'10', ec=bright, lw=1.5, ls=(0,(3,3)), alpha=0.5))
-        ax.add_patch(Circle((0,0), outer_r, fc='none', ec=bright, lw=1.8, alpha=0.45))
-        angle = -0.4 + n * 0.35
-        lx = (outer_r + 12) * math.cos(angle); ly = (outer_r + 12) * math.sin(angle)
-        ax.text(lx, ly, f'n={n}', color=bright, fontsize=10, fontweight='bold',
+        theta = np.linspace(0, 2*np.pi, 300)
+
+        # DM wall region fill (σ₂ to σ₄)
+        for r in np.linspace(inner_r, outer_r, 12):
+            alpha_grad = 0.015 * (1 - abs(r - shell_r)/(outer_r - inner_r))
+            ax.plot(r*np.cos(theta), r*np.sin(theta), color=col, alpha=alpha_grad, linewidth=0.6)
+
+        # Core region (σ₃) with subtle fill
+        ax.add_patch(Circle((0,0), core_r, fc=col+'08', ec=bright,
+                           lw=2.0, ls=(0,(4,2)), alpha=0.6))
+
+        # Inner wall (σ₂)
+        ax.add_patch(Circle((0,0), inner_r, fc='none', ec=dim,
+                           lw=1.2, ls=':', alpha=0.35))
+
+        # Shell center (σ_S)
+        ax.add_patch(Circle((0,0), shell_r, fc='none', ec=col,
+                           lw=0.8, alpha=0.25))
+
+        # Outer wall (σ₄)
+        ax.add_patch(Circle((0,0), outer_r, fc='none', ec=bright,
+                           lw=2.2, alpha=0.55))
+
+        # Label with connecting line
+        angle = -0.5 + n * 0.38
+        label_r = outer_r + 25 + (8 - n) * 3
+        lx = label_r * math.cos(angle)
+        ly = label_r * math.sin(angle)
+        line_end_x = outer_r * math.cos(angle)
+        line_end_y = outer_r * math.sin(angle)
+
+        # Connecting line
+        ax.plot([lx*0.92, line_end_x], [ly*0.92, line_end_y],
+               color=col, alpha=0.4, lw=0.8, ls='-')
+
+        ax.text(lx, ly, f'n={n}', color=bright, fontsize=11, fontweight='bold',
                fontfamily='monospace', ha='center', va='center',
-               bbox=dict(boxstyle='round,pad=0.2', fc=BG, ec=col+'44', alpha=0.9))
-    ax.plot(0, 0, '+', color='#fff', ms=12, mew=2)
-    ax.set_xlim(-max_r*1.15, max_r*1.15); ax.set_ylim(-max_r*1.15, max_r*1.15)
-    ax.set_title('Concentric Wall Nesting — 8 Metallic Means', color='#f5c542',
-                fontsize=16, fontweight='bold', fontfamily='monospace', pad=20)
+               bbox=dict(boxstyle='round,pad=0.25', fc=BG+'ee', ec=col+'66', lw=1.2))
+
+    # Central seed crystal
+    ax.plot(0, 0, '+', color=GOLD, ms=16, mew=2.5, alpha=0.8)
+    ax.add_patch(Circle((0,0), 12, fc=GOLD+'15', ec=GOLD+'60', lw=1.5))
+
+    # "You are here" marker (Gold's σ₃ region)
+    mw_r = METALLIC_SPECTRA[1]['R_M'] * max_r * 0.6
+    mw_ang = 2.2
+    ax.plot(mw_r*math.cos(mw_ang), mw_r*math.sin(mw_ang), '*',
+           color=GREEN, ms=10, mec='#fff', mew=0.5, zorder=50)
+    ax.text(mw_r*math.cos(mw_ang)+18, mw_r*math.sin(mw_ang)+8,
+           "Milky Way", color=GREEN, fontsize=7, fontfamily='monospace', fontweight='bold')
+
+    ax.set_xlim(-max_r*1.18, max_r*1.18)
+    ax.set_ylim(-max_r*1.18, max_r*1.18)
+
+    # Title and subtitle
+    ax.text(0, max_r*1.12, 'Concentric Wall Nesting — 8 Metallic Means', color=GOLD,
+           fontsize=16, fontweight='bold', fontfamily='monospace', ha='center')
+    ax.text(0, max_r*1.06, 'Silver tightest at center → Gold → Bronze → ... → n=8 outermost',
+           color='#556', fontsize=9, fontfamily='monospace', ha='center')
+
     return fig_to_b64(fig, dpi=180)
 
 
