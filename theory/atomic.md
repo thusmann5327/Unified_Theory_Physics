@@ -19,7 +19,7 @@ We examine whether the Husmann Decomposition — a framework deriving physical c
 
 ## 1. Introduction
 
-The Husmann Decomposition [1] derives cosmological parameters, large-scale structure sizes, and stellar properties from two inputs: the golden ratio φ = (1+√5)/2 and an attosecond timescale t_as = 232 × 10⁻¹⁸ s. The framework has been validated against cosmic structure (9 void/wall predictions at 1.8% mean error [2]), the solar diameter (0.06% via the cos(α) photosphere position [3]), and the cosmological energy budget (Ω_b, Ω_DM, Ω_DE matching Planck 2018 at χ² = 9.6 × 10⁻⁵ [1]).
+The Husmann Decomposition [1] derives cosmological parameters, large-scale structure sizes, and stellar properties from a self-referential lattice of D = F(F(7)) = F(13) = 233 sites (Axiom 0), the golden ratio φ = (1+√5)/2, and an attosecond timescale t_as = 232 × 10⁻¹⁸ s. The framework has been validated against cosmic structure (9 void/wall predictions at 1.8% mean error [2]), the solar diameter (0.06% via the cos(α) photosphere position [3]), and the cosmological energy budget (Ω_b, Ω_DM, Ω_DE matching Planck 2018 at χ² = 9.6 × 10⁻⁵ [1]).
 
 The question addressed here is whether the same framework extends to atomic physics — specifically, to the hydrogen atom, the most precisely measured quantum system.
 
