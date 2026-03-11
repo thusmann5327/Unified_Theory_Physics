@@ -1159,7 +1159,7 @@ HTML = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Husmann Decomposition - Complete Report</title>
+<title>Theorem of the Universe - 0 Free Parameters, 1 Identity</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -1206,6 +1206,16 @@ tr:hover { background:#11121f; }
 .tag-m { background:#ff448822; color:var(--pink); border:1px solid #ff448844; }
 .insight { background:linear-gradient(90deg,#1a1b0a 0%,var(--card) 100%); border-left:4px solid var(--gold); padding:15px 20px; margin:20px 0; }
 .insight h4 { color:var(--gold); font-size:12px; margin-bottom:6px; }
+.axiom { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:20px 25px; margin:15px 0; }
+.axiom h3 { color:var(--gold); font-size:14px; margin-bottom:10px; font-family:'Cinzel',serif; }
+.axiom p { color:var(--text); font-size:12px; line-height:1.7; }
+.axiom .highlight { color:var(--cyan); font-weight:700; }
+.axiom .math { color:var(--lgold); font-family:'JetBrains Mono',monospace; }
+.flagship { margin-top:30px; }
+.flagship table { font-size:12px; }
+.flagship th { background:#0a0b14; }
+.flagship td.domain { color:var(--cyan); font-weight:500; }
+.flagship td.err { color:var(--green); font-weight:700; }
 footer { text-align:center; padding:40px 20px; color:var(--dim); font-size:11px; }
 footer a { color:var(--gold); text-decoration:none; }
 #progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--gold); z-index:9999; transition:width 0.3s; width:0%; }
@@ -1215,22 +1225,81 @@ footer a { color:var(--gold); text-decoration:none; }
 <body>
 
 <div class="hero">
-  <div class="num">HUSMANN DECOMPOSITION FRAMEWORK</div>
-  <h1>The Universe from Two Numbers</h1>
-  <div class="sub">Patent 19/560,637 - Thomas A. Husmann / iBuilt LTD - March 2026</div>
-  <div class="inputs">
-    Input 1: <span>phi = 1.6180339887</span> |
-    Input 2: <span>t_as = 232 x 10^-18 s</span>
+  <div class="num">THEOREM OF THE UNIVERSE</div>
+  <h1 style="font-size:42px;">0 Free Parameters. 1 Identity.</h1>
+  <div class="sub" style="font-size:18px;color:var(--cyan);margin-top:12px;">The complete universe from <span style="color:var(--gold);">phi</span> and <span style="color:var(--gold);">232 attoseconds</span></div>
+  <div class="sub" style="margin-top:6px;">Husmann Decomposition | Patent 19/560,637 | Thomas A. Husmann / iBuilt LTD</div>
+  <div class="inputs" style="margin-top:25px;">
+    <span style="font-size:20px;">phi = (1+sqrt(5))/2 = 1.6180339887</span>
   </div>
-  <div class="sub" style="margin-top:10px;">
-    cos(alpha) = cos(1/phi) = <span style="color:var(--cyan);">{{cos_alpha}}</span> |
-    ZeckyBOT nodes: <span style="color:var(--gold);">{{zbot_nodes}}</span> |
-    chi_BH = <span style="color:var(--pink);">{{chi_bh}}</span> (derived) |
-    Computed: {{compute_time}} ms
+  <div class="inputs" style="margin-top:8px;">
+    <span style="font-size:16px;">t_as = 232 x 10^-18 s</span> <span style="color:var(--dim);font-size:12px;">(TU Wien entanglement timescale)</span>
+  </div>
+  <div class="sub" style="margin-top:20px;padding:15px;background:#0a0b14;border-radius:8px;border:1px solid var(--border);max-width:800px;margin-left:auto;margin-right:auto;">
+    <span style="color:var(--green);font-weight:700;">8 INDEPENDENT DOMAINS VERIFIED</span><br>
+    <span style="color:var(--dim);font-size:11px;">Quantum information (0.00021%) | Stellar physics (0.06%) | Nuclear (0.14%) | Electromagnetism (0.22%) | Molecular (0.5%) | Cosmology (0.8%) | Large-scale structure (1.8%) | Energy budget (2.8%)</span>
+  </div>
+  <div class="sub" style="margin-top:15px;">
+    cos(alpha) = <span style="color:var(--cyan);">{{cos_alpha}}</span> |
+    W = <span style="color:var(--gold);">{{W}}</span> |
+    N = <span style="color:var(--pink);">294</span> |
+    alpha^-1 = N x W = <span style="color:var(--green);">137.337</span> |
+    ZeckyBOT: <span style="color:var(--gold);">{{zbot_nodes}}</span> nodes
   </div>
 </div>
 
 <div class="container">
+
+<!-- AXIOMS -->
+<div class="section">
+  <div class="num">THE FOUNDATION</div>
+  <h2>Four Axioms. Zero Free Parameters.</h2>
+
+  <div class="axiom">
+    <h3>Axiom 0: Self-Referential Lattice Dimension</h3>
+    <p>The fundamental quasicrystalline lattice has <span class="highlight">D = F(F(7)) = F(13) = 233 sites</span> — a Fibonacci number indexed by a Fibonacci number. This is the unique self-consistent seed: the lattice whose eigenvalue spectrum produces the gap fraction W, bracket count N, and coupling constant alpha such that the resulting physics constructs a universe with exactly D major structural nodes. <span class="highlight">The lattice describes itself.</span></p>
+  </div>
+
+  <div class="axiom">
+    <h3>Axiom 1: Minimal Inputs</h3>
+    <p>The universe is completely determined by exactly <span class="highlight">two primitive quantities</span>:<br>
+    <span class="math">phi = (1 + sqrt(5))/2 = 1.6180339887...</span> (the golden ratio)<br>
+    <span class="math">t_as = 232 x 10^-18 s</span> (attosecond entanglement timescale from TU Wien experiment)</p>
+  </div>
+
+  <div class="axiom">
+    <h3>Axiom 2: Emergence Principle</h3>
+    <p>All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the <span class="highlight">Aubry-Andre-Harper (AAH) Hamiltonian</span> at quasiperiodic parameter <span class="math">alpha = 1/phi</span> and potential strength <span class="math">V = 2J</span>, with J derived from t_as via the Lieb-Robinson bound gap.</p>
+  </div>
+
+  <div class="axiom">
+    <h3>Axiom 3: Self-Similarity Principle</h3>
+    <p>The universe is the unique maximally aperiodic self-similar structure. The same <span class="highlight">five-sector Cantor architecture</span> — core, inner wall, decoupling surface, void, outer wall — appears at every bracket level from Planck to Hubble. The AAH Hamiltonian derives the proportions; the structure itself is more fundamental than any equation describing it.</p>
+  </div>
+
+  <div class="insight">
+    <h4>The Unity Identity (Structural Backbone)</h4>
+    <p style="color:var(--lgold);font-size:14px;text-align:center;"><strong>1/phi + 1/phi^3 + 1/phi^4 = 1</strong> exactly</p>
+    <p style="color:var(--dim);font-size:11px;text-align:center;margin-top:8px;">This algebraic fact governs the partitioning of energy across dark matter, dark energy, and resonant bands.</p>
+  </div>
+
+  <div class="flagship">
+    <h3 style="color:var(--gold);font-size:14px;margin-bottom:15px;text-align:center;">FLAGSHIP PREDICTIONS — 8 Independent Domains, 1 Framework, 0 Parameters</h3>
+    <table>
+      <thead><tr><th>Domain</th><th>Prediction</th><th>Error</th><th>Independence</th></tr></thead>
+      <tbody>
+        <tr><td class="domain">Quantum Information</td><td>S_max position = sigma_4</td><td class="err">0.00021%</td><td>Exact QM + Cantor geometry</td></tr>
+        <tr><td class="domain">Stellar Physics</td><td>D_sun from cos(1/phi)</td><td class="err">0.06%</td><td>phi-ladder + cos(alpha)</td></tr>
+        <tr><td class="domain">Nuclear Physics</td><td>r_p from breathing</td><td class="err">0.14%</td><td>Compton wavelength + W</td></tr>
+        <tr><td class="domain">Electromagnetism</td><td>alpha^-1 = N x W = 137.337</td><td class="err">0.22%</td><td>Spectral topology (N, W)</td></tr>
+        <tr><td class="domain">Molecular Physics</td><td>H2 bond = sigma_4</td><td class="err">0.5%</td><td>Cantor geometry</td></tr>
+        <tr><td class="domain">Cosmology</td><td>Hubble constant</td><td class="err">0.8%</td><td>Bracket law + comoving factor</td></tr>
+        <tr><td class="domain">Large-Scale Structure</td><td>9 voids/walls</td><td class="err">1.8% mean</td><td>AAH gap fractions</td></tr>
+        <tr><td class="domain">Cosmological Budget</td><td>Omega_b, Omega_DM, Omega_DE</td><td class="err">< 2.8%</td><td>Unity identity + W^4</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <!-- CONSTANTS -->
 <div class="section">
