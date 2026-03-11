@@ -1533,7 +1533,7 @@ def render_collapse_metal(which_n=1):
 app = Flask(__name__)
 
 @app.route("/api/image/<name>")
-def api_image(n):
+def api_image(name):
     renderers = {
         'cantor': lambda: get_cached_image('cantor', render_cantor_bar, EIGS_5, EIGS_55, EIGS_233, BANDS_233, SECTORS),
         'eq_main': lambda: get_cached_image('eq_main', render_evolved_equilibrium, ZBOT, 'Evolved Equilibrium - Primary', 22, 38),
@@ -1567,8 +1567,8 @@ def api_image(n):
         renderers[f'eq_side_{ns}'] = (lambda m=mn: get_cached_image(f'eq_side_{m}', render_equilibrium_metal, m, 0, 90, 'Side'))
         renderers[f'collapse_{ns}'] = (lambda m=mn: get_cached_image(f'collapse_{m}', render_collapse_metal, m))
         renderers[f'vehicle_{ns}'] = (lambda m=mn: get_cached_image(f'vehicle_{m}', render_metallic_vehicle, m))
-    if n not in renderers: return json.dumps({"error": "unknown"}), 404
-    return json.dumps({"image": renderers[n](), "key": n})
+    if name not in renderers: return json.dumps({"error": "unknown"}), 404
+    return json.dumps({"image": renderers[name](), "key": name})
 
 @app.route("/api/zeckybot/stats")
 def api_zeckybot_stats(): return jsonify(ZBOT.stats())
