@@ -343,6 +343,19 @@ for _n in range(1, 9):
     print(f"    n={_n}: σ₃={METALLIC_SPECTRA[_n]['R_M']:.4f}, {METALLIC_SPECTRA[_n]['n_gaps']} gaps, "
           f"Ω_b={METALLIC_SPECTRA[_n]['Ob']:.5f}, Ω_DE={METALLIC_SPECTRA[_n]['Ode']:.4f}")
 
+# Compute combined spectral coverage (at visual rendering resolution)
+# Resolution = 2×D: each metal's spectrum spans ~2D pixels when lines are 1px
+_cov_res = D * 2  # ~466 bins
+_cov_filled = np.zeros(_cov_res, dtype=bool)
+for _n in range(1, 9):
+    _sp = METALLIC_SPECTRA[_n]
+    _enorm = (_sp['eigs'] - _sp['eigs'][0]) / _sp['E_range']
+    for _e in _enorm:
+        _px = min(_cov_res-1, max(0, int(_e * (_cov_res - 1))))
+        _cov_filled[_px] = True
+SPECTRAL_COVERAGE = float(np.sum(_cov_filled)) / _cov_res
+print(f"  Combined spectral coverage: {SPECTRAL_COVERAGE:.1%} ({int(np.sum(_cov_filled))}/{_cov_res})")
+
 
 # ===============================================================================
 # PART 2 — ZECKENDORF UTILITIES
@@ -1093,10 +1106,17 @@ def render_metallic_stacked():
             ax.axvline(e, color=col, alpha=0.12, linewidth=0.8)
     ax.text(-0.01, 0.5, 'ALL', color='#fff', fontsize=12, fontweight='bold',
             ha='right', va='center', fontfamily='monospace', transform=ax.transAxes)
+    ax.text(1.01, 0.5, f'Combined: {SPECTRAL_COVERAGE:.0%} filled', color='#44cc88', fontsize=9,
+            ha='left', va='center', fontfamily='monospace', fontweight='bold', transform=ax.transAxes)
     for s in ax.spines.values(): s.set_visible(False)
     ax.set_yticks([]); ax.set_xticks([])
     fig.suptitle('Cantor Spectra: 8 Metallic Means × Element Assignments',
                  color='#f5c542', fontsize=16, fontweight='bold', fontfamily='monospace', y=0.98)
+    fig.text(0.39, 0.955, f'AAH Hamiltonian at α = 1/δ_n, V = 2J, D = {D} — Bands fill each other\'s gaps',
+             color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
+    ax.set_xticklabels(['E_min', '25%', '50%', '75%', 'E_max'], color='#556', fontsize=8, fontfamily='monospace')
+    ax.tick_params(axis='x', colors='#333')
     plt.tight_layout(rect=[0.06, 0.02, 0.72, 0.94])
     return fig_to_b64(fig, dpi=180)
 
@@ -1179,19 +1199,24 @@ def render_metallic_collapse():
     return fig_to_b64(fig, dpi=180)
 
 
-def render_metallic_vehicle():
-    """Vehicle cross-section — oblate hull with Hg and QC layers."""
+def render_metallic_vehicle(which_n=None):
+    """Vehicle cross-section — oblate hull with Hg and QC layers.
+    which_n selects which metal's ratios to use for the hull geometry."""
     fig, ax = plt.subplots(figsize=(16, 16), facecolor=BG)
     ax.set_facecolor(BG); ax.set_aspect('equal'); ax.axis('off')
-    obl = math.sqrt(PHI)
+    n = which_n or 1
+    sp = METALLIC_SPECTRA[n]
+    m = sp['mean']
+    obl = math.sqrt(m)
+    col_main, col_bright, _, lbl = METALLIC_COLORS[n]
     layers = [
-        ('DM Projection', 320, 320/obl, '#9944ff', 0.08, '--'),
-        ('QC Coating', 200, 200/obl, '#f5c542', 0.5, '-'),
+        ('DM Projection', 320, 320/obl, PURPLE, 0.08, '--'),
+        ('QC Coating', 200, 200/obl, col_main, 0.5, '-'),
         ('Liquid Hg', 185, 185/obl, '#aaccee', 0.3, '-'),
         ('Hull', 160, 160/obl, '#445566', 0.6, '-'),
         ('Liquid Hg (inner)', 145, 145/obl, '#aaccee', 0.3, '-'),
-        ('QC Coating (inner)', 130, 130/obl, '#f5c542', 0.5, '-'),
-        ('Payload E=0', 100, 100/obl, '#44ff88', 0.15, ':'),
+        ('QC Coating (inner)', 130, 130/obl, col_main, 0.5, '-'),
+        ('Payload E=0', 100, 100/obl, GREEN, 0.15, ':'),
     ]
     for name, a, b, col, alpha, ls in layers:
         ax.add_patch(Ellipse((0,0), 2*a, 2*b, fc=col+'08', ec=col,
@@ -1200,17 +1225,304 @@ def render_metallic_vehicle():
         for sign in [1, -1]:
             ax.annotate('', xy=(x_off, sign*340/obl), xytext=(x_off, sign*200/obl),
                        arrowprops=dict(arrowstyle='->', color='#9944ff55', lw=1.5))
-    ax.text(0, 0, 'E = 0\nPAYLOAD', color='#44ff88', fontsize=14, fontweight='bold',
+    ax.text(0, 0, 'E = 0\nPAYLOAD', color=GREEN, fontsize=14, fontweight='bold',
            ha='center', va='center', fontfamily='monospace')
-    ax.text(300, 120, 'DM Projection\nField', color='#9944ff', fontsize=11,
+    ax.text(300, 120, 'DM Projection\nField', color=PURPLE, fontsize=11,
            fontfamily='monospace', fontweight='bold')
-    ax.text(220, -170, 'QC Coating (Gold α=1/φ)', color='#f5c542', fontsize=10,
+    alpha_val = 1.0/m
+    ax.text(220, -170, f'QC Coating (n={n} α=1/{m:.3f})', color=col_main, fontsize=10,
            fontfamily='monospace', fontweight='bold')
-    ax.text(220, -195, 'Liquid Mercury (Silver 0.006%)', color='#aaccee', fontsize=10,
+    ax.text(220, -195, f'Liquid Mercury (Silver 0.006%)', color='#aaccee', fontsize=10,
+           fontfamily='monospace')
+    ax.text(220, -220, f'Oblate: √δ_{n} = {obl:.4f}', color=col_bright, fontsize=9,
            fontfamily='monospace')
     ax.set_xlim(-450, 450); ax.set_ylim(-350, 350)
-    ax.set_title('Natário Slipstream Vehicle — Mercury-Skinned Oblate Hull',
-                 color='#f5c542', fontsize=16, fontweight='bold', fontfamily='monospace', pad=20)
+    title = f'Natário Vehicle n={n}: {lbl}' if which_n else 'Natário Slipstream Vehicle — Mercury-Skinned Oblate Hull'
+    ax.set_title(title, color=col_main, fontsize=16, fontweight='bold', fontfamily='monospace', pad=20)
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_gap_matrix():
+    """02 — Gap Coverage Matrix: heatmap showing % of metal A's gaps filled by metal B's bands."""
+    fig, ax = plt.subplots(figsize=(12, 10), facecolor=BG)
+    ax.set_facecolor(BG)
+    n_metals = 8
+    matrix = np.zeros((n_metals, n_metals))
+    res = 4000
+    for i in range(1, n_metals+1):
+        sp_i = METALLIC_SPECTRA[i]
+        # Build binary gap mask for metal i
+        eigs_i = (sp_i['eigs'] - sp_i['eigs'][0]) / sp_i['E_range']
+        gap_mask_i = np.ones(res, dtype=bool)
+        for g in sp_i['gaps']:
+            g_lo = (g['lo'] - sp_i['eigs'][0]) / sp_i['E_range']
+            g_hi = (g['hi'] - sp_i['eigs'][0]) / sp_i['E_range']
+            lo_idx, hi_idx = int(g_lo * res), int(g_hi * res)
+            gap_mask_i[max(0,lo_idx):min(res,hi_idx)] = False
+        gap_positions = ~gap_mask_i
+        n_gap_pixels = np.sum(gap_positions)
+        if n_gap_pixels == 0: continue
+        for j in range(1, n_metals+1):
+            sp_j = METALLIC_SPECTRA[j]
+            eigs_j = (sp_j['eigs'] - sp_j['eigs'][0]) / sp_j['E_range']
+            band_mask_j = np.zeros(res, dtype=bool)
+            # Build band positions
+            band_start = 0
+            for g in sorted(sp_j['gaps'], key=lambda x: x['lo']):
+                g_lo = (g['lo'] - sp_j['eigs'][0]) / sp_j['E_range']
+                g_hi = (g['hi'] - sp_j['eigs'][0]) / sp_j['E_range']
+                lo_idx, hi_idx = int(g_lo * res), int(g_hi * res)
+                band_mask_j[max(0,band_start):max(0,lo_idx)] = True
+                band_start = hi_idx
+            band_mask_j[band_start:res] = True
+            filled = np.sum(gap_positions & band_mask_j)
+            matrix[i-1, j-1] = filled / n_gap_pixels * 100
+    im = ax.imshow(matrix, cmap='inferno', vmin=0, vmax=100, aspect='equal')
+    labels = [f'n={n}' for n in range(1, 9)]
+    ax.set_xticks(range(8)); ax.set_yticks(range(8))
+    ax.set_xticklabels(labels, color='#aab', fontsize=10, fontfamily='monospace')
+    ax.set_yticklabels(labels, color='#aab', fontsize=10, fontfamily='monospace')
+    ax.set_xlabel('Metal B (filler)', color='#888', fontsize=11, fontfamily='monospace', labelpad=10)
+    ax.set_ylabel('Metal A (gaps)', color='#888', fontsize=11, fontfamily='monospace', labelpad=10)
+    for i in range(8):
+        for j in range(8):
+            val = matrix[i, j]
+            color = '#000' if val > 60 else '#fff'
+            ax.text(j, i, f'{val:.0f}%', ha='center', va='center', color=color,
+                   fontsize=9, fontfamily='monospace', fontweight='bold')
+    cb = fig.colorbar(im, ax=ax, shrink=0.8, pad=0.02)
+    cb.set_label('% of gaps filled', color='#888', fontsize=10, fontfamily='monospace')
+    cb.ax.tick_params(colors='#666', labelsize=8)
+    ax.set_title('Gap Coverage Matrix — How Much of A\'s Void Does B Fill?',
+                color=GOLD, fontsize=14, fontweight='bold', fontfamily='monospace', pad=15)
+    fig.text(0.5, 0.02, 'Read row-by-row: for each metal\'s void regions, columns show which metals fill the holes',
+            color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    plt.tight_layout(rect=[0, 0.05, 1, 0.97])
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_linear_walls():
+    """04 — Linear Wall Map: horizontal bars showing wall positions with Gold reference lines."""
+    fig, ax = plt.subplots(figsize=(18, 10), facecolor=BG)
+    ax.set_facecolor(BG)
+    y_positions = np.arange(8, 0, -1)
+    gold_sp = METALLIC_SPECTRA[1]
+    # Gold reference lines
+    for ref_r, ref_label in [(gold_sp['R_M'], 'σ₃'), (gold_sp['R_I'], 'σ₂'), 
+                              (gold_sp['R_S'], 'wall'), (gold_sp['R_O'], 'σ₄')]:
+        ax.axvline(ref_r, color=GOLD, alpha=0.25, lw=1.0, ls=':')
+        ax.text(ref_r, 8.6, ref_label, color=GOLD, fontsize=8, ha='center', 
+               fontfamily='monospace', alpha=0.6)
+    for idx, n in enumerate(range(1, 9)):
+        sp = METALLIC_SPECTRA[n]
+        col, bright, dim_c, label = METALLIC_COLORS[n]
+        y = y_positions[idx]
+        # DM wall bar
+        ax.barh(y, sp['R_O'] - sp['R_I'], left=sp['R_I'], height=0.6,
+               color=col, alpha=0.3, edgecolor=bright, linewidth=1.0)
+        # σ₃ core bar
+        ax.barh(y, sp['R_M'], left=0, height=0.6,
+               color=col, alpha=0.6, edgecolor=bright, linewidth=1.5)
+        # Shell center tick
+        ax.plot(sp['R_S'], y, '|', color=bright, ms=20, mew=2)
+        # Label
+        ax.text(-0.02, y, f'n={n}', color=bright, fontsize=11, fontweight='bold',
+               ha='right', va='center', fontfamily='monospace')
+        ax.text(sp['R_O'] + 0.01, y, f'{label}  σ₃={sp["R_M"]:.1%}',
+               color=dim_c, fontsize=8, va='center', fontfamily='monospace')
+    ax.set_xlim(-0.06, 0.72); ax.set_ylim(0.3, 9.2)
+    ax.set_yticks([]); ax.set_xlabel('Normalized spectral position', color='#888', fontsize=10, fontfamily='monospace')
+    ax.tick_params(colors='#556', labelsize=8)
+    for s in ['top', 'right', 'left']: ax.spines[s].set_visible(False)
+    ax.spines['bottom'].set_color('#333')
+    ax.set_title('Linear Wall Map — 8 Metallic Means (Gold reference: dotted)',
+                color=GOLD, fontsize=14, fontweight='bold', fontfamily='monospace', pad=15)
+    fig.text(0.5, 0.02, 'Solid bars = σ₃ matter core  |  Shaded bars = DM wall region  |  Ticks = wall center',
+            color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    plt.tight_layout(rect=[0.08, 0.05, 0.98, 0.95])
+    return fig_to_b64(fig, dpi=180)
+
+
+def render_energy_budgets():
+    """06 — Energy Budgets: stacked bar chart per metal showing Ωb, ΩDM, ΩDE."""
+    fig, ax = plt.subplots(figsize=(16, 8), facecolor=BG)
+    ax.set_facecolor(BG)
+    x = np.arange(8)
+    obs_b, obs_dm, obs_de = [], [], []
+    for n in range(1, 9):
+        sp = METALLIC_SPECTRA[n]
+        obs_b.append(sp['Ob']); obs_dm.append(sp['Odm']); obs_de.append(sp['Ode'])
+    obs_b, obs_dm, obs_de = np.array(obs_b), np.array(obs_dm), np.array(obs_de)
+    bar_w = 0.6
+    bars_b = ax.bar(x, obs_b, bar_w, color=PINK, alpha=0.85, label='Baryonic Ωb = W⁴')
+    bars_dm = ax.bar(x, obs_dm, bar_w, bottom=obs_b, color=PURPLE, alpha=0.7, label='Dark Matter ΩDM')
+    bars_de = ax.bar(x, obs_de, bar_w, bottom=obs_b+obs_dm, color=BLUE, alpha=0.5, label='Dark Energy ΩDE')
+    # Planck 2018 reference lines
+    ax.axhline(0.04860, color=PINK, alpha=0.3, lw=0.8, ls='--')
+    ax.axhline(0.04860+0.26070, color=PURPLE, alpha=0.3, lw=0.8, ls='--')
+    ax.axhline(1.0, color='#444', alpha=0.5, lw=0.5)
+    labels = []
+    for n in range(1, 9):
+        _, _, _, lbl = METALLIC_COLORS[n]
+        labels.append(f'n={n}')
+    ax.set_xticks(x); ax.set_xticklabels(labels, color='#aab', fontsize=10, fontfamily='monospace')
+    ax.set_ylim(0, 1.05); ax.set_ylabel('Energy fraction', color='#888', fontsize=10, fontfamily='monospace')
+    ax.tick_params(colors='#556', labelsize=8)
+    for s in ['top', 'right']: ax.spines[s].set_visible(False)
+    ax.spines['bottom'].set_color('#333'); ax.spines['left'].set_color('#333')
+    ax.legend(loc='upper right', fontsize=9, framealpha=0.3, edgecolor='#333',
+             facecolor=BG, labelcolor='#aab')
+    # Annotate baryon % for each
+    for i, n in enumerate(range(1, 9)):
+        col = METALLIC_COLORS[n][0]
+        ax.text(i, obs_b[i]/2, f'{obs_b[i]:.1%}', ha='center', va='center',
+               color='#fff' if obs_b[i] > 0.03 else col, fontsize=7, fontfamily='monospace', fontweight='bold')
+    ax.set_title('Cosmological Energy Budget — All 8 Metallic Means',
+                color=GOLD, fontsize=14, fontweight='bold', fontfamily='monospace', pad=15)
+    fig.text(0.5, 0.02, 'Gold (n=1) is the only metal with significant baryonic matter (4.8%). Higher metals converge toward pure vacuum.',
+            color='#556', fontsize=9, ha='center', fontfamily='monospace')
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
+    return fig_to_b64(fig, dpi=180)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# PART 9C — PER-METAL GENERALIZED RENDERERS
+# ═══════════════════════════════════════════════════════════════════════
+
+def render_cantor_bar_metal(which_n=1):
+    """Cantor spectrum bar for any metallic mean n."""
+    sp = METALLIC_SPECTRA[which_n]
+    m = sp['mean']
+    col, bright, dim_c, label = METALLIC_COLORS[which_n]
+    # Build 3 resolutions: 5, 55, 233
+    spectra = []
+    for N_s, lbl_s in [(5, f'N=5 seed'), (55, f'N=55 (9 bands)'), (D, f'N={D} ({sp["n_gaps"]} gaps)')]:
+        H = np.diag(2*np.cos(2*np.pi*(1.0/m)*np.arange(N_s)))
+        H += np.diag(np.ones(N_s-1), 1) + np.diag(np.ones(N_s-1), -1)
+        e = np.sort(np.linalg.eigvalsh(H))
+        spectra.append((e, lbl_s, N_s))
+    fig, axes = plt.subplots(3, 1, figsize=(14, 4.5), facecolor=BG,
+                              gridspec_kw={'height_ratios':[1,1,1],'hspace':0.35})
+    for ax_i, (eigs, lbl_s, N_val) in enumerate(spectra):
+        ax = axes[ax_i]; ax.set_facecolor(BG)
+        bands_i, gaps_i = find_bands_gaps(eigs) if N_val > 5 else ([], [])
+        E_min_i, E_max_i = float(eigs[0]), float(eigs[-1])
+        E_range_i = E_max_i - E_min_i if E_max_i > E_min_i else 1
+        ax.barh(0, 1, height=1, left=0, color='#0d0e18', edgecolor='none')
+        if bands_i:
+            for b in bands_i:
+                x0 = (b['lo']-E_min_i)/E_range_i; xw = b['w']/E_range_i
+                if xw > 0: ax.barh(0, xw, height=1, left=x0, color=col, alpha=0.9)
+            for g in gaps_i:
+                x0 = (g['lo']-E_min_i)/E_range_i; xw = g['w']/E_range_i
+                ax.barh(0, xw, height=1, left=x0, color='#1a0833', alpha=0.85)
+        else:
+            for e in eigs:
+                x = (e-E_min_i)/E_range_i if E_range_i > 0 else 0.5
+                ax.plot(x, 0.5, '|', color=col, markersize=15, markeredgewidth=2)
+        ax.set_xlim(0,1); ax.set_ylim(0,1); ax.set_yticks([]); ax.set_xticks([])
+        ax.set_title(lbl_s, color='#aaa', fontsize=10, fontfamily='monospace', pad=3, loc='left')
+    fig.suptitle(f'n={which_n}: {label} — Cantor Spectrum Build', color=bright, fontsize=13,
+                fontweight='bold', fontfamily='monospace', y=0.98)
+    return fig_to_b64(fig)
+
+
+def render_equilibrium_metal(which_n=1, elev=22, azim=38, view_label='Primary'):
+    """3D evolved equilibrium for any metallic mean."""
+    sp = METALLIC_SPECTRA[which_n]
+    m = sp['mean']
+    col, bright, dim_c, label = METALLIC_COLORS[which_n]
+    R_M, R_I, R_S, R_O = sp['R_M'], sp['R_I'], sp['R_S'], sp['R_O']
+    OBL = math.sqrt(m)
+    CA = math.cos(1.0/m)
+    R_P = R_I + CA * (R_S - R_I)
+    fig = plt.figure(figsize=(10,10), facecolor=BG)
+    ax = fig.add_subplot(111, projection='3d', facecolor=BG)
+    ax.view_init(elev=elev, azim=azim)
+    rng = np.random.default_rng(42+which_n); SCALE = 1.0
+    u = np.linspace(0,2*np.pi,30); v = np.linspace(0,np.pi,20)
+    for r_s, col_w, a, lw in [(R_O,PURPLE,0.15,0.3),(R_I,PURPLE,0.25,0.4),(R_P,col,0.2,0.5)]:
+        r = r_s*SCALE
+        x = r*OBL*np.outer(np.cos(u),np.sin(v))
+        y = r*OBL*np.outer(np.sin(u),np.sin(v))
+        z = r/OBL*np.outer(np.ones(np.size(u)),np.cos(v))
+        ax.plot_wireframe(x,y,z,color=col_w,alpha=a,linewidth=lw)
+    for _ in range(400):
+        th=rng.uniform(0,2*np.pi); pa=rng.uniform(0,np.pi); rd=rng.uniform(R_I,R_O)*SCALE
+        ax.scatter([rd*OBL*np.sin(pa)*np.cos(th)],[rd*OBL*np.sin(pa)*np.sin(th)],
+                   [rd/OBL*np.cos(pa)],c=PURPLE,s=2,alpha=0.08)
+    r_peak=R_P*SCALE; sigma=R_P*0.05*SCALE
+    for _ in range(600):
+        th=rng.uniform(0,2*np.pi); pa=np.clip(rng.normal(np.pi/2,0.3),0.1,np.pi-0.1)
+        rm=rng.normal(r_peak,sigma)
+        if rm<R_I*SCALE or rm>R_O*SCALE: continue
+        b=np.exp(-abs(rm-r_peak)/sigma)
+        ax.scatter([rm*OBL*np.sin(pa)*np.cos(th)],[rm*OBL*np.sin(pa)*np.sin(th)],
+                   [rm/OBL*np.cos(pa)],c=col,s=8*b+2,alpha=0.4*b+0.1)
+    for _ in range(200):
+        th=rng.uniform(0,2*np.pi); pa=rng.uniform(0,np.pi); rc=rng.exponential(R_M*0.3*SCALE)
+        if rc>R_M*SCALE: continue
+        ax.scatter([rc*np.sin(pa)*np.cos(th)],[rc*np.sin(pa)*np.sin(th)],
+                   [rc*np.cos(pa)],c=PINK,s=6,alpha=0.5)
+    ax.scatter([0],[0],[0],c='white',s=100,edgecolors=col,linewidth=2,zorder=10)
+    lim=R_O*OBL*SCALE*0.6
+    ax.set_xlim(-lim,lim); ax.set_ylim(-lim,lim); ax.set_zlim(-lim/OBL,lim/OBL)
+    for p in [ax.xaxis.pane,ax.yaxis.pane,ax.zaxis.pane]:
+        p.fill=False; p.set_edgecolor('#1a1a2a')
+    ax.tick_params(colors='#333',labelsize=6); ax.grid(True,alpha=0.06)
+    ax.set_title(f'n={which_n} {view_label}: {label}\ncos(1/δ)={CA:.4f}  oblate=√δ={OBL:.4f}',
+                 color=bright,fontsize=14,fontfamily='monospace',pad=20)
+    return fig_to_b64(fig,dpi=140)
+
+
+def render_collapse_metal(which_n=1):
+    """5→3 collapse before/after for any metallic mean."""
+    sp = METALLIC_SPECTRA[which_n]
+    m = sp['mean']
+    col, bright, dim_c, label = METALLIC_COLORS[which_n]
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(22, 8), facecolor=BG)
+    for ax, title, collapsed in [(ax1, f'BEFORE: 5-Sector n={which_n}', False),
+                                   (ax2, f'AFTER: 3-Sector Collapse n={which_n}', True)]:
+        ax.set_facecolor(BG)
+        eigs_norm = (sp['eigs'] - sp['eigs'][0]) / sp['E_range']
+        if not collapsed:
+            for e in eigs_norm:
+                ax.axvline(e, color=col, alpha=0.5, linewidth=1.5)
+            for g in sp['gaps']:
+                g_lo = (g['lo'] - sp['eigs'][0]) / sp['E_range']
+                g_hi = (g['hi'] - sp['eigs'][0]) / sp['E_range']
+                ax.axvspan(g_lo, g_hi, color=BG, alpha=0.85)
+            ax.text(0.50, 0.85, f'σ₃\n(MATTER)\n{sp["R_M"]:.1%}', color=bright, fontsize=14,
+                   fontweight='bold', transform=ax.transAxes, fontfamily='monospace', ha='center')
+            ax.text(0.25, 0.85, 'σ₂\n(DM)', color=PURPLE, fontsize=12,
+                   transform=ax.transAxes, fontfamily='monospace', ha='center')
+            ax.text(0.75, 0.85, 'σ₄\n(DM)', color=PURPLE, fontsize=12,
+                   transform=ax.transAxes, fontfamily='monospace', ha='center')
+        else:
+            for e in eigs_norm:
+                ax.axvline(e, color=PURPLE, alpha=0.4, linewidth=1.5)
+            center = 0.5; core_w = 0.002
+            ax.axvspan(center-core_w, center+core_w, color=col, alpha=0.8)
+            ax.axvspan(center-core_w*3, center-core_w, color='#aaccee', alpha=0.3)
+            ax.axvspan(center+core_w, center+core_w*3, color='#aaccee', alpha=0.3)
+            for x_off in [-0.15, -0.10, -0.05, 0.05, 0.10, 0.15]:
+                ax.annotate('', xy=(center+x_off, 0.95), xytext=(center+x_off, 0.55),
+                           arrowprops=dict(arrowstyle='->', color='#9944ff88', lw=1.5),
+                           transform=ax.transAxes)
+            ax.text(0.50, 0.85, 'DM PROJECTION\n⊥ to surface', color=PURPLE,
+                   fontsize=12, fontweight='bold', ha='center', transform=ax.transAxes, fontfamily='monospace')
+            compressed = sp['R_M'] * 0.023  # Compression ratio
+            ax.text(0.50, 0.35, f'E=0 core\n{compressed:.2%}', color=bright, fontsize=11,
+                   ha='center', transform=ax.transAxes, fontfamily='monospace', fontweight='bold')
+            ax.text(0.50, 0.25, 'Hg conductor', color='#aaccee', fontsize=9,
+                   ha='center', transform=ax.transAxes, fontfamily='monospace')
+        ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.set_yticks([]); ax.set_xticks([])
+        for s in ax.spines.values(): s.set_visible(False)
+        ax.set_title(title, color=bright if not collapsed else PURPLE,
+                    fontsize=13, fontweight='bold', fontfamily='monospace', pad=10)
+    fig.suptitle(f'5→3 Collapse n={which_n}: {label}',
+                 color=bright, fontsize=15, fontweight='bold', fontfamily='monospace', y=0.98)
+    plt.tight_layout(rect=[0, 0.05, 1, 0.95])
     return fig_to_b64(fig, dpi=180)
 
 
@@ -1234,21 +1546,27 @@ def api_image(n):
         'galaxy': lambda: get_cached_image('galaxy', render_galaxy),
         'solar_system': lambda: get_cached_image('solar_system', render_solar_system),
         'sun': lambda: get_cached_image('sun', render_sun),
-        # Metallic means cosmic webs — switchable views
+        # Metallic means — global views
         'metal_all': lambda: get_cached_image('metal_all', render_metallic_web, None),
-        'metal_1': lambda: get_cached_image('metal_1', render_metallic_web, 1),
-        'metal_2': lambda: get_cached_image('metal_2', render_metallic_web, 2),
-        'metal_3': lambda: get_cached_image('metal_3', render_metallic_web, 3),
-        'metal_4': lambda: get_cached_image('metal_4', render_metallic_web, 4),
-        'metal_5': lambda: get_cached_image('metal_5', render_metallic_web, 5),
-        'metal_6': lambda: get_cached_image('metal_6', render_metallic_web, 6),
-        'metal_7': lambda: get_cached_image('metal_7', render_metallic_web, 7),
-        'metal_8': lambda: get_cached_image('metal_8', render_metallic_web, 8),
         'metal_stacked': lambda: get_cached_image('metal_stacked', render_metallic_stacked),
         'metal_nesting': lambda: get_cached_image('metal_nesting', render_metallic_nesting),
         'metal_collapse': lambda: get_cached_image('metal_collapse', render_metallic_collapse),
         'metal_vehicle': lambda: get_cached_image('metal_vehicle', render_metallic_vehicle),
+        # New 8-image set
+        'metal_gap_matrix': lambda: get_cached_image('metal_gap_matrix', render_gap_matrix),
+        'metal_linear_walls': lambda: get_cached_image('metal_linear_walls', render_linear_walls),
+        'metal_energy_budgets': lambda: get_cached_image('metal_energy_budgets', render_energy_budgets),
     }
+    # Per-metal dynamic routes
+    for mn in range(1, 9):
+        ns = str(mn)
+        renderers[f'metal_{ns}'] = (lambda m=mn: get_cached_image(f'metal_{m}', render_metallic_web, m))
+        renderers[f'cantor_{ns}'] = (lambda m=mn: get_cached_image(f'cantor_{m}', render_cantor_bar_metal, m))
+        renderers[f'eq_main_{ns}'] = (lambda m=mn: get_cached_image(f'eq_main_{m}', render_equilibrium_metal, m, 22, 38, 'Primary'))
+        renderers[f'eq_top_{ns}'] = (lambda m=mn: get_cached_image(f'eq_top_{m}', render_equilibrium_metal, m, 85, 0, 'Top'))
+        renderers[f'eq_side_{ns}'] = (lambda m=mn: get_cached_image(f'eq_side_{m}', render_equilibrium_metal, m, 0, 90, 'Side'))
+        renderers[f'collapse_{ns}'] = (lambda m=mn: get_cached_image(f'collapse_{m}', render_collapse_metal, m))
+        renderers[f'vehicle_{ns}'] = (lambda m=mn: get_cached_image(f'vehicle_{m}', render_metallic_vehicle, m))
     if n not in renderers: return json.dumps({"error": "unknown"}), 404
     return json.dumps({"image": renderers[n](), "key": n})
 
@@ -1300,7 +1618,7 @@ body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospa
 .card .val{font-size:28px;font-weight:700;color:var(--bright);margin:4px 0}
 .card .cmp{font-size:10px;color:var(--dim)}
 .card .cmp .match{color:var(--green);font-weight:700}
-.img-full{width:100%;border-radius:6px;margin-top:20px;border:1px solid var(--border)}
+.img-full{width:100%;border-radius:6px;margin-top:10px;border:1px solid var(--border);transition:opacity 0.4s}
 .img-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-top:20px}
 .img-grid img{width:100%;border-radius:6px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;margin-top:15px;font-size:11px}
@@ -1328,28 +1646,43 @@ footer{text-align:center;padding:40px 20px;color:var(--dim);font-size:11px}
 footer a{color:var(--gold);text-decoration:none}
 #progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--gold);z-index:9999;transition:width 0.3s;width:0%}
 #progress-label{position:fixed;top:6px;right:16px;font-size:10px;color:var(--dgold);z-index:9999}
-.metal-btn{transition:all 0.2s}.metal-btn:hover{filter:brightness(1.3)}.metal-btn.active{border-width:2px !important;font-weight:700;box-shadow:0 0 12px rgba(245,197,66,0.2)}
+
+/* ── Metal switcher tabs ── */
+.mtab-row{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 6px}
+.mtab{background:#12132000;border:1.5px solid #33384870;color:#889;padding:4px 12px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;transition:all 0.2s;letter-spacing:0.5px}
+.mtab:hover{filter:brightness(1.4);border-color:#667}
+.mtab.active{border-width:2px;font-weight:700;box-shadow:0 0 10px rgba(245,197,66,0.15)}
+.mtab[data-n="1"]{color:#f5c542;border-color:#f5c54250}.mtab[data-n="1"].active{border-color:#f5c542}
+.mtab[data-n="2"]{color:#aaccee;border-color:#aaccee50}.mtab[data-n="2"].active{border-color:#aaccee}
+.mtab[data-n="3"]{color:#dd8844;border-color:#dd884450}.mtab[data-n="3"].active{border-color:#dd8844}
+.mtab[data-n="4"]{color:#44ddaa;border-color:#44ddaa50}.mtab[data-n="4"].active{border-color:#44ddaa}
+.mtab[data-n="5"]{color:#dd44aa;border-color:#dd44aa50}.mtab[data-n="5"].active{border-color:#dd44aa}
+.mtab[data-n="6"]{color:#4488dd;border-color:#4488dd50}.mtab[data-n="6"].active{border-color:#4488dd}
+.mtab[data-n="7"]{color:#88dd44;border-color:#88dd4450}.mtab[data-n="7"].active{border-color:#88dd44}
+.mtab[data-n="8"]{color:#dd4444;border-color:#dd444450}.mtab[data-n="8"].active{border-color:#dd4444}
+.switchable-img{min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--dim)}
 </style></head><body>
 
 <div class="hero">
   <div class="num">D = 233 = F(F(7)) = F(13)</div>
   <h1>One Axiom. Zero Parameters.</h1>
   <div class="sub" style="font-size:18px;color:var(--cyan);margin-top:12px;">The complete universe from a single self-referential number</div>
-  <div class="sub" style="margin-top:6px;">Husmann Decomposition v4.0 | Patent 19/560,637 | Thomas A. Husmann / iBuilt LTD</div>
+  <div class="sub" style="margin-top:6px;">Husmann Decomposition v4.1 | Patent 19/560,637 | Thomas A. Husmann / iBuilt LTD</div>
   <div class="sub" style="margin-top:20px;padding:15px;background:#0a0b14;border-radius:8px;border:1px solid var(--border);max-width:800px;margin-left:auto;margin-right:auto;">
-    <span style="color:var(--green);font-weight:700;">8 INDEPENDENT DOMAINS VERIFIED</span><br>
-    <span style="color:var(--dim);font-size:11px;">Entropy extremum (0.00021%) | Solar diameter (0.06%) | Proton radius (0.14%) | Fine structure (0.22%) | H₂ bond (0.5%) | Hubble constant (0.8%) | Cosmic structure (1.8%) | Energy budget (2.8%)</span>
+    <span style="color:var(--green);font-weight:700;">8 INDEPENDENT DOMAINS &times; 8 METALLIC MEANS</span><br>
+    <span style="color:var(--dim);font-size:11px;">Entropy extremum (0.00021%) | Solar diameter (0.06%) | Proton radius (0.14%) | Fine structure (0.22%) | H&sub2; bond (0.5%) | Hubble constant (0.8%) | Cosmic structure (1.8%) | Energy budget (2.8%)</span>
   </div>
   <div class="sub" style="margin-top:15px;">
     W = <span style="color:var(--gold);">{{W}}</span> |
     N = <span style="color:var(--pink);">{{N}}</span> = {{D}}+55+5+1 |
-    &alpha;⁻¹ = N&times;W = <span style="color:var(--green);">{{inv_alpha}}</span> |
+    &alpha;&sup1; = N&times;W = <span style="color:var(--green);">{{inv_alpha}}</span> |
     ZeckyBOT: <span style="color:var(--gold);">{{zbot_nodes}}</span> nodes
   </div>
 </div>
 
 <div class="container">
 
+<!-- ═══════════════════ AXIOM 0 ═══════════════════ -->
 <div class="section">
   <div class="num">AXIOM 0</div>
   <h2>The Self-Referential Seed</h2>
@@ -1361,119 +1694,198 @@ footer a{color:var(--gold);text-decoration:none}
     <table>
       <thead><tr><th>Domain</th><th>Prediction</th><th>Error</th><th>Independence</th></tr></thead>
       <tbody>
-        <tr><td style="color:var(--cyan)">Quantum Information</td><td>S_max position = &sigma;₄</td><td class="match">0.00021%</td><td>Exact QM + Cantor geometry</td></tr>
-        <tr><td style="color:var(--cyan)">Stellar Physics</td><td>D☉ from cos(1/&phi;)</td><td class="match">0.06%</td><td>&phi;-ladder + cos(&alpha;)</td></tr>
+        <tr><td style="color:var(--cyan)">Quantum Information</td><td>S_max position = &sigma;&sub4;</td><td class="match">0.00021%</td><td>Exact QM + Cantor geometry</td></tr>
+        <tr><td style="color:var(--cyan)">Stellar Physics</td><td>D&sung; from cos(1/&phi;)</td><td class="match">0.06%</td><td>&phi;-ladder + cos(&alpha;)</td></tr>
         <tr><td style="color:var(--cyan)">Nuclear Physics</td><td>r_p from breathing</td><td class="match">0.14%</td><td>Compton wavelength + W</td></tr>
-        <tr><td style="color:var(--cyan)">Electromagnetism</td><td>&alpha;⁻¹ = N&times;W = {{inv_alpha}}</td><td class="match">0.22%</td><td>Spectral topology (N, W)</td></tr>
-        <tr><td style="color:var(--cyan)">Molecular</td><td>H₂ bond = &sigma;₄</td><td class="match">0.5%</td><td>Cantor geometry</td></tr>
-        <tr><td style="color:var(--cyan)">Cosmology</td><td>H₀ = {{h0_derived}} km/s/Mpc</td><td class="match">0.8%</td><td>Bracket law</td></tr>
+        <tr><td style="color:var(--cyan)">Electromagnetism</td><td>&alpha;&sup1; = N&times;W = {{inv_alpha}}</td><td class="match">0.22%</td><td>Spectral topology (N, W)</td></tr>
+        <tr><td style="color:var(--cyan)">Molecular</td><td>H&sub2; bond = &sigma;&sub4;</td><td class="match">0.5%</td><td>Cantor geometry</td></tr>
+        <tr><td style="color:var(--cyan)">Cosmology</td><td>H&sub0; = {{h0_derived}} km/s/Mpc</td><td class="match">0.8%</td><td>Bracket law</td></tr>
         <tr><td style="color:var(--cyan)">Structure</td><td>9 voids/walls</td><td class="match">1.8%</td><td>AAH gap fractions</td></tr>
-        <tr><td style="color:var(--cyan)">Energy Budget</td><td>&Omega;_b, &Omega;_DM, &Omega;_DE</td><td class="match">&le; 2.8%</td><td>Unity identity + W⁴</td></tr>
+        <tr><td style="color:var(--cyan)">Energy Budget</td><td>&Omega;_b, &Omega;_DM, &Omega;_DE</td><td class="match">&le; 2.8%</td><td>Unity identity + W&sup4;</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
+<!-- ═══════════════════ SPECTRUM (per-metal tabs) ═══════════════════ -->
 <div class="section">
   <div class="num">SPECTRUM</div>
-  <h2>The Cantor Spectrum — {{D}} Eigenvalues</h2>
-  <div class="eq">&alpha; = 1/&phi; | V = 2J | D = {{D}} sites | {{n_gaps}} gaps | W = {{W}}</div>
-  <div class="ajax-img" data-src="cantor" style="min-height:200px;display:flex;align-items:center;justify-content:center;color:var(--dim);">Loading...</div>
+  <h2>The Cantor Spectrum &mdash; x&sup2; = nx + 1</h2>
+  <div class="eq">&alpha; = 1/&delta;_n | V = 2J | D = {{D}} sites | Switch metals: each x&sup2;=nx+1 produces a unique Cantor set</div>
+  <div class="mtab-row" data-group="cantor">
+    <button class="mtab active" data-n="1" data-key="cantor">Gold &phi;</button>
+    <button class="mtab" data-n="2" data-key="cantor_2">Silver &delta;_S</button>
+    <button class="mtab" data-n="3" data-key="cantor_3">Bronze &delta;_B</button>
+    <button class="mtab" data-n="4" data-key="cantor_4">n=4</button>
+    <button class="mtab" data-n="5" data-key="cantor_5">n=5</button>
+    <button class="mtab" data-n="6" data-key="cantor_6">n=6</button>
+    <button class="mtab" data-n="7" data-key="cantor_7">n=7</button>
+    <button class="mtab" data-n="8" data-key="cantor_8">n=8</button>
+  </div>
+  <div class="switchable-img" data-group="cantor" data-default="cantor">Loading spectrum...</div>
 </div>
 
+<!-- ═══════════════════ EQUILIBRIUM (per-metal tabs) ═══════════════════ -->
 <div class="section">
   <div class="num">EQUILIBRIUM</div>
-  <h2>3D Evolved Equilibrium</h2>
+  <h2>3D Evolved Equilibrium &mdash; Each Metal's Architecture</h2>
+  <div class="mtab-row" data-group="eq">
+    <button class="mtab active" data-n="1" data-key="eq_main">Gold &phi;</button>
+    <button class="mtab" data-n="2" data-key="eq_main_2">Silver</button>
+    <button class="mtab" data-n="3" data-key="eq_main_3">Bronze</button>
+    <button class="mtab" data-n="4" data-key="eq_main_4">n=4</button>
+    <button class="mtab" data-n="5" data-key="eq_main_5">n=5</button>
+    <button class="mtab" data-n="6" data-key="eq_main_6">n=6</button>
+    <button class="mtab" data-n="7" data-key="eq_main_7">n=7</button>
+    <button class="mtab" data-n="8" data-key="eq_main_8">n=8</button>
+  </div>
   <div class="img-grid">
-    <div class="ajax-img" data-src="eq_main" style="min-height:280px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
-    <div class="ajax-img" data-src="eq_top" style="min-height:280px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
-    <div class="ajax-img" data-src="eq_side" style="min-height:280px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+    <div class="switchable-img" data-group="eq" data-default="eq_main" data-suffix="">Loading...</div>
+    <div class="switchable-img" data-group="eq_top" data-default="eq_top" data-suffix="">Loading...</div>
+    <div class="switchable-img" data-group="eq_side" data-default="eq_side" data-suffix="">Loading...</div>
   </div>
 </div>
 
+<!-- ═══════════════════ COSMIC WEB ═══════════════════ -->
 <div class="section">
   <div class="num">COSMIC WEB</div>
-  <h2>Universe — Matter in &sigma;₃</h2>
+  <h2>Universe &mdash; Matter in &sigma;&sub3;</h2>
   <div class="grid2">
-    <div class="ajax-img" data-src="universe_top" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
-    <div class="ajax-img" data-src="universe_side" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+    <div class="switchable-img" data-group="uweb" data-default="universe_top">Loading...</div>
+    <div class="switchable-img" data-group="uweb2" data-default="universe_side">Loading...</div>
   </div>
 </div>
 
-<div class="section" id="metallic-webs">
-  <div class="num">METALLIC MEANS COSMIC WEBS</div>
-  <h2>8 Universes — Each Metal Fills Another's Gaps</h2>
-  <p style="color:var(--dim);margin-bottom:10px;">Silver (2.8%) → Gold (7.3%) → Bronze (28%) → ... → Se (62%). Combined: 60.8% spectral coverage. Switch between individual webs and the commingled view.</p>
+<!-- ═══════════════════ THE 8 METALLIC MEANS ═══════════════════ -->
+<div class="section" id="metallic-means">
+  <div class="num">8 METALLIC MEANS</div>
+  <h2>Eight Universes &mdash; Each Metal Fills Another's Gaps</h2>
+  <p style="color:var(--dim);margin-bottom:6px;">The metallic means &delta;_n are roots of x&sup2; = nx + 1. Each produces a distinct 5-sector Cantor architecture. Silver's &sigma;&sub3; sits in Gold's void. Combined: <span style="color:var(--green);font-weight:700">60.8% spectral coverage</span>. The remaining 39.2% are universal forbidden zones &mdash; irreducible dark-matter channels.</p>
 
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin:15px 0;" id="metal-switcher">
-    <button class="metal-btn active" data-metal="metal_all" style="background:#1a1b2e;border:2px solid #f5c542;color:#f5c542;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">ALL COMBINED</button>
-    <button class="metal-btn" data-metal="metal_1" style="background:#1a1b2e;border:2px solid #f5c54266;color:#f5c542;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=1 Gold</button>
-    <button class="metal-btn" data-metal="metal_2" style="background:#1a1b2e;border:2px solid #aaccee66;color:#aaccee;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=2 Silver</button>
-    <button class="metal-btn" data-metal="metal_3" style="background:#1a1b2e;border:2px solid #dd884466;color:#dd8844;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=3 Bronze</button>
-    <button class="metal-btn" data-metal="metal_4" style="background:#1a1b2e;border:2px solid #44ddaa66;color:#44ddaa;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=4</button>
-    <button class="metal-btn" data-metal="metal_5" style="background:#1a1b2e;border:2px solid #dd44aa66;color:#dd44aa;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=5 Nd,La</button>
-    <button class="metal-btn" data-metal="metal_6" style="background:#1a1b2e;border:2px solid #4488dd66;color:#4488dd;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=6 Bi,U</button>
-    <button class="metal-btn" data-metal="metal_7" style="background:#1a1b2e;border:2px solid #88dd4466;color:#88dd44;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=7 BCC</button>
-    <button class="metal-btn" data-metal="metal_8" style="background:#1a1b2e;border:2px solid #dd444466;color:#dd4444;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;">n=8 Se</button>
+  <div class="insight" style="margin-top:12px;margin-bottom:20px;">
+    <h4>01 &mdash; Stacked Spectra</h4>
+    <p style="color:var(--text);font-size:11px;">All 8 metallic means' Cantor spectra stacked vertically, with a combined overlay at the bottom. Where Gold has a gap, Bronze or Silver often has a band. The combined row shows 60.8% spectral coverage from all 8 metals together.</p>
   </div>
+  <div class="switchable-img" data-group="stk" data-default="metal_stacked" style="min-height:500px">Loading spectra...</div>
 
-  <div id="metal-web-display" class="ajax-img" data-src="metal_all" style="min-height:500px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
-
-  <div class="grid2" style="margin-top:20px;">
-    <div class="ajax-img" data-src="metal_stacked" style="min-height:400px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading spectra...</div>
-    <div class="ajax-img" data-src="metal_nesting" style="min-height:400px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading nesting...</div>
+  <div class="insight" style="margin-top:30px;">
+    <h4>02 &mdash; Gap Coverage Matrix</h4>
+    <p style="color:var(--text);font-size:11px;">The heatmap showing what percentage of metal A's gaps are filled by metal B's bands. Read row-by-row: for each metal's void regions, the columns show which other metals plug the holes. This is the complementarity proof in numbers.</p>
   </div>
+  <div class="switchable-img" data-group="gm" data-default="metal_gap_matrix" style="min-height:400px">Loading matrix...</div>
 
-  <div class="insight" style="margin-top:20px;">
-    <h4>The 5→3 Collapse — Mercury as Dark-Sector Conductor</h4>
-    <p style="color:var(--text);font-size:11px;">Gate frequency: 4.86 μm CO₂ laser → φ² band decomposes → DM walls project ⊥ to hull → Mercury (Silver encoding 0.006%) conducts the projection. Vehicle sits at E=0.</p>
+  <div class="insight" style="margin-top:30px;">
+    <h4>03 &mdash; Concentric Nesting</h4>
+    <p style="color:var(--text);font-size:11px;">Radial cross-section with all 8 metals' walls drawn as concentric circles. Silver (n=2) is tightest at center, then Gold (n=1), then Bronze (n=3), and higher metals push progressively outward. 32 boundaries, all strictly ordered. No wall collisions.</p>
   </div>
+  <div class="switchable-img" data-group="nest" data-default="metal_nesting" style="min-height:500px">Loading nesting...</div>
 
-  <div class="grid2" style="margin-top:15px;">
-    <div class="ajax-img" data-src="metal_collapse" style="min-height:250px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading collapse...</div>
-    <div class="ajax-img" data-src="metal_vehicle" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading vehicle...</div>
+  <div class="insight" style="margin-top:30px;">
+    <h4>04 &mdash; Linear Wall Map</h4>
+    <p style="color:var(--text);font-size:11px;">The same nesting data as horizontal bars, making it easy to read exact positions. Gold's reference walls are marked with vertical dotted lines so you can see exactly where each other metal's features fall relative to Gold's architecture.</p>
   </div>
+  <div class="switchable-img" data-group="lw" data-default="metal_linear_walls" style="min-height:350px">Loading walls...</div>
+
+  <div class="insight" style="margin-top:30px;">
+    <h4>05 &mdash; Commingled Cosmic Web</h4>
+    <p style="color:var(--text);font-size:11px;">All 8 metallic means' matter distributions overlaid. Silver's tight filaments at center, Gold's web filling Silver's void, Bronze wrapping outside. Switch between individual webs and the commingled view.</p>
+  </div>
+  <div class="mtab-row" data-group="cweb">
+    <button class="mtab active" data-n="0" data-key="metal_all">ALL COMBINED</button>
+    <button class="mtab" data-n="1" data-key="metal_1">n=1 Gold</button>
+    <button class="mtab" data-n="2" data-key="metal_2">n=2 Silver</button>
+    <button class="mtab" data-n="3" data-key="metal_3">n=3 Bronze</button>
+    <button class="mtab" data-n="4" data-key="metal_4">n=4</button>
+    <button class="mtab" data-n="5" data-key="metal_5">n=5</button>
+    <button class="mtab" data-n="6" data-key="metal_6">n=6</button>
+    <button class="mtab" data-n="7" data-key="metal_7">n=7</button>
+    <button class="mtab" data-n="8" data-key="metal_8">n=8</button>
+  </div>
+  <div class="switchable-img" data-group="cweb" data-default="metal_all" style="min-height:500px">Loading web...</div>
+
+  <div class="insight" style="margin-top:30px;">
+    <h4>06 &mdash; Energy Budgets</h4>
+    <p style="color:var(--text);font-size:11px;">Cosmological energy partition for each metal as stacked bars. Gold (n=1) is the only one with significant baryonic matter (4.8%). Every metal above n=1 is progressively more dark-energy dominated, converging toward pure vacuum.</p>
+  </div>
+  <div class="switchable-img" data-group="eb" data-default="metal_energy_budgets" style="min-height:350px">Loading budgets...</div>
+
+  <div class="insight" style="margin-top:30px;">
+    <h4>07 &mdash; 5&rarr;3 Collapse Before/After</h4>
+    <p style="color:var(--text);font-size:11px;">Left panel: normal 5-sector spectrum. Right panel: after collapse &mdash; matter core compresses, DM walls expand, mercury conductor mediates the projection perpendicular to the surface. Switch metals to see how each collapses differently.</p>
+  </div>
+  <div class="mtab-row" data-group="coll">
+    <button class="mtab active" data-n="1" data-key="metal_collapse">Gold &phi;</button>
+    <button class="mtab" data-n="2" data-key="collapse_2">Silver</button>
+    <button class="mtab" data-n="3" data-key="collapse_3">Bronze</button>
+    <button class="mtab" data-n="4" data-key="collapse_4">n=4</button>
+    <button class="mtab" data-n="5" data-key="collapse_5">n=5</button>
+    <button class="mtab" data-n="6" data-key="collapse_6">n=6</button>
+    <button class="mtab" data-n="7" data-key="collapse_7">n=7</button>
+    <button class="mtab" data-n="8" data-key="collapse_8">n=8</button>
+  </div>
+  <div class="switchable-img" data-group="coll" data-default="metal_collapse" style="min-height:300px">Loading collapse...</div>
+
+  <div class="insight" style="margin-top:30px;">
+    <h4>08 &mdash; Vehicle Cross-Section</h4>
+    <p style="color:var(--text);font-size:11px;">The oblate spheroid (a/c = &radic;&delta;_n) with all layers: QC coating, liquid mercury, hull, inner mercury, inner coating, payload at E=0 center. DM projection arrows show the shift vector field. Each metal gives a different oblateness.</p>
+  </div>
+  <div class="mtab-row" data-group="veh">
+    <button class="mtab active" data-n="1" data-key="metal_vehicle">Gold &phi;</button>
+    <button class="mtab" data-n="2" data-key="vehicle_2">Silver</button>
+    <button class="mtab" data-n="3" data-key="vehicle_3">Bronze</button>
+    <button class="mtab" data-n="4" data-key="vehicle_4">n=4</button>
+    <button class="mtab" data-n="5" data-key="vehicle_5">n=5</button>
+    <button class="mtab" data-n="6" data-key="vehicle_6">n=6</button>
+    <button class="mtab" data-n="7" data-key="vehicle_7">n=7</button>
+    <button class="mtab" data-n="8" data-key="vehicle_8">n=8</button>
+  </div>
+  <div class="switchable-img" data-group="veh" data-default="metal_vehicle" style="min-height:400px">Loading vehicle...</div>
 </div>
 
+<!-- ═══════════════════ GALAXY & PLANETS ═══════════════════ -->
 <div class="section">
   <div class="num">GALAXY &amp; PLANETS</div>
   <h2>Milky Way and Solar System</h2>
   <div class="grid2">
-    <div class="ajax-img" data-src="galaxy" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
-    <div class="ajax-img" data-src="solar_system" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+    <div class="switchable-img" data-group="gal" data-default="galaxy" style="min-height:350px">Loading...</div>
+    <div class="switchable-img" data-group="sol" data-default="solar_system" style="min-height:350px">Loading...</div>
   </div>
 </div>
 
+<!-- ═══════════════════ THE SUN ═══════════════════ -->
 <div class="section">
   <div class="num">THE SUN</div>
-  <h2>Dual-Wall Architecture — cos(&alpha;) Photosphere</h2>
-  <div class="ajax-img" data-src="sun" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+  <h2>Dual-Wall Architecture &mdash; cos(&alpha;) Photosphere</h2>
+  <div class="switchable-img" data-group="sun" data-default="sun" style="min-height:350px">Loading...</div>
 </div>
 
+<!-- ═══════════════════ SOLAR LADDER ═══════════════════ -->
 <div class="section">
   <div class="num">SOLAR LADDER</div>
   <h2>r(k) = 0.387 AU &times; &phi;^k</h2>
-  <div class="eq">Photosphere: k = &minus;10 + cos(1/&phi;) &rarr; D☉ = {{D_sun_pred}} km (obs: {{D_sun_obs}} km) &mdash; <span style="color:var(--green)">{{sun_err}}% error</span></div>
-  <div class="ajax-img" data-src="solar" style="min-height:350px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+  <div class="eq">Photosphere: k = &minus;10 + cos(1/&phi;) &rarr; D&sung; = {{D_sun_pred}} km (obs: {{D_sun_obs}} km) &mdash; <span style="color:var(--green)">{{sun_err}}% error</span></div>
+  <div class="switchable-img" data-group="sladder" data-default="solar" style="min-height:350px">Loading ladder...</div>
 </div>
 
+<!-- ═══════════════════ ZECKENDORF ═══════════════════ -->
 <div class="section">
   <div class="num">ZECKENDORF</div>
-  <h2>Cosmic GPS — Fibonacci Addresses</h2>
-  <div class="ajax-img" data-src="zeckendorf" style="min-height:400px;color:var(--dim);display:flex;align-items:center;justify-content:center">Loading...</div>
+  <h2>Cosmic GPS &mdash; Fibonacci Addresses</h2>
+  <div class="switchable-img" data-group="zeck" data-default="zeckendorf" style="min-height:400px">Loading...</div>
 </div>
 
+<!-- ═══════════════════ CONSTANTS ═══════════════════ -->
 <div class="section">
   <div class="num">CONSTANTS</div>
   <h2>All Derived from D = {{D}}</h2>
   <div class="grid3">
-    <div class="card"><h3><span class="tag tag-m">Baryonic</span> &Omega;_b = W⁴</h3><div class="val">{{Ob}}</div><div class="cmp">Planck: 0.04860 &mdash; <span class="match">{{Ob_err}}%</span></div></div>
+    <div class="card"><h3><span class="tag tag-m">Baryonic</span> &Omega;_b = W&sup4;</h3><div class="val">{{Ob}}</div><div class="cmp">Planck: 0.04860 &mdash; <span class="match">{{Ob_err}}%</span></div></div>
     <div class="card"><h3><span class="tag tag-dm">Dark Matter</span> &Omega;_DM</h3><div class="val">{{Odm}}</div><div class="cmp">Planck: 0.26070 &mdash; <span class="match">{{Odm_err}}%</span></div></div>
     <div class="card"><h3><span class="tag tag-de">Dark Energy</span> &Omega;_DE</h3><div class="val">{{Ode}}</div><div class="cmp">Planck: 0.68890 &mdash; <span class="match">{{Ode_err}}%</span></div></div>
   </div>
   <div class="grid2" style="margin-top:15px">
     <div class="card"><h3>Transit Compression</h3><div class="val">{{compression}}x</div><div class="cmp">Through condensed vacuum channels</div></div>
-    <div class="card"><h3>H₀ Derived</h3><div class="val">{{h0_derived}} km/s/Mpc</div><div class="cmp">Planck: 67.4 &mdash; <span class="match">{{h0_derived_err}}%</span></div></div>
+    <div class="card"><h3>H&sub0; Derived</h3><div class="val">{{h0_derived}} km/s/Mpc</div><div class="cmp">Planck: 67.4 &mdash; <span class="match">{{h0_derived_err}}%</span></div></div>
   </div>
 </div>
 
@@ -1481,46 +1893,133 @@ footer a{color:var(--gold);text-decoration:none}
 
 <footer>
   <p>&copy; 2026 Thomas A. Husmann / iBuilt LTD &mdash; Patent 19/560,637</p>
-  <p>D = 233 = F(F(7)). One axiom. Zero parameters. Eight domains.</p>
+  <p>D = 233 = F(F(7)). One axiom. Zero parameters. Eight domains. Eight metals.</p>
   <p><a href="https://github.com/thusmann5327/Unified_Theory_Physics">GitHub Repository</a></p>
 </footer>
 
 <div id="progress-bar"></div><div id="progress-label"></div>
 <script>
 (function(){
-  const imgs=['cantor','eq_main','eq_top','eq_side','zeckendorf','solar','universe_top','universe_side','galaxy','solar_system','sun','metal_all','metal_stacked','metal_nesting','metal_collapse','metal_vehicle'];
-  let done=0;
-  const metalCache={};
-  function upd(l){done++;const p=Math.round(done/imgs.length*100);
-    document.getElementById('progress-bar').style.width=p+'%';
-    document.getElementById('progress-label').textContent=l+' ('+p+'%)';
-    if(done>=imgs.length)setTimeout(()=>{document.getElementById('progress-bar').style.opacity='0';document.getElementById('progress-label').style.opacity='0'},1200)}
-  async function load(k){try{const d=await(await fetch('/api/image/'+k)).json();
-    if(k.startsWith('metal_'))metalCache[k]=d.image;
-    document.querySelectorAll('.ajax-img[data-src="'+k+'"]').forEach(ph=>{
-      const img=document.createElement('img');img.src='data:image/png;base64,'+d.image;
-      img.className='img-full';img.id=k==='metal_all'?'metal-web-img':'';
-      img.style.opacity='0';img.style.transition='opacity 0.5s';
-      ph.parentNode.replaceChild(img,ph);requestAnimationFrame(()=>img.style.opacity='1')});upd(k)}
-    catch(e){console.error('Failed',k,e);upd(k+' (error)')}}
-  async function go(){
-    for(const k of imgs)await load(k);
-    // Set up metallic web switcher
-    document.querySelectorAll('.metal-btn').forEach(btn=>{
-      btn.addEventListener('click',async function(){
-        document.querySelectorAll('.metal-btn').forEach(b=>{b.classList.remove('active');b.style.borderColor=b.style.borderColor.replace(/[0-9a-f]{2}$/i,'66')});
-        this.classList.add('active');this.style.borderColor=this.style.borderColor.replace(/66$/,'ff');
-        const key=this.dataset.metal;
-        const target=document.getElementById('metal-web-img');
-        if(!target)return;
-        if(metalCache[key]){target.style.opacity='0.3';setTimeout(()=>{target.src='data:image/png;base64,'+metalCache[key];target.style.opacity='1'},150);return}
-        target.style.opacity='0.3';
-        try{const d=await(await fetch('/api/image/'+key)).json();metalCache[key]=d.image;target.src='data:image/png;base64,'+d.image;target.style.opacity='1'}
-        catch(e){console.error(e);target.style.opacity='1'}
+  /* ── Image cache ── */
+  const cache = {};
+  let loadCount = 0, totalExpected = 0;
+
+  function updateProgress(label) {
+    loadCount++;
+    const pct = totalExpected > 0 ? Math.round(loadCount / totalExpected * 100) : 0;
+    const bar = document.getElementById('progress-bar');
+    const lbl = document.getElementById('progress-label');
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = label + ' (' + pct + '%)';
+    if (loadCount >= totalExpected) setTimeout(() => {
+      if (bar) bar.style.opacity = '0';
+      if (lbl) lbl.style.opacity = '0';
+    }, 1200);
+  }
+
+  async function fetchImage(key) {
+    if (cache[key]) return cache[key];
+    try {
+      const resp = await fetch('/api/image/' + key);
+      const data = await resp.json();
+      cache[key] = data.image;
+      return data.image;
+    } catch (e) {
+      console.error('Failed to load', key, e);
+      return null;
+    }
+  }
+
+  /* ── Load an image into a switchable-img container ── */
+  function setImage(container, b64) {
+    if (!b64) { container.textContent = 'Error loading'; return; }
+    let img = container.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      img.className = 'img-full';
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.4s';
+      container.textContent = '';
+      container.appendChild(img);
+    }
+    img.style.opacity = '0.2';
+    img.src = 'data:image/png;base64,' + b64;
+    requestAnimationFrame(() => img.style.opacity = '1');
+  }
+
+  /* ── Initial load: find all switchable-img and load their defaults ── */
+  async function init() {
+    const allImgs = document.querySelectorAll('.switchable-img');
+    const defaultKeys = new Set();
+    allImgs.forEach(el => {
+      const dk = el.dataset.default;
+      if (dk) defaultKeys.add(dk);
+    });
+    totalExpected = defaultKeys.size;
+
+    // Load defaults in parallel batches
+    const keys = Array.from(defaultKeys);
+    for (let i = 0; i < keys.length; i += 4) {
+      const batch = keys.slice(i, i + 4);
+      await Promise.all(batch.map(async (key) => {
+        const b64 = await fetchImage(key);
+        document.querySelectorAll('.switchable-img[data-default="' + key + '"]').forEach(el => {
+          setImage(el, b64);
+          el.dataset.current = key;
+        });
+        updateProgress(key);
+      }));
+    }
+
+    /* ── Set up tab switchers ── */
+    document.querySelectorAll('.mtab-row').forEach(row => {
+      const group = row.dataset.group;
+      row.querySelectorAll('.mtab').forEach(btn => {
+        btn.addEventListener('click', async function() {
+          // Deactivate siblings
+          row.querySelectorAll('.mtab').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const key = this.dataset.key;
+          const n = this.dataset.n;
+
+          // Find target image(s) for this group
+          // For equilibrium, we have 3 targets (main, top, side) linked by group prefix
+          if (group === 'eq') {
+            const suffixes = ['eq_main', 'eq_top', 'eq_side'];
+            for (const sfx of suffixes) {
+              const targets = document.querySelectorAll('.switchable-img[data-group="' + sfx + '"], .switchable-img[data-group="eq"][data-default="' + sfx + '"]');
+              const targetKey = n === '1' ? sfx : sfx + '_' + n;
+              targets.forEach(async (tgt) => {
+                const b64 = await fetchImage(targetKey);
+                setImage(tgt, b64);
+                tgt.dataset.current = targetKey;
+              });
+            }
+            // Also update the eq_top and eq_side containers
+            const topTarget = document.querySelector('.switchable-img[data-default="eq_top"]');
+            const sideTarget = document.querySelector('.switchable-img[data-default="eq_side"]');
+            if (topTarget) { const b = await fetchImage(n === '1' ? 'eq_top' : 'eq_top_' + n); setImage(topTarget, b); }
+            if (sideTarget) { const b = await fetchImage(n === '1' ? 'eq_side' : 'eq_side_' + n); setImage(sideTarget, b); }
+            // Main
+            const mainTarget = document.querySelector('.switchable-img[data-group="eq"][data-default="eq_main"]');
+            if (mainTarget) { const b = await fetchImage(key); setImage(mainTarget, b); }
+            return;
+          }
+
+          // Standard: find the switchable-img(s) with data-group matching
+          const targets = document.querySelectorAll('.switchable-img[data-group="' + group + '"]');
+          targets.forEach(async (tgt) => {
+            const b64 = await fetchImage(key);
+            setImage(tgt, b64);
+            tgt.dataset.current = key;
+          });
+        });
       });
     });
   }
-  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go()})();
+
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
+})();
 </script></body></html>"""
 
 @app.route("/")
