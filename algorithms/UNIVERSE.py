@@ -12,7 +12,7 @@ Integrated edition with:
   - Zeckendorf addressing with backbone explanations
   - 6 NEW render views: Universe Top/Side, Galaxy, Solar System, Sun, Solar Ladder
 
-Two inputs: phi = (1+sqrt(5))/2 and t_as = 232 x 10^-18 s
+One input: phi = (1+sqrt(5))/2
 Everything else is derived. Zero free parameters.
 
 Thomas A. Husmann / iBuilt LTD — March 2026
@@ -1227,13 +1227,10 @@ footer a { color:var(--gold); text-decoration:none; }
 <div class="hero">
   <div class="num">THEOREM OF THE UNIVERSE</div>
   <h1 style="font-size:42px;">0 Free Parameters. 1 Identity.</h1>
-  <div class="sub" style="font-size:18px;color:var(--cyan);margin-top:12px;">The complete universe from <span style="color:var(--gold);">phi</span> and <span style="color:var(--gold);">232 attoseconds</span></div>
+  <div class="sub" style="font-size:18px;color:var(--cyan);margin-top:12px;">The complete universe from <span style="color:var(--gold);">phi</span> alone</div>
   <div class="sub" style="margin-top:6px;">Husmann Decomposition | Patent 19/560,637 | Thomas A. Husmann / iBuilt LTD</div>
   <div class="inputs" style="margin-top:25px;">
     <span style="font-size:20px;">phi = (1+sqrt(5))/2 = 1.6180339887</span>
-  </div>
-  <div class="inputs" style="margin-top:8px;">
-    <span style="font-size:16px;">t_as = 232 x 10^-18 s</span> <span style="color:var(--dim);font-size:12px;">(TU Wien entanglement timescale)</span>
   </div>
   <div class="sub" style="margin-top:20px;padding:15px;background:#0a0b14;border-radius:8px;border:1px solid var(--border);max-width:800px;margin-left:auto;margin-right:auto;">
     <span style="color:var(--green);font-weight:700;">8 INDEPENDENT DOMAINS VERIFIED</span><br>
@@ -1261,15 +1258,15 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
 
   <div class="axiom">
-    <h3>Axiom 1: Minimal Inputs</h3>
-    <p>The universe is completely determined by exactly <span class="highlight">two primitive quantities</span>:<br>
+    <h3>Axiom 1: Single Input</h3>
+    <p>The universe is completely determined by exactly <span class="highlight">one primitive quantity</span>:<br>
     <span class="math">phi = (1 + sqrt(5))/2 = 1.6180339887...</span> (the golden ratio)<br>
-    <span class="math">t_as = 232 x 10^-18 s</span> (attosecond entanglement timescale from TU Wien experiment)</p>
+    <span style="color:var(--dim);font-size:11px;">The unique irrational whose continued fraction is all 1s. The limit of consecutive Fibonacci ratios. The self-referential constant.</span></p>
   </div>
 
   <div class="axiom">
     <h3>Axiom 2: Emergence Principle</h3>
-    <p>All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the <span class="highlight">Aubry-Andre-Harper (AAH) Hamiltonian</span> at quasiperiodic parameter <span class="math">alpha = 1/phi</span> and potential strength <span class="math">V = 2J</span>, with J derived from t_as via the Lieb-Robinson bound gap.</p>
+    <p>All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the <span class="highlight">Aubry-Andre-Harper (AAH) Hamiltonian</span> at quasiperiodic parameter <span class="math">alpha = 1/phi</span> and potential strength <span class="math">V = 2J</span>. The coupling J and all derived scales emerge from the spectrum itself.</p>
   </div>
 
   <div class="axiom">
