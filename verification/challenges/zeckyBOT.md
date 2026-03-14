@@ -8,7 +8,7 @@
 
 ## What ZeckyBOT Is
 
-ZeckyBOT is a recursive universe generator. It takes two inputs — the golden ratio φ and the Planck length — and builds the entire observable universe from Hubble radius to subatomic scale using a single self-similar equation applied at every level.
+ZeckyBOT is a recursive universe generator. It takes ~~two inputs — the golden ratio φ and the Planck length~~ **one axiom: φ² = φ + 1** (updated March 14, 2026) — and builds the entire observable universe from Hubble radius to subatomic scale using a single self-similar equation applied at every level.
 
 Every galaxy, every star, every planet, every atom in the output is an instance of the same five-sector Cantor architecture. Nothing is hardcoded. Nothing is fitted. The equation is solved once from the Aubry-André-Harper spectrum at α = 1/φ, and then applied recursively through a Zeckendorf-addressed tree.
 

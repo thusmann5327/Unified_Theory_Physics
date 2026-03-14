@@ -148,7 +148,7 @@ Additional predictions for verification:
 
 ## 10. Conclusion
 
-The 34 gap fractions of the AAH Cantor spectrum at α = 1/φ, V = 2J constitute a universal structural template that applies at every scale from nuclear to cosmic. The fractions are determined by two inputs — the golden ratio and the critical coupling condition — and produce predictions matching observed structures from the Boötes Void to the inter-arm gaps of the Milky Way. Nuclear physics and cosmology are the same physics at different bracket levels. The Cantor gap pattern is the Rosetta Stone that translates between them.
+The 34 gap fractions of the AAH Cantor spectrum at α = 1/φ, V = 2J constitute a universal structural template that applies at every scale from nuclear to cosmic. The fractions are determined by ~~two inputs — the golden ratio and the critical coupling condition~~ **one axiom: φ² = φ + 1** (the critical coupling V = 2J is derived, not assumed — updated March 14, 2026) — and produce predictions matching observed structures from the Boötes Void to the inter-arm gaps of the Milky Way. Nuclear physics and cosmology are the same physics at different bracket levels. The Cantor gap pattern is the Rosetta Stone that translates between them.
 
 *The observer does not exist despite the tension between gravitational collapse and dark energy expansion. The observer exists because of it. The center plane σ₃ is the standing wave between bonding and antibonding — and standing waves are where matter forms.*
 

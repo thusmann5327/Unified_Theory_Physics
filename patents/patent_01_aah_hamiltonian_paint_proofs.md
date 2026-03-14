@@ -23,11 +23,11 @@ The coating simultaneously provides: low friction (μ = 0.03–0.08), high hardn
 
 ## Framework Connection
 
-All properties derive from two inputs:
+All properties derive from ~~two inputs~~ **one axiom: φ² = φ + 1** (updated March 14, 2026):
 
 ```
-φ = 1.6180339887...        (pure mathematics)
-t_as = 232 × 10⁻¹⁸ s      (TU Wien helium attosecond measurement)
+φ = 1.6180339887...        (pure mathematics — the AXIOM)
+t_as = 232 × 10⁻¹⁸ s      (TU Wien helium attosecond — VERIFICATION, not input)
 ```
 
 Everything else is derived — no free parameters:
