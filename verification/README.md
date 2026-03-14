@@ -39,6 +39,16 @@ against observational data and mathematical identities.
 
 ---
 
+## Note on Intentional Forks
+
+The verification directory contains **intentional independent copies** of core engines
+(`challenges/universe_verify.py`, `challenges/zeckyBOT.py`) that were forked from
+`algorithms/UNIVERSE.py` and `algorithms/zeckybot.py` respectively. These are deliberately
+maintained as separate codebases to ensure verification independence — changes to the main
+engines do not automatically propagate to the verification copies.
+
+---
+
 ## /challenges/ — Extended Verification
 
 In-depth verification challenges, including cross-validation with external AI systems.

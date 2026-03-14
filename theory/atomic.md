@@ -489,5 +489,9 @@ The N = 294 spectral topology derivation (Section 2, Section 6.1) and the W²/N 
 
 ---
 
+**See also:** [`tools/ATOMIC.md`](../tools/ATOMIC.md) — comprehensive 3D modeling instructions and practical rendering guide for atomic Cantor nodes.
+
+---
+
 *© 2026 Thomas A. Husmann / iBuilt LTD*
 *All rights reserved. Patent Application 19/560,637.*

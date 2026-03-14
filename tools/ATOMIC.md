@@ -1664,3 +1664,5 @@ BRACKET   TEMP(K)   ZONE                ELEMENTS
 *Source repository: github.com/thusmann5327/Unified_Theory_Physics*
 *Framework: Thomas A. Husmann / iBuilt LTD / Patent App. 19/560,637*
 *This document: Generated for dedicated atomic structure modeling machine.*
+
+**See also:** [`theory/atomic.md`](../theory/atomic.md) — theoretical derivation, hydrogen predictions, and entropy extremum proof.
