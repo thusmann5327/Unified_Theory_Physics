@@ -109,7 +109,7 @@ The σ₃ center band width of **0.04854** (in J units) matches the Planck 2018 
 
 ### 3.1 Discovery in the GABA Engine
 
-The σ₄ boundary was first identified computationally in the GABA-Microtubule Quantum Engine (`tools/gaba engine.py`), which models the microtubule as a room-temperature quantum device. Each tubulin dimer sits at the σ₄ entropy boundary with:
+The σ₄ boundary was first identified computationally in the GABA-Microtubule Quantum Engine (`tools/gaba_engine.py`), which models the microtubule as a room-temperature quantum device. Each tubulin dimer sits at the σ₄ entropy boundary with:
 
 - **p_inside ≈ 0.535** — probability of entanglement being inside σ₄ (matter fraction)
 - **p_outside ≈ 0.465** — dark tail extending beyond σ₄ into the dark sector conduit
@@ -315,7 +315,7 @@ The most remarkable feature of this framework is that the same σ₄ boundary—
 | Milky Way | 100 kly | ~220 | Halo at ~34 kly | Estimated DM halo ~30–40 kly |
 | Observable universe | 93 Gly | ~294 | DM walls at 30 Gly | σ₂/σ₄ = 32.4% each |
 
-The GABA engine's `TubulinDimer` class (`gaba engine.py`, line 448) and the galaxy rotation formula share the same constants:
+The GABA engine's `TubulinDimer` class (`gaba_engine.py`, line 448) and the galaxy rotation formula share the same constants:
 
 ```python
 MATTER_FRAC = 1 / PHI**(PHI**3)   # 0.1302 — same in microtubule and galaxy
@@ -570,7 +570,7 @@ print(f"β = {beta:.4f}, α_bb = {alpha_bb:.4f}, slope = {slope:.4f}")
 
 - Husmann, T. A. (2026). *Unified Theory of Physics: The Husmann Decomposition*. GitHub. github.com/thusmann5327/Unified_Theory_Physics
 - Husmann, T. A. (2026). *The Cantor Rosetta Stone*. Patent Application 19/560,637.
-- Husmann, T. A. (2026). *GABA-Microtubule Quantum Engine v4*. `tools/gaba engine.py`.
+- Husmann, T. A. (2026). *GABA-Microtubule Quantum Engine v4*. `tools/gaba_engine.py`.
 - Aubry, S. & André, G. (1980). *Ann. Israel Phys. Soc.* 3, 133–164.
 - Harper, P. G. (1955). *Proc. Phys. Soc. A* 68, 874.
 - Bellissard, J. et al. (1992). Gap Labelling Theorems. *From Number Theory to Physics*, Springer.

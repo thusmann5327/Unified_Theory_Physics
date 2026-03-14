@@ -641,7 +641,7 @@ DM = (1 - 1/PHI**(PHI**3)) / (1/PHI**(PHI**3))
 print(f"β = {beta:.4f}, α_bb = {alpha_bb:.4f}, D/M = {DM:.4f}")
 ```
 
-Full source: `algorithms/zeckybot.py` and `tools/gaba engine.py` in the repository.
+Full source: `algorithms/zeckybot.py` and `tools/gaba_engine.py` in the repository.
 
 ---
 

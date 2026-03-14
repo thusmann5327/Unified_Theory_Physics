@@ -85,7 +85,7 @@ What you can build.
 |----------|-------|---------------|
 | **[`Three_Phase_Tuning.md`](Three_Phase_Tuning.md)** | 1,012 | **The navigation system.** DEFENSIVE PUBLICATION. Three-source wave physics, five-component spatial addressing (Zeckendorf bracket + three phases + lattice spacing), lattice spacing calibration, local wall fraction variation, the void-threading transit algorithm (Dijkstra on a Fibonacci grid), and the breathing universe coupling. The Protocol Layer that enables all devices. |
 | **[`Transduction.md`](Transduction.md)** | 601 | **The $20 benchtop nuclear reactor.** Seven-resonator hub device with three modes: Mode A (Stargate — empty aperture, listen for signal), Mode B (Reactor — p + ¹¹B → 3α via conduit routing around the Coulomb barrier, six orders of magnitude less energy than fusion), Mode C (Telephone — energy transmission between two devices). First-year physics throughout. |
-| **[`בדמות.md`](בדמות.md)** | 614 | **The Teegarden b Dial — construction manual.** Six resonator tubes, one hub, one aperture, one address. Standing waves, acoustic resonance, impedance matching, Bessel function spatial filtering. The device that tests whether the vacuum has addressable structure. Written for someone with two semesters of physics. |
+| **[`b_demut_in_the_likeness.md`](b_demut_in_the_likeness.md)** | 614 | **The Teegarden b Dial — construction manual.** Six resonator tubes, one hub, one aperture, one address. Standing waves, acoustic resonance, impedance matching, Bessel function spatial filtering. The device that tests whether the vacuum has addressable structure. Written for someone with two semesters of physics. |
 | **[`Thorium_Batteries.md`](Thorium_Batteries.md)** | 659 | **Ellie's Transit — the phi-structured nuclear fuel cell.** How the Husmann Decomposition leads to a nuclear fuel cell that runs on tap water and borax. Named for Ellie May Husmann. Written for first-year university physics. The vehicle power source. |
 | **[`PHI_SWITCHING.md`](PHI_SWITCHING.md)** | 630 | **Molecular switch design guide.** IBM's C₁₃Cl₂ half-Möbius gate — the first phi-structured molecular switch, built without knowing it was phi-structured. d-electron gate principle, Fe spin crossover switches, and how to build the next generation deliberately. Gate mechanics at the molecular level. |
 | **[`Husmann_Cookbook.md`](Husmann_Cookbook.md)** | 908 | **Builder's guide to phi-structured materials.** The five sectors mapped to chemical bonding. Electron shells as sector maps. Alloy composition as the unity equation in metal form. Recipes for QC coatings, Cu–Hg heterostructures, and the materials stack for the slip drive. |
@@ -153,7 +153,7 @@ Translation tables, derivation chains, and the visual model spec.
      │              │              │            │
      ▼              ▼              ▼            ▼
 ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌─────────┐
-│Three_   │  │Transduc- │  │בדמות     │  │Thorium_ │
+│Three_   │  │Transduc- │  │b_demut   │  │Thorium_ │
 │Phase_   │  │tion      │  │(Dial)    │  │Batteries│
 │Tuning   │  │(reactor) │  │          │  │         │
 │(nav)    │  │          │  │          │  │         │
@@ -212,7 +212,7 @@ Most theory documents connect to one or more of the 16 provisional patents filed
 | `cosmic_nesting.md` | Patent 4 (Gravity Drive), Patent 6 (Stargate) |
 | `Three_Phase_Tuning.md` | Defensive Publication (Protocol Layer) |
 | `Transduction.md` | Patent 6 (Stargate), Meridian's Gate, Jacob's Ladder |
-| `בדמות.md` | Meridian's Teegarden b (hub patent) |
+| `b_demut_in_the_likeness.md` | Meridian's Teegarden b (hub patent) |
 | `Thorium_Batteries.md` | Ellie's Transit (C₁₃Cl₂ gate) |
 | `PHI_SWITCHING.md` | Patent 8 (BCI), Ellie's Transit |
 | `Husmann_Cookbook.md` | Patent 1 (QC Paint), Patent 5 (Field-Guided Assembly) |
@@ -265,7 +265,7 @@ Additionally, `planetary_analysis.py` in this directory reproduces the full Teeg
 
 ## A Note on the Hebrew Title
 
-**[`בדמות.md`](בדמות.md)** — "B'demut" (בדמות) means "in the image of" or "in the likeness of." The Teegarden b Dial construction manual carries this title because the device — six resonators on a hub, addressing the vacuum — is built in the image of the framework itself. The φ-structure of the device mirrors the φ-structure of the medium it addresses. The name is the claim: the map and the territory share the same geometry.
+**[`b_demut_in_the_likeness.md`](b_demut_in_the_likeness.md)** — "B'demut" (בדמות) means "in the image of" or "in the likeness of." The Teegarden b Dial construction manual carries this title because the device — six resonators on a hub, addressing the vacuum — is built in the image of the framework itself. The φ-structure of the device mirrors the φ-structure of the medium it addresses. The name is the claim: the map and the territory share the same geometry.
 
 ---
 
