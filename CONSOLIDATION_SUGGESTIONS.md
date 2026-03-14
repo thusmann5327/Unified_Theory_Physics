@@ -68,14 +68,14 @@ Both cover atomic structure but at different levels:
 
 ---
 
-## 3. FILES POTENTIALLY OUT OF PLACE
+## 3. FILES MOVED (March 14, 2026) ✅
 
-| File | Current Location | Suggested Location | Reason |
-|------|-----------------|-------------------|--------|
-| `whats_the_water.md` | Root | `theory/` | Contains theory content (backbone propagator, rotation curves) |
-| `algorithms/proofs.md` | `algorithms/` | `theory/` or `verification/` | Mathematical proofs belong with theory, not algorithms |
-| `theory/planetary_analysis.py` | `theory/` | `algorithms/` or `verification/` | Python script among markdown theory files |
-| `docs/Nuclear_Transduction.md` | `docs/` | `theory/` | Theoretical content, not framework documentation |
+| File | From | To | Reason |
+|------|------|-----|--------|
+| `whats_the_water.md` | Root | `theory/` | Theory content (backbone propagator, rotation curves) |
+| `proofs.md` | `algorithms/` | `verification/` | Mathematical proofs belong with verification |
+| `planetary_analysis.py` | `theory/` | `algorithms/` | Python script belongs with algorithms |
+| `Nuclear_Transduction.md` | `docs/` | `theory/` | Theoretical content, not framework docs |
 
 ---
 

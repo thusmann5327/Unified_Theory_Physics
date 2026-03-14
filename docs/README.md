@@ -11,7 +11,7 @@ Reference documentation for the Husmann Decomposition framework.
 | [`ASSUMPTIONS.md`](ASSUMPTIONS.md) | Core assumptions and adjustable parameters — what the framework assumes and where calibration enters |
 | [`EXPERIMENTAL_PREDICTIONS.md`](EXPERIMENTAL_PREDICTIONS.md) | Testable predictions — proposed experiments with expected outcomes and costs |
 | [`OPEN_PROBLEMS.md`](OPEN_PROBLEMS.md) | Outstanding theoretical questions — unresolved derivations and known gaps |
-| [`Nuclear_Transduction.md`](Nuclear_Transduction.md) | Nuclear physics applications — transduction mechanisms at nuclear scales |
+| ~~`Nuclear_Transduction.md`~~ | *Moved to `theory/Nuclear_Transduction.md` — theoretical content belongs with theory* |
 
 ---
 

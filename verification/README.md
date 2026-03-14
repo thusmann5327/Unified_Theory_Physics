@@ -18,13 +18,17 @@ against observational data and mathematical identities.
 | [`threephase_verify.py`](threephase_verify.py) | Three-phase tuning — interference field CDF vs Unity partition |
 | [`unity_triangulation.py`](unity_triangulation.py) | Unity triangulation — geometric verification of sector partition |
 
+### Mathematical Proofs
+
+| File | Description |
+|------|-------------|
+| [`proofs.md`](proofs.md) | 43K — Mathematical proofs reference — derivations supporting the framework |
+
 ### Reports
 
 | File | Description |
 |------|-------------|
 | [`REPORT.md`](REPORT.md) | Verification report — summary of all test results |
-| `report_verify_stub.md` | *(Placeholder — detailed report, not yet written)* |
-| `report_verify_stub.py` | *(Placeholder — automated report generator, not yet written)* |
 
 ### Visualizations
 

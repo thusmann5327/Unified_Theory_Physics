@@ -23,17 +23,11 @@ Core computational engines and signal processing pipelines.
 | [`interbrain_sim.py`](interbrain_sim.py) | 502B | Two-person brain coupling simulation via φ-coherence |
 | [`stim_protocols.py`](stim_protocols.py) | 974B | Stimulation waveform generation (protocols A/B/C) |
 
-### Documentation
+### Companion Scripts
 
 | File | Size | Description |
 |------|------|-------------|
-| [`proofs.md`](proofs.md) | 43K | Mathematical proofs reference — derivations supporting the algorithms |
-
-### Stubs
-
-| File | Status |
-|------|--------|
-| `grok_review.md` | *Placeholder — Grok review notes, not yet written* |
+| [`planetary_analysis.py`](planetary_analysis.py) | 25K | Teegarden system analysis — standalone planetary frequency address computation |
 
 ---
 

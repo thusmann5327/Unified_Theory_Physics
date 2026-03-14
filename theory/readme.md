@@ -109,7 +109,8 @@ Translation tables, derivation chains, and the visual model spec.
 
 | File | Description |
 |------|-------------|
-| **[`planetary_analysis.py`](planetary_analysis.py)** | Full Python source for the Teegarden system analysis (25K, standalone) |
+| **[`Nuclear_Transduction.md`](Nuclear_Transduction.md)** | Nuclear physics applications — transduction mechanisms at nuclear scales (moved from `docs/`) |
+| **[`whats_the_water.md`](whats_the_water.md)** | Dark sector as gravitational medium — backbone propagator, galaxy rotation curves (moved from root) |
 
 ---
 
@@ -243,7 +244,7 @@ Key verification scripts in [`../verification/`](../verification/):
 | `threephase_verify.py` | Navigation algorithm and void-threading |
 | `simulation_validation.py` | AAH spectrum, gap fractions, σ₃ width |
 
-Additionally, `planetary_analysis.py` in this directory reproduces the full Teegarden system analysis standalone.
+The `planetary_analysis.py` script has been moved to `algorithms/planetary_analysis.py` (Python code belongs with algorithms).
 
 ---
 
