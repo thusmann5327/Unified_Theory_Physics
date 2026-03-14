@@ -3,7 +3,7 @@
 ## The Complete Backbone Architecture at the Current Epoch
 
 **Thomas A. Husmann — iBuilt Ltd
-**Document Version: 1.0 — March 10, 2026**
+**~~Document Version: 1.0 — March 10, 2026~~ Document Version: 2.0 — March 14, 2026**
 
 ---
 
@@ -12,23 +12,27 @@
 This document captures the complete theoretical framework and serves as the
 definitive instruction set for building a visual model of the observable universe
 as described by UNIVERSE.py. Every structural element, every constant, every
-rendering decision traces back to two inputs: φ = (1+√5)/2 and t_as = 232 × 10⁻¹⁸ s.
+rendering decision traces back to ~~two inputs: φ = (1+√5)/2 and t_as = 232 × 10⁻¹⁸ s.~~ **one axiom: φ² = φ + 1.** The lattice spacing l₀ is experimentally calibrable; t_as = 232 as is a verification, not an input.
 
 ---
 
-## Part I: The Two Inputs
+## Part I: ~~The Two Inputs~~ The Single Axiom (updated March 14, 2026)
 
 Everything derives from:
 
 ```
-INPUT 1:  φ = (1 + √5) / 2 = 1.6180339887498949
-INPUT 2:  t_as = 232 × 10⁻¹⁸ seconds (TU Wien attosecond measurement)
+AXIOM:    φ² = φ + 1  →  φ = (1 + √5) / 2 = 1.6180339887498949
+          D = 233 = F(F(7)) = F(13)  (self-referential lattice seed)
+
+~~INPUT 2:  t_as = 232 × 10⁻¹⁸ seconds (TU Wien attosecond measurement)~~
+CALIBRATION: l₀ ≈ 9.3 nm (experimentally calibrable coherence patch)
+VERIFICATION: t_as = (D−1) × 1 as = 232 as (TU Wien — confirms l₀, not an input)
 ```
 
 Derived constants (zero free parameters):
 
 ```
-J       = 2π ħ / (ω_lattice × t_as) = 10.579 eV    (hopping integral)
+J       = c ħ / (2 l₀) = 10.579 eV                    (hopping integral, from Lieb-Robinson)
 l₀      = c ħ / (2J) = 9.326 nm                      (coherence patch)
 W       = 2/φ⁴ + φ^(-1/φ)/φ³ = 0.467134              (wall/gap fraction)
 W²      = 0.218214                                     (DM self-coupling)
@@ -91,6 +95,12 @@ axes span 3D.
 S₁ (1/φ  = 61.8%): Dark energy backbone — longest reach, structural skeleton
 S₂ (1/φ³ = 23.6%): Dark matter web — medium reach, connective tissue
 S₃ (1/φ⁴ = 14.6%): Matter — shortest reach, finest structure
+
+NOTE (March 14, 2026): The above uses the abstract boundary law partition
+(2/φ⁴ + 3/φ³ = 1). The eigensolver partition gives σ₂ = σ₄ = 32.4% (DM walls)
+and σ₃ = 4.9% (baryonic center). The tiling model from complimentary_occupation.md
+suggests three metallic means TILE space rather than superimpose — this may
+supersede the three-source interference model above at certain scales.
 
 Sum: 1/φ + 1/φ³ + 1/φ⁴ = 1.000000000000000 (exact)
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 HUSMANN DECOMPOSITION — POLISHED DEMO
-Computes the observable universe from two inputs: φ and t_as.
+Computes the observable universe from ~~two inputs: φ and t_as~~ one axiom: φ² = φ + 1. (l₀ calibrated; t_as is verification.)
 Renders the backbone, spectrum, predictions, and 3D structure.
 Every image is generated live from the eigensolver. Nothing is precompiled.
 

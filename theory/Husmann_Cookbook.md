@@ -81,6 +81,12 @@ On observation (the 5 → 3 collapse):
 | Dark Matter | σ₃ | 1/φ³ = 23.6% | Non-bonding electrons — structural framework |
 | Dark Energy | σ₄ + σ₅ | 1/φ = 61.8% | Antibonding electrons — expansion/repulsion |
 
+> **Note (March 14, 2026):** This table uses the **post-observation** Unity partition
+> (1/φ⁴ + 1/φ³ + 1/φ = 1). In the pre-observation eigensolver spectrum, σ₃ is the
+> baryonic center (4.9%), not the dark matter fraction (23.6%). The sector labeling
+> here maps to the 5→3 collapsed view where "Dark Matter" = conduit sectors. See
+> `Exhibit_Aleph.md` for the explicit connection between representations.
+
 **The key insight:** Every atom's electrons distribute across these sectors based on their quantum numbers. The angular momentum quantum number `l` determines which sector an electron occupies:
 
 | l | Orbital type | Sector | Bonding character |

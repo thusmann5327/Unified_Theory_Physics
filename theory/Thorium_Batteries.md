@@ -76,6 +76,11 @@ This equation says the universe's energy is partitioned into three observable fr
 | 1/φ³ | 23.6% | Dark matter | Non-bonding | Structural framework |
 | 1/φ⁴ | 14.6% | Baryonic matter | Bonding | Holds atoms together |
 
+> **Note (March 14, 2026):** These are the **post-observation** Unity partition fractions
+> (5→3 collapse). The pre-observation eigensolver gives σ₂=σ₄=32.4% (DM walls),
+> σ₃=4.9% (baryonic center). The precise baryonic density parameter is Ω_b = W⁴ = 0.04762
+> (or Ω_b = e^{-3} = 0.04979 via 3D Cantor dust folding).
+
 The five sectors map to these three fractions:
 
 ```

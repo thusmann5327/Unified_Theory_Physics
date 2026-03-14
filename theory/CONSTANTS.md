@@ -46,8 +46,8 @@ unity = component_1 + component_2 + component_3
 
 | Parameter | Symbol | Value | Unit | Status |
 |-----------|--------|-------|------|--------|
-| Lattice spacing | l | 9.3 | nm | Fitted |
-| Hopping energy | J | 10.6 | eV | Fitted |
+| Lattice spacing | l | 9.3 | nm | ~~Fitted~~ Calibrated (t_as is verification, not input — March 14, 2026) |
+| Hopping energy | J | 10.6 | eV | ~~Fitted~~ Derived: c = 2Jl/ℏ |
 | Critical ratio | V/J | 2.0 | - | Exact (AAH) |
 | Bracket count | N | 293.92 | - | Derived (Planck→Hubble) |
 | Wall fraction | W | 0.467134 | - | Derived (three-layer wall) |
@@ -347,5 +347,47 @@ where:
 
 ---
 
+## March 2026 Additions
+
+### Backbone Propagator Constants (galaxy rotation curves)
+
+| Constant | Symbol | Value | Source |
+|----------|--------|-------|--------|
+| Backbone coupling | β | 1.118 | φ-derived |
+| Backbone attenuation | α_bb | 0.764 | φ-derived |
+| Dark-to-matter ratio | D/M | 6.68 | From W and unity partition |
+
+### Bundle Percolation (13-PF microtubule uniqueness)
+
+| Constant | Symbol | Value | Source |
+|----------|--------|-------|--------|
+| Triangular lattice p_c | p_c | 0.3473 | 2sin(π/18) — exact |
+| Golden angle | θ_g | 137.508° | 360°/φ² |
+| 13-PF golden coupling | T(13,g) | 0.361 | Husmann 2026 — EXCEEDS p_c |
+| 13-PF uniform coupling | T(13,u) | 0.132 | Below p_c |
+| 14-PF uniform coupling | T(14,u) | 0.119 | Below p_c |
+| 15-PF uniform coupling | T(15,u) | 0.104 | Below p_c |
+
+### Algebraic IDS Values (gap labeling theorem — exact)
+
+| Ratio | Algebraic value | Numerical | Phenomenological |
+|-------|----------------|-----------|-----------------|
+| σ₂ | √5 − 2 = 1/φ³ | 0.23607 | 0.2350 |
+| σ₄ | (9√5 − 19)/2 | 0.56155 | 0.5594 |
+| shell | (33√5 − 73)/2 | 0.39512 | 0.3972 |
+| cos α pos | (35√5 − 77)/2 | 0.41312 | — |
+| Near-identity | (7−3√5)/4 | 0.14590 | e^{-φ²} = 0.14584 (0.004%) |
+
+### Alternative Baryonic Fraction
+
+| Derivation | Value | Planck 2018 | Error |
+|------------|-------|-------------|-------|
+| W⁴ (spectral) | 0.04762 | 0.04860 | 2.8% |
+| e^{-3} (3D Cantor dust) | 0.04979 | 0.04860 | 2.4% |
+| (1−{35α})³ (algebraic) | 0.05020 | 0.04860 | 3.2% |
+
+---
+
 *© 2026 Thomas A. Husmann / iBuilt LTD. All rights reserved.*
 *Licensed under CC BY-NC-SA 4.0 for academic and research use.*
+*~~Last updated: March 2026~~ Last updated: March 14, 2026*

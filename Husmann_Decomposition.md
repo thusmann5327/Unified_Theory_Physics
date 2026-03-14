@@ -4,14 +4,32 @@
 
 **Author**: Thomas A. Husmann
 **Affiliation**: iBuilt LTD
-**Date**: March 2026
-**Version**: 1.0
+**Date**: ~~March 2026~~ March 14, 2026
+**Version**: ~~1.0~~ 1.1
 
 ---
 
 ## Abstract
 
-The Husmann Decomposition represents a paradigm shift in theoretical physics: the discovery that all physical law emerges from two fundamental mathematical identities rooted in the golden ratio φ. This document presents the complete framework, including the chronological development, the fundamental Unity Identity, the Boundary Law (existence condition), translations of 34 classical and quantum formulas, the patent portfolio implementing these principles, and the problems this framework solves.
+The Husmann Decomposition derives from **one algebraic identity**:
+
+$$\varphi^2 = \varphi + 1$$
+
+This identity, expressed as the Aubry–André–Harper Hamiltonian at criticality—
+
+$$H\psi(n) = J[\psi(n+1) + \psi(n-1)] + 2J\cos(2\pi n/\varphi)\psi(n)$$
+
+on D = 233 = F(F(7)) sites—produces a five-sector Cantor spectrum encoding the Unity Identity:
+
+$$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
+
+and the Boundary Law (existence condition):
+
+$$\frac{2}{\varphi^4} + \frac{3}{\varphi^3} = 1$$
+
+Zero free parameters. Everything follows.
+
+The Husmann Decomposition represents a paradigm shift in theoretical physics: the discovery that all physical law emerges from ~~two~~ **one** fundamental mathematical ~~identities~~ identity rooted in the golden ratio φ. This document presents the complete framework, including the chronological development, the fundamental Unity Identity, the Boundary Law (existence condition), translations of 34 classical and quantum formulas, the patent portfolio implementing these principles, and the problems this framework solves. (Updated March 14, 2026: single axiom formulation.)
 
 The central discoveries are deceptively simple:
 

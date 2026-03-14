@@ -19,10 +19,15 @@ $$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
 
 where **φ = (1+√5)/2 ≈ 1.618** is the golden ratio. This partition corresponds to observed cosmological energy densities (dark energy, dark matter, baryonic matter) within current observational uncertainties and provides a unified mathematical description spanning quantum mechanics to cosmology.
 
-**Key Results:**
-- Derivation of the fine structure constant α ≈ 1/137 from lattice geometry (0.19% match)
+**Key Results (updated March 14, 2026):**
+- Derivation of the fine structure constant α ≈ 1/137 from lattice geometry (0.22% match)
 - Speed of light c emerges as the Lieb-Robinson velocity: c = 2Jl/ℏ
 - Translation of 26 fundamental physics formulas into quasicrystalline basis
+- Hydrogen entanglement entropy maximum at σ₄ to 0.00021% (flagship atomic result)
+- Galaxy rotation curves from backbone propagator (zero free parameters, matches NFW profile)
+- 13-PF microtubule bundle percolation: golden-angle geometry is the ONLY configuration exceeding p_c (Proof 2 RESOLVED)
+- GABA gate Lindblad simulation + anesthetic DFT proxy: 18.47 meV (Proof 4 RESOLVED)
+- 34 gap fractions predict cosmic void structure (Boötes, Dipole Repeller, Sloan Great Wall)
 - Signal extraction algorithm for Fibonacci-locked neural oscillations
 - Engineering implementations protected by 16+ provisional patents
 
@@ -93,11 +98,16 @@ Unified_Theory_Physics/
 ├── README.md                           # This document
 ├── LICENSE.md                          # CC BY-NC-SA 4.0 + Patent notice
 │
-├── theory/                             # MATHEMATICAL FRAMEWORK
+├── theory/                             # MATHEMATICAL FRAMEWORK (27 documents)
 │   ├── Quantum_Rosetta.md             # QM → Framework translation (13 formulas)
 │   ├── Husmann_Rosetta.md             # Classical → Framework (26 formulas)
 │   ├── PHI_PI_IDENTITIES.md           # π-φ connection proofs
-│   └── CONSTANTS.md                    # Fundamental constants derivation
+│   ├── CONSTANTS.md                    # Fundamental constants derivation
+│   ├── cantor_bands.md                # 34 gap fractions → cosmic void predictions
+│   ├── Entanglement.md               # Five-sector partition + entanglement interpretation
+│   ├── complimentary_occupation.md    # Metallic mean tiling (corrects superposition model)
+│   ├── cosmic_nesting.md             # Hg dark-sector conductor + vehicle architecture
+│   └── ... (27 total)                 # See theory/readme.md for complete listing
 │
 ├── algorithms/                         # SIGNAL PROCESSING
 │   ├── phi_pipeline.py                # Core Fibonacci coherence extraction
@@ -148,19 +158,35 @@ $$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
 1.0000000000000000
 ```
 
-### Physical Interpretation: The Five-Band Partition
+### Physical Interpretation: The Five-Band Partition (updated March 14, 2026)
 
-The framework proposes that the vacuum energy spectrum is partitioned into five bands (σ₁ through σ₅), which collapse to three observable sectors upon measurement:
+The framework proposes that the vacuum energy spectrum is partitioned into five bands (σ₁ through σ₅), which collapse to three observable sectors upon measurement.
 
-| Band | Width Fraction | Observable Sector |
+**~~Pre-observation (abstract/boundary law partition):~~**
+
+| Band | ~~Width Fraction~~ | ~~Observable Sector~~ |
 |------|----------------|-------------------|
-| σ₁ | 1/φ⁴ ≈ 14.6% | Matter (endpoint) |
-| σ₂ | 1/φ³ ≈ 23.6% | Dark Matter (conduit) |
-| σ₃ | 1/φ³ ≈ 23.6% | Observer sector |
-| σ₄ | 1/φ³ ≈ 23.6% | Dark Matter (mirror conduit) |
-| σ₅ | 1/φ⁴ ≈ 14.6% | Matter (mirror endpoint) |
+| ~~σ₁~~ | ~~1/φ⁴ ≈ 14.6%~~ | ~~Matter (endpoint)~~ |
+| ~~σ₂~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Dark Matter (conduit)~~ |
+| ~~σ₃~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Observer sector~~ |
+| ~~σ₄~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Dark Matter (mirror conduit)~~ |
+| ~~σ₅~~ | ~~1/φ⁴ ≈ 14.6%~~ | ~~Matter (mirror endpoint)~~ |
 
-The forbidden exponent φ² is "consumed" as the boundary mediator—it appears only as the divisor or connector, never as a term.
+**Post-observation (eigensolver partition — the physical spectrum):**
+
+| Band | Width Fraction | Physical Role |
+|------|----------------|---------------|
+| σ₁ | 14.6% (11 bands) | Bonding endpoint (matter) |
+| σ₂ | 32.4% (DOMINANT GAP) | Dark matter wall |
+| σ₃ | 4.9% (10 bands, Ω_b ≈ 0.0485) | Baryonic center |
+| σ₄ | 32.4% (DOMINANT GAP) | Dark matter wall (mirror) |
+| σ₅ | 14.6% (12 bands) | Antibonding endpoint |
+
+The abstract boundary law partition (2/φ⁴ + 3/φ³ = 1) constrains the algebraic structure.
+The eigensolver partition is what emerges from the actual AAH Hamiltonian. The 5→3
+collapse upon observation yields the Unity Identity: 1/φ + 1/φ³ + 1/φ⁴ = 1.
+
+~~The forbidden exponent φ² is "consumed" as the boundary mediator—it appears only as the divisor or connector, never as a term.~~
 
 ### The Aubry-André-Harper Lattice
 
@@ -173,13 +199,13 @@ At the self-dual critical point **V = 2J**, this produces:
 - **Multifractal eigenstates:** Wavefunctions with dimension d_s = 1/2
 - **Power-law decay:** |ψ(n)| ~ n^(-β) with β ≈ 1.1, not exponential
 
-### Lattice Parameters
+### Lattice Parameters (updated March 14, 2026)
 
-| Parameter | Value | Calibration Source |
+| Parameter | Value | ~~Calibration Source~~ Derivation |
 |-----------|-------|-------------------|
-| Lattice spacing l | 9.3 nm | TU Wien 232 attosecond measurement |
-| Hopping energy J | 10.6 eV | Fit to c = 2Jl/ℏ |
-| Spectral gap ω_gap | 1.685 (dimensionless) | AAH critical point |
+| Lattice spacing l | 9.3 nm | ~~TU Wien 232 attosecond measurement~~ Experimentally calibrable; TU Wien 232 as is **verification**, not input |
+| Hopping energy J | 10.6 eV | c = 2Jl/ℏ (Lieb-Robinson bound) |
+| Spectral gap ω_gap | 1.685 (dimensionless) | AAH critical point (from eigensolver) |
 
 ---
 
@@ -681,4 +707,4 @@ Patent portfolio pending (63/995,401 through 63/998,394 + 30/050,931).
 
 ---
 
-*Last Updated: March 2026*
+*~~Last Updated: March 2026~~ Last Updated: March 14, 2026*

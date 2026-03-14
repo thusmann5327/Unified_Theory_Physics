@@ -101,7 +101,7 @@ Translation tables, derivation chains, and the visual model spec.
 |----------|-------|-----------------|
 | **[`Husmann_Rosetta.md`](Husmann_Rosetta.md)** | 970 | **34 classical formulas translated.** Newton → lattice, Maxwell → sector, Schrödinger → AAH, Dirac → hinge, Einstein → boundary law, Hawking → bracket recycling, Shannon → Cantor entropy, Boltzmann → sector population, Hodgkin-Huxley → gap-gated transport, Michaelis-Menten → gap-cancellation saturation, and 24 more. Each formula mapped to its patent. The single most comprehensive reference document. |
 | **[`Quantum_Rosetta.md`](Quantum_Rosetta.md)** | 880 | **Standard QM → Husmann translation + planetary detail system.** 12 quantum mechanical formulas translated. Master coupling equation. Condensation sequence. Planetary zoom data for the UNIVERSE.py simulator. Cross-references all patents. |
-| **[`architecture.md`](architecture.md)** | 693 | **Visual model build instructions.** The complete backbone architecture at the current epoch. Definitive instruction set for UNIVERSE.py. Every structural element, every constant, every rendering decision traces to two inputs: φ and t_as = 232 × 10⁻¹⁸ s. The Three.js specification for building the universe. |
+| **[`architecture.md`](architecture.md)** | 693 | **Visual model build instructions.** The complete backbone architecture at the current epoch. Definitive instruction set for UNIVERSE.py. Every structural element, every constant, every rendering decision traces to ~~two inputs: φ and t_as = 232 × 10⁻¹⁸ s~~ **one axiom: φ² = φ + 1** (updated March 14, 2026). The Three.js specification for building the universe. |
 
 ---
 

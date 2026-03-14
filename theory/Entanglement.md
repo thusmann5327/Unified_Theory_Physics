@@ -29,6 +29,12 @@ The AAH Hamiltonian at criticality (V = 2J, α = 1/φ) produces a Cantor-set ene
 
 The widths are {1/φ⁴, 1/φ³, 1/φ³, 1/φ³, 1/φ⁴}, satisfying the boundary law 2/φ⁴ + 3/φ³ = 1.
 
+> **Note (March 14, 2026):** This is the **abstract/pre-observation** partition — the
+> algebraic identity that constrains the structure. The **eigensolver** (physical spectrum)
+> produces a different partition: σ₁ = 14.6% (11 bands), σ₂ = 32.4% (DM wall gap),
+> σ₃ = 4.9% (10 bands, baryonic center), σ₄ = 32.4% (DM wall gap), σ₅ = 14.6% (12 bands).
+> See `Exhibit_Aleph.md` for the explicit 5→3 collapse connecting these representations.
+
 ### 1.2 The Role of Each Sector
 
 | Sector | Width | Physical role | Band character |

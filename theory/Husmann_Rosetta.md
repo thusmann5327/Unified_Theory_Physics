@@ -201,7 +201,7 @@ c  =  v_LR  =  2J·l/ℏ  =  (2 × 10.6 eV × 9.3 nm) / (6.582×10⁻¹⁶ eV·s
 
 **Translation:** c is not a property of empty space. It is a property of the lattice — the maximum rate at which correlations propagate through nearest-neighbor hops at hopping strength J across spacing l = 9.3 nm. Nothing travels faster than nearest-neighbor hopping allows.
 
-**Key insight:** c emerges from two parameters — J = 10.6 eV (coupling strength) and l = 9.3 nm (lattice spacing). Both are pinned by the TU Wien 232-attosecond calibration. The speed of light is a derived quantity, not a fundamental constant.
+**Key insight:** c emerges from two parameters — J = 10.6 eV (coupling strength) and l = 9.3 nm (lattice spacing). ~~Both are pinned by the TU Wien 232-attosecond calibration.~~ l₀ is experimentally calibrable; the TU Wien 232 as measurement provides **independent verification**, not calibration (updated March 14, 2026). The speed of light is a derived quantity, not a fundamental constant.
 
 *Patent Pending: 63/995,841 (conf. 5167) — Field-Guided QC Coating Assembly with Rotating EM Alignment*
 

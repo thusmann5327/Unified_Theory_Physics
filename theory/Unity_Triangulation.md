@@ -63,6 +63,11 @@ The equation 1/φ + 1/φ³ + 1/φ⁴ = 1 is simultaneously:
 2. The intensity distribution of the interference field
 3. The dimensional origin of space
 
+> **Note (March 14, 2026):** The tiling model (`complimentary_occupation.md`)
+> suggests the three metallic means tile space complementarily rather than
+> superimpose as interfering waves. Both descriptions produce the Unity partition;
+> they may be complementary at different scales.
+
 ---
 
 ## Pairwise Structure

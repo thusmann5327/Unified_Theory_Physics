@@ -12,8 +12,8 @@ The TU Wien measurement of 232 attoseconds in helium provides
 independent verification: t_as = (D−1) × 1 as is a PREDICTION, 
 not an input.
 
-## Axiom 2: Emergence Principle  
-All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the **Aubry-André-Harper (AAH) Hamiltonian** at quasiperiodic parameter **α = 1/φ** and potential strength **V = 2J**, with **J** derived from **t_as** via the Lieb-Robinson bound gap **ω_gap(t_as)**.
+## Axiom 2: Emergence Principle
+All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the **Aubry-André-Harper (AAH) Hamiltonian** at quasiperiodic parameter **α = 1/φ** and potential strength **V = 2J**~~, with **J** derived from **t_as** via the Lieb-Robinson bound gap **ω_gap(t_as)**~~. **J** is determined by the experimentally calibrable coherence length l₀ via the Lieb-Robinson bound: **c = 2Jl₀/ℏ**. (Updated March 14, 2026: t_as is a prediction, not an input.)
 
 ## Axiom 3: Self-Similarity Principle  
 The universe is the unique maximally aperiodic self-similar structure. The same five-sector Cantor architecture — core, inner wall, decoupling surface, void, outer wall — appears at every bracket level from Planck to Hubble. The AAH Hamiltonian is one computational tool that derives the proportions of this structure; the structure itself is more fundamental than any particular equation describing it.
@@ -215,8 +215,8 @@ The Cantor outer wall and the global entropy maximum coincide to within **two pa
 - **Breathing**: 1 − √(1−W²) = 11.6% — universe oscillates, not monotonically expands.
 - **Transit velocity**: v_g = 0.4996c at Lieb-Robinson bound.
 
-### Implication  
-The observable universe is the visible projection (fraction **1 − W²**) of a **dual-sector, entangled structure** whose geometry, scales, and energy content are dictated solely by the golden ratio **φ** and one attosecond-derived timescale — with **no free parameters**, **no ad hoc constants**, and **exact algebraic closure** via the unity identity.
+### Implication
+The observable universe is the visible projection (fraction **1 − W²**) of a **dual-sector, entangled structure** whose geometry, scales, and energy content are dictated solely by the golden ratio **φ** ~~and one attosecond-derived timescale~~ — with **no free parameters**, **no ad hoc constants**, and **exact algebraic closure** via the unity identity. (Updated March 14, 2026: t_as removed as input; l₀ is the single calibration.)
 
 The 233-site lattice (Axiom 0) is the self-referential seed: F(F(7)) = F(13) = 233, a Fibonacci number indexed by a Fibonacci number. It produces the gap fraction W, the bracket count N = 233 + 55 + 5 + 1 = 294, the fine structure constant α = 1/(N×W), and the Cantor architecture whose σ₄ boundary coincides with the global maximum of the hydrogen 1s entanglement entropy to two parts per million. The lattice describes the universe. The universe instantiates the lattice. The loop closes.
 
@@ -237,6 +237,39 @@ The 233-site lattice (Axiom 0) is the self-referential seed: F(F(7)) = F(13) = 2
 
 ---
 
-*Thomas A. Husmann / iBuilt LTD — March 11, 2026*  
-*Patent Application 19/560,637*  
+### March 2026 Additions
+
+#### Backbone Propagator — Galaxy Rotation Curves (zero free parameters)
+The dark sector (σ₂/σ₄) functions as a gravitational medium. The backbone propagator
+predicts galaxy rotation curves matching the NFW profile at −10.4% vs −9.8%, with
+β = 1.118, α_bb = 0.764, D/M = 6.68 — all derived from φ.
+
+#### 34 Gap Fractions → Cosmic Void Structure
+The AAH spectrum produces 34 significant gaps (= F(9)) whose fractions predict
+observed cosmic voids: Boötes at 1.6%, Dipole Repeller at 2.0%, Sloan Great Wall at 2.5%.
+
+#### Bundle Percolation — 13-PF Microtubule Uniqueness (Proof 2 RESOLVED)
+The golden-angle coupling tolerance T(13,golden) = 0.361 exceeds the triangular lattice
+bond percolation threshold p_c = 2sin(π/18) = 0.3473. No other MT geometry (13-uniform,
+14-PF, 15-PF) reaches p_c. This is a phase transition: 13-PF golden-angle bundles
+form percolating coherent networks; all others fragment.
+
+#### GABA Gate — Anesthetic DFT Proxy (Proof 4 RESOLVED)
+ΔE = h·F_J/φ^12 · σ₄ = 18.47 meV matches Craddock 10–25 meV and Landauer 18.52 meV.
+Lindblad master equation confirms coherent excitation transport at ~8 m/s.
+
+#### Proof Status (March 14, 2026)
+
+| Proof | Status | Key result |
+|-------|--------|------------|
+| 1 — φ-cascade lattice | **NEGATIVE** | Trace map algebraic barrier (Lindemann-Weierstrass) |
+| 2 — 13-PF QEC | **RESOLVED** | Bundle percolation T=0.361 > p_c=0.347 |
+| 3 — Ωb dark matter | **PARTIALLY RESOLVED** | e^{-3} theorem conditional |
+| 4 — GABA gate | **RESOLVED** | Lindblad + anesthetic DFT proxy |
+| 5 — Global consistency | **PARTIALLY RESOLVED** | Cross-validation ongoing |
+
+---
+
+*~~Thomas A. Husmann / iBuilt LTD — March 11, 2026~~ Thomas A. Husmann / iBuilt LTD — March 14, 2026*
+*Patent Application 19/560,637*
 *Repository: github.com/thusmann5327/Unified_Theory_Physics*

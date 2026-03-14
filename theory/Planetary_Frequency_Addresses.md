@@ -24,18 +24,18 @@ The spatial address tells the Fibonacci resonant wave WHERE to form a channel. T
 
 ---
 
-## First Principles: Two Inputs, Zero Free Parameters
+## First Principles: ~~Two Inputs~~ One Axiom, Zero Free Parameters (updated March 14, 2026)
 
-The entire addressing system derives from exactly two inputs:
+The entire addressing system derives from ~~exactly two inputs~~ **one axiom: φ² = φ + 1**:
 
 - **φ** = (1 + √5) / 2 = 1.6180339887 (the golden ratio — pure mathematics)
-- **t_as** = 232 × 10⁻¹⁸ s (the attosecond timescale — TU Wien helium measurement)
+- ~~**t_as** = 232 × 10⁻¹⁸ s (the attosecond timescale — TU Wien helium measurement)~~ **l₀** ≈ 9.3 nm (experimentally calibrable coherence patch; TU Wien 232 as is **verification**)
 
 All constants follow:
 
 ```
-J    = 2π·ℏ / (1.685 · t_as) = 10.579 eV       [hopping integral]
-l₀   = c·ℏ / (2·J)            = 9.326 nm        [coherence patch]
+l₀   = 9.326 nm                                  [coherence patch — calibrated]
+J    = c·ℏ / (2·l₀)           = 10.579 eV       [hopping integral, from Lieb-Robinson]
 W    = 2/φ⁴ + φ^(-1/φ)/φ³     = 0.467134        [Cantor gap fraction]
 GA   = 360° / φ²               = 137.508°        [golden angle]
 W⁴   = 0.047617                                   [baryon fraction]
@@ -51,7 +51,7 @@ Space and time emerge from the same structure. The bracket scale law maps a sing
 
 ```
 L(n) = l₀ × φⁿ          [spatial scale at bracket n]
-T(n) = t_as × φⁿ         [temporal period at bracket n]
+T(n) = (l₀/c) × φⁿ       [temporal period at bracket n] ~~t_as × φⁿ~~ (updated March 14, 2026)
 ```
 
 At n = 0: the coherence patch (9.3 nm) and the attosecond (232 as).

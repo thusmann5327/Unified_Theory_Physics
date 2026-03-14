@@ -100,6 +100,11 @@ The intensity CDF of the interference field reproduces the unity equation:
 - Next 23.6% → filaments (dark matter fraction 1/φ³)
 - Top 61.8% → diffuse field (dark energy fraction 1/φ)
 
+> **Note (March 14, 2026):** These are the post-observation Unity partition fractions.
+> The complementary occupation model (`complimentary_occupation.md`) proposes that the
+> three metallic means **tile** space rather than superimpose. Both models reproduce
+> the correct CDF; their relationship at different scales requires explicit resolution.
+
 Pairwise correlations:
 
 | Source Pair | Correlation with Total | Structure Created |

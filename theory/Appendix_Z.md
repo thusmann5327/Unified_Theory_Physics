@@ -323,6 +323,11 @@ After the five-to-three fold, the cosmic energy budget is:
 | Dark Matter (1/φ³) | 23.6% | ~27% |
 | Matter (1/φ⁴) | 14.6% | ~5% (baryonic) |
 
+> **Note (March 14, 2026):** These are the Unity partition fractions. The eigensolver
+> gives the precise budget: Ω_b = W⁴ = 0.04762, Ω_DM = 0.26323, Ω_DE = 0.68915.
+> Also: backbone propagator predicts galaxy rotation curves (matches NFW, zero free params)
+> and 34 gap fractions predict cosmic void structure (Boötes, Dipole Repeller, Sloan).
+
 ### Accounting for Observer Embedding
 
 The apparent ~7% offset in dark energy (61.8% vs 68%) arises from the five-to-three fold correction. The baryonic matter (5%) is the **observable portion** of the full matter sector (14.6%); the remainder is non-radiating (black holes, primordial remnants, etc.).

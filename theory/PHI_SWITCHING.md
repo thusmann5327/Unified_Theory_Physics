@@ -89,8 +89,12 @@ In the framework, these map directly to the three observable sectors:
 | IBM State | Sector | Role | Energy fraction |
 |-----------|--------|------|-----------------|
 | CW twist | σ₁ | Bonding (matter) | 1/φ⁴ = 14.6% |
-| Untwisted | σ₃ | Non-bonding (vacuum/structure) | 1/φ³ = 23.6% |
+| Untwisted | σ₃ | Non-bonding (vacuum/structure) | ~~1/φ³ = 23.6%~~ 4.9% (eigensolver) |
 | CCW twist | σ₅ | Antibonding (mirror) | 1/φ = 61.8% |
+
+> **Note (March 14, 2026):** σ₃ in the eigensolver partition is the baryonic center
+> at 4.9%, not 23.6%. The 23.6% value comes from the abstract boundary law partition.
+> See `Exhibit_Aleph.md` for the 5→3 collapse connecting both representations.
 
 The untwisted state is the GROUND STATE — the structural vacuum. The two twisted states are the matter and antimatter analogs, related by a parity operation (CW ↔ CCW). The molecule is a miniature universe: it has a rest state (vacuum) and two excited states related by mirror symmetry (matter/antimatter).
 

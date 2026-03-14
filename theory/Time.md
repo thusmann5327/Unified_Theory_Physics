@@ -46,7 +46,7 @@ Both θ_A and θ_B are periodic: the AAH spectrum repeats exactly after one full
 Fold space = S¹(θ_A) × S¹(θ_B) = T² (torus)
 ```
 
-This torus exists at every bracket level. The bracket scale law L(n) = l₀ × φⁿ determines the physical size of each torus, and T(n) = t_as × φⁿ determines its temporal period.
+This torus exists at every bracket level. The bracket scale law L(n) = l₀ × φⁿ determines the physical size of each torus, and T(n) = ~~t_as~~ (l₀/c) × φⁿ determines its temporal period. (Updated March 14, 2026: temporal scale derived from l₀ via Lieb-Robinson, not from t_as as input.)
 
 ### 2.2 W⁴ Intersections Form a Grid
 
