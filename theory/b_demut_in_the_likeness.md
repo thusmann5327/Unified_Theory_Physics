@@ -4,6 +4,8 @@
 **Thomas A. Husmann — iBuilt LTD**
 **March 2026**
 
+> **Note on filename:** Originally `בדמות.md` (Hebrew: *b'demut*, "in the likeness", Genesis 5:1, gematria = 452 = Zeckendorf address of Teegarden b). Renamed to ASCII-safe `b_demut_in_the_likeness.md` for portability. Content is entirely in English.
+
 > *Six resonators. One hub. One aperture. One address.*
 > *Everything in this document uses physics you learned in your first two semesters.*
 
