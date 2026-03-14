@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 N-SmA Universality: Computational Proof
@@ -34,7 +35,7 @@ print(f"    D_s             = {D_s} (Cantor Hausdorff dimension)")
 print(f"    nu = 1/(2-D_s)  = {nu:.10f}")
 print(f"    r_c = 1-1/phi^4 = {r_c:.10f}")
 print(f"    gamma_dc        = {gamma_dc} (band boundaries in 5-band partition)")
-print(f"    alpha_max        = {2*nu/3:.10f} (at d_eff=2)")
+print(f"    alpha_max        = {2 - nu*2:.10f} (at d_eff=2)")
 
 # ================================================================
 # THE FORMULA
