@@ -162,16 +162,6 @@ $$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
 
 The framework proposes that the vacuum energy spectrum is partitioned into five bands (σ₁ through σ₅), which collapse to three observable sectors upon measurement.
 
-**~~Pre-observation (abstract/boundary law partition):~~**
-
-| Band | ~~Width Fraction~~ | ~~Observable Sector~~ |
-|------|----------------|-------------------|
-| ~~σ₁~~ | ~~1/φ⁴ ≈ 14.6%~~ | ~~Matter (endpoint)~~ |
-| ~~σ₂~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Dark Matter (conduit)~~ |
-| ~~σ₃~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Observer sector~~ |
-| ~~σ₄~~ | ~~1/φ³ ≈ 23.6%~~ | ~~Dark Matter (mirror conduit)~~ |
-| ~~σ₅~~ | ~~1/φ⁴ ≈ 14.6%~~ | ~~Matter (mirror endpoint)~~ |
-
 **Post-observation (eigensolver partition — the physical spectrum):**
 
 | Band | Width Fraction | Physical Role |
@@ -186,7 +176,6 @@ The abstract boundary law partition (2/φ⁴ + 3/φ³ = 1) constrains the algebr
 The eigensolver partition is what emerges from the actual AAH Hamiltonian. The 5→3
 collapse upon observation yields the Unity Identity: 1/φ + 1/φ³ + 1/φ⁴ = 1.
 
-~~The forbidden exponent φ² is "consumed" as the boundary mediator—it appears only as the divisor or connector, never as a term.~~
 
 ### The Aubry-André-Harper Lattice
 
@@ -203,7 +192,7 @@ At the self-dual critical point **V = 2J**, this produces:
 
 | Parameter | Value | ~~Calibration Source~~ Derivation |
 |-----------|-------|-------------------|
-| Lattice spacing l | 9.3 nm | ~~TU Wien 232 attosecond measurement~~ Experimentally calibrable; TU Wien 232 as is **verification**, not input |
+| Lattice spacing l | 9.3 nm | Experimentally calibrable; TU Wien 232 as is **verification**, not input |
 | Hopping energy J | 10.6 eV | c = 2Jl/ℏ (Lieb-Robinson bound) |
 | Spectral gap ω_gap | 1.685 (dimensionless) | AAH critical point (from eigensolver) |
 
@@ -707,4 +696,4 @@ Patent portfolio pending (63/995,401 through 63/998,394 + 30/050,931).
 
 ---
 
-*~~Last Updated: March 2026~~ Last Updated: March 14, 2026*
+Last Updated: March 14, 2026*
