@@ -4,10 +4,13 @@
 ## Axiom 0: Self-Referential Lattice Dimension
 The fundamental quasicrystalline lattice has **D = F(F(7)) = F(13) = 233 sites** — a Fibonacci number indexed by a Fibonacci number. This is the unique self-consistent seed: the lattice whose eigenvalue spectrum produces the gap fraction W, bracket count N, and coupling constant α such that the resulting physics constructs a universe with exactly D major structural nodes. The lattice describes itself. The bottom of the explanatory stack is not a derivation but a **fixed point** — the universe is the unique self-consistent solution to its own structure equation.
 
-## Axiom 1: Minimal Inputs  
-The universe is completely determined by exactly **two primitive quantities**:  
-- The golden ratio **φ = (1 + √5)/2 ≈ 1.6180339887**  
-- A single temporal scale **t_as = 232 × 10⁻¹⁸ s** (attosecond entanglement timescale from TU Wien experiment)
+## Axiom 1: The universe is completely determined by exactly ONE 
+          primitive quantity: φ = (1+√5)/2
+
+The lattice spacing l₀ is experimentally calibrable (nominally 9.3 nm).
+The TU Wien measurement of 232 attoseconds in helium provides 
+independent verification: t_as = (D−1) × 1 as is a PREDICTION, 
+not an input.
 
 ## Axiom 2: Emergence Principle  
 All physical constants, scales, cosmological parameters, spatial discretization, galactic structure, and habitability arise as emergent consequences of the **Aubry-André-Harper (AAH) Hamiltonian** at quasiperiodic parameter **α = 1/φ** and potential strength **V = 2J**, with **J** derived from **t_as** via the Lieb-Robinson bound gap **ω_gap(t_as)**.
