@@ -596,6 +596,96 @@ def nu_noninteracting(): return PHI**2
 def nu_interacting(): return 2 / R_C
 
 # ============================================================
+# MODE SELECTOR — FOUR MODES OF 5→3 COLLAPSE
+# ============================================================
+
+@dataclass
+class ModeResult:
+    """Result of the universal mode selector."""
+    P_collapse: float          # probability of complete collapse (0 to 1)
+    permanence: float          # Π(η) = 1 - e^{-η} (0 = transient, 1 = permanent)
+    theta: float               # σ₃ visibility fraction
+    gamma_confine: float       # confinement branching ratio
+    gamma_dark: float          # dark sector branching ratio
+    gamma_measure: float       # measurement branching ratio
+    gamma_free: float          # free (no collapse) fraction
+    dominant_mode: str         # which mode wins
+    eta: float                 # E_gap / k_BT
+
+def mode_selector(x, eta, theta=0.68, x_c=R_C, x_max=1.0, gamma=GAMMA_DC):
+    """
+    Universal mode selector for the 5→3 Chern pair annihilation.
+
+    Parameters:
+        x      : control parameter (r for N-SmA, Λ/E for QCD, gate_strength for GABA)
+        eta    : E_gap / k_BT (permanence ratio)
+        theta  : σ₃ capture fraction (visibility)
+        x_c    : onset = 1 - 1/φ⁴ = 0.854 (universal)
+        x_max  : saturation scale (system-specific, default 1.0)
+        gamma  : barrier count = 4 (Chern gaps, TKNN)
+
+    Returns:
+        ModeResult with branching ratios for all four modes.
+
+    The mode with the largest branching ratio determines the physics:
+        Γ_confine : permanent + visible    → QCD nucleon
+        Γ_dark    : permanent + invisible  → dark matter
+        Γ_measure : transient + visible    → GABA neural signal
+        Γ_free    : no collapse            → nematic / deconfined
+    """
+    # Collapse probability
+    if x <= x_c:
+        P = 0.0
+    else:
+        P = ((x - x_c) / (x_max - x_c)) ** gamma
+
+    # Permanence: Boltzmann suppression of thermal restoration
+    Pi = 1.0 - math.exp(-eta) if eta < 500 else 1.0
+
+    # Four-mode branching
+    G_confine = P * Pi * theta
+    G_dark    = P * Pi * (1.0 - theta)
+    G_measure = P * (1.0 - Pi) * theta
+    G_free    = 1.0 - P
+
+    # Determine dominant mode
+    modes = {'confinement': G_confine, 'dark': G_dark,
+             'measurement': G_measure, 'free': G_free}
+    dominant = max(modes, key=modes.get)
+
+    return ModeResult(
+        P_collapse=P, permanence=Pi, theta=theta,
+        gamma_confine=G_confine, gamma_dark=G_dark,
+        gamma_measure=G_measure, gamma_free=G_free,
+        dominant_mode=dominant, eta=eta
+    )
+
+def mode_qcd(E_probe_mev=1.0, T_kelvin=300.0, theta=0.83):
+    """QCD confinement mode: x = Λ_QCD/E, η = Λ_QCD/k_BT."""
+    LAMBDA_QCD = 330.0  # MeV
+    x = LAMBDA_QCD / max(E_probe_mev, 1e-10)
+    x = min(x, 1.0)  # cap at 1
+    eta = LAMBDA_QCD * 1e6 * EV / (K_B * T_kelvin)  # enormous
+    return mode_selector(x, eta, theta)
+
+def mode_gaba(gate_strength=1.0, T_kelvin=310.0, theta=0.83):
+    """GABA measurement mode: x = gate_strength, η ≈ 1 at body temp."""
+    E_gap_ev = K_B * T_kelvin / EV  # ~26 meV
+    eta = E_gap_ev / (K_B * T_kelvin / EV)  # ≈ 1
+    x = 0.60 + 0.40 * gate_strength  # maps [0,1] → [0.60, 1.00]
+    return mode_selector(x, eta, theta)
+
+def mode_nsma(r, theta=1.0):
+    """N-SmA crossover mode: x = r, η >> 1 (permanent), θ = 1 (no dark)."""
+    return mode_selector(r, eta=100.0, theta=theta)
+
+def dark_matter_ratio(theta):
+    """Predict Ω_DM / Ω_b from visibility fraction."""
+    if theta <= 0 or theta >= 1:
+        return float('inf') if theta <= 0 else 0.0
+    return (1.0 - theta) / theta
+
+# ============================================================
 # GABA ENGINE BRIDGE (preserved from v1)
 # ============================================================
 
@@ -741,9 +831,46 @@ if __name__ == "__main__":
         e_str = f"{p.energy_mev:.1f}" if p.energy_mev > 0.001 else f"{p.energy_mev:.1e}"
         print(f"  {p.name:>40s}  {e_str:>12s}  {p.status:>12s}")
 
+    # ── MODE SELECTOR ──
+    print(f"\n  MODE SELECTOR — Four Modes of 5→3 Collapse:")
+    print(f"  {'System':>12s}  {'Γ_conf':>7s}  {'Γ_dark':>7s}  {'Γ_meas':>7s}  {'Γ_free':>7s}  {'Mode':>14s}")
+    print(f"  {'-' * 65}")
+
+    # QCD at room temperature (fully confined)
+    m = mode_qcd(E_probe_mev=1.0, T_kelvin=300)
+    print(f"  {'QCD (1 MeV)':>12s}  {m.gamma_confine:>7.4f}  {m.gamma_dark:>7.4f}  "
+          f"{m.gamma_measure:>7.4f}  {m.gamma_free:>7.4f}  {m.dominant_mode:>14s}")
+
+    # QCD at deconfinement
+    m = mode_qcd(E_probe_mev=500.0, T_kelvin=1.7e12)  # T ~ 150 MeV
+    print(f"  {'QCD (QGP)':>12s}  {m.gamma_confine:>7.4f}  {m.gamma_dark:>7.4f}  "
+          f"{m.gamma_measure:>7.4f}  {m.gamma_free:>7.4f}  {m.dominant_mode:>14s}")
+
+    # GABA full gate
+    m = mode_gaba(gate_strength=1.0)
+    print(f"  {'GABA full':>12s}  {m.gamma_confine:>7.4f}  {m.gamma_dark:>7.4f}  "
+          f"{m.gamma_measure:>7.4f}  {m.gamma_free:>7.4f}  {m.dominant_mode:>14s}")
+
+    # GABA partial gate
+    m = mode_gaba(gate_strength=0.3)
+    print(f"  {'GABA 30%':>12s}  {m.gamma_confine:>7.4f}  {m.gamma_dark:>7.4f}  "
+          f"{m.gamma_measure:>7.4f}  {m.gamma_free:>7.4f}  {m.dominant_mode:>14s}")
+
+    # N-SmA at various r
+    for r_val in [0.80, 0.90, 0.95, 0.99]:
+        m = mode_nsma(r_val)
+        print(f"  {'r='+str(r_val):>12s}  {m.gamma_confine:>7.4f}  {m.gamma_dark:>7.4f}  "
+              f"{m.gamma_measure:>7.4f}  {m.gamma_free:>7.4f}  {m.dominant_mode:>14s}")
+
+    # Dark matter ratio predictions
+    print(f"\n  Ω_DM/Ω_b PREDICTIONS:")
+    for th, label in [(0.83, "θ₃D(L=12)"), (0.68, "θ₁D"), (0.186, "φ^{-3.5}"), (0.157, "required")]:
+        ratio = dark_matter_ratio(th)
+        print(f"    {label:>12s}: θ={th:.3f} → Ω_DM/Ω_b = {ratio:.2f}  (observed: 5.36)")
+
     # ── SUMMARY ──
     print(f"\n{'=' * 68}")
     print(f"  v3 MODULES: metallic means, discriminants, three-wave, Chern,")
-    print(f"  collapse, crossover, Saturn, dark probes, GABA bridge, √5 proof")
-    print(f"  RESULT: 3D from φ² = φ + 1. γ=4 from TKNN. Matter ≈ 5%.")
+    print(f"  collapse, crossover, Saturn, dark probes, mode selector,")
+    print(f"  GABA bridge, √5 proof | 4 modes, 2 parameters, 1 axiom")
     print(f"{'=' * 68}")
