@@ -462,9 +462,59 @@ print("All derivations verified. The chain is complete. ∎")
 
 ---
 
+## March 15-16, 2026 — Hofstadter, Pythagorean, Convergence
+
+### New Derivations
+
+40. Harper equation = AAH at V=2J (mathematical identity)
+41. Magic angle θ = 1.08° = metallic mean n=53 (0.06% match)
+42. Graphene/hBN mismatch δ = 1.68% = metallic mean n=60 (0.66%)
+43. Chern numbers at golden flux: +2, −1, +1, −2
+44. 5→3 collapse = topological pair annihilation (outer pair sums to 0)
+45. Discriminant Fibonacci chain: Δ_n = n²+4, chain 5+8=13
+46. Uniqueness: (n−2)² = 0, n=2 is unique link
+47. Pythagorean triple: (√5)²+(√8)²=(√13)²
+48. cos θ = √5/√13 = 0.6202 ≈ 1/φ
+49. Corrected nesting: Silver(0.171) inner → Gold(0.236) middle → Bronze(0.394) outer
+50. Dirac mapping: E²=p²c²+m²c⁴ ↔ 13=5+8 (mass=silver, momentum=gold)
+51. Schrödinger = tangent at silver vertex: Δ_eff(v) = 8 + 5(v/c)²
+52. l_B/l₀ = 1/√(2π) (0.03% match)
+53. Solar core boundary from σ₃ ratios: 0.214R (7% match to 0.20-0.25R☉)
+54. Baryonic coordination κ = 4 from 2 fold axes × 2 directions
+55. Aristotle gap ≈ tetrahedral dihedral − icosahedral angle (3.6% match)
+56. Regge curvature on icosahedral backbone (standard physics, applied to HD)
+57. Vacuum refractive index n(r) = (ρ/ρ₀)^{1/3} (standard physics, applied to HD)
+58. Disclination strain F ∝ 1/r → flat rotation (standard condensed matter)
+59. Independent convergence: Ebanks (2026) FTL framework confirms φ-lattice approach
+
+### New Formulas
+
+Discriminant Pythagorean:
+  (√5)² + (√8)² = (√13)²  [exact]
+
+Effective discriminant:
+  Δ_eff(v) = 8 + 5(v/c)²  [interpolates silver→bronze]
+
+Layer boundaries:
+  r_silver = σ₃_silver / σ₃_total = 0.214 R
+  r_gold = (σ₃_silver + σ₃_gold) / σ₃_total = 0.508 R
+
+Regge curvature (standard):
+  Δθ = 2π − Σθᵢ  [angular deficit at vertex]
+  R = (1/V) Σ(Δθ × L_edge)  [Ricci scalar]
+
+Refractive index (standard):
+  n(r) = (ρ(r)/ρ₀)^{1/3}
+
+Strain force (standard):
+  F_gap = √(GM × a₀) / r  where a₀ = cH₀sin(δ)
+  v_flat = (GM × a₀)^{1/4}  [Tully-Fisher]
+
+---
+
 ## Summary
 
-The Husmann Decomposition proceeds through 16 logical steps from a single axiom (the golden ratio φ) to the observable universe. Each step is either:
+The Husmann Decomposition proceeds through 16 logical steps from a single axiom (the golden ratio φ) to the observable universe, extended with 20 additional derivations (March 15-16, 2026) covering Hofstadter butterfly metallic mean hierarchy, discriminant Pythagorean triple, Chern number pair annihilation, and convergence with independent approaches. Each step is either:
 
 1. **Algebraic identity** (proven from previous steps)
 2. **Physical identification** (matching mathematical structure to observation)

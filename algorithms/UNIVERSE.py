@@ -41,8 +41,29 @@ Patent Application 19/560,637
 Repository: github.com/thusmann5327/Unified_Theory_Physics
 """
 
-import math, io, base64, json, time, os
+import math, io, base64, json, time, os, sys
 import numpy as np
+
+# ================================================================
+# March 16, 2026 — Regge curvature + lattice optics + strain energy
+# ================================================================
+# Standard physics applied to the HD backbone.
+# See: regge_curvature.py, lattice_optics.py, strain_energy.py
+try:
+    from regge_curvature import (
+        icosahedral_vertices, angular_deficit, curvature_scalar,
+        backbone_curvature_field, ARISTOTLE_GAP_APPROX, ARISTOTLE_GAP_EXACT
+    )
+    from lattice_optics import (
+        cantor_density, refractive_index, deflection_angle
+    )
+    from strain_energy import (
+        strain_energy_density, disclination_force, rotation_velocity,
+        flat_velocity, wall_fraction_to_acceleration
+    )
+except ImportError:
+    # Modules may not be on path if UNIVERSE.py is run from a different directory
+    pass
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
