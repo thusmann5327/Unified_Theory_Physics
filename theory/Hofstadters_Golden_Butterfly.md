@@ -985,7 +985,45 @@ The GABA-mediated quantum collapse in microtubules (n = 13) operates at the same
 
 ---
 
-## XII. Honest Assessment
+## XII. Three Dimensions from the Discriminant Fibonacci Chain
+
+### The Discriminant Sequence
+
+Each metallic mean δ_n is the root of x² = nx + 1 with discriminant Δ_n = n² + 4:
+
+| n | Metallic Mean | Δ_n | Fibonacci? | F(?) |
+|---|---|---|---|---|
+| 1 | Golden: φ | **5** | **F(5)** | ✓ |
+| 2 | Silver: 1+√2 | **8** | **F(6)** | ✓ |
+| 3 | Bronze: (3+√13)/2 | **13** | **F(7)** | ✓ |
+| 4 | n=4 | 20 | ≠ F(8) = 21 | ✗ |
+
+### The Fibonacci Chain Closes at Three
+
+The recurrence F(5) + F(6) = F(7) — which is **5 + 8 = 13** — holds for the first three discriminants. This is φ² = φ + 1 written in Fibonacci integers. At n = 4, the chain breaks: 8 + 13 = 21 ≠ 20.
+
+**Uniqueness proof:** The recurrence Δ_{n-1} + Δ_n = Δ_{n+1} requires (n-1)² + 4 + n² + 4 = (n+1)² + 4, which gives (n-2)² = 0, so n = 2. The silver mean is the UNIQUE link in the Fibonacci chain. Exactly one consecutive triple of discriminants satisfies the recurrence: {5, 8, 13}. ∎
+
+### Physical Consequence
+
+The bronze wave is not independent — its discriminant IS the sum of gold's and silver's. Three dimensions is a THEOREM of the metallic mean algebra:
+
+- **Gold** (√5): self-similarity along one axis → 1D
+- **Silver** (√8 = 2√2): orthogonal completion → 2D
+- **Bronze** (√13): Fibonacci closure, 5 + 8 = 13 → 3D
+- **n = 4** (√20 ≠ √21): chain breaks → no 4th dimension
+
+The coupling coefficient n in x² = nx + 1 IS the dimension count. The exponent 3 in Ω_b = (cos α)³ ≈ e⁻³ is not assumed — it is the number of metallic means whose discriminants form a Fibonacci chain.
+
+The 3D vacuum Hamiltonian uses all three frequencies:
+
+$$\alpha_1 = \frac{\sqrt{5}-1}{2}, \quad \alpha_2 = \sqrt{2}-1, \quad \alpha_3 = \frac{\sqrt{13}-3}{2}$$
+
+Each axis at the critical point V = 2J. The 3D Cantor dust has D_s = 3/2 and matter fraction (cos α)³ ≈ 5%.
+
+---
+
+## XIII. Honest Assessment
 
 ### What is established:
 
@@ -1014,7 +1052,7 @@ The GABA-mediated quantum collapse in microtubules (n = 13) operates at the same
 
 ---
 
-## XIII. Citation
+## XIV. Citation
 
 ```bibtex
 @misc{husmann2026butterfly,
