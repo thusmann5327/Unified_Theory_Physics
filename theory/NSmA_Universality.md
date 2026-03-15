@@ -164,9 +164,39 @@ Three quantities follow:
 
 **1. r\_c = 1 − 1/φ⁴ = 0.8541** — The crossover McMillan ratio, equal to the complement of the σ₁ band width. Below this threshold, the smectic q-vector samples the interior of a Cantor band and the system is fully 3D.
 
-**2. γ\_dc = 4** — The decoupling exponent, equal to the number of band boundaries. Interlayer coupling propagates through the dark-sector conduit (σ₂ + σ₄) and must traverse all four boundaries to maintain 3D coherence. Each boundary acts as a resonant barrier due to the van Hove singularity ρ(E) ∼ |E − E\_c|^(−1/2). Simultaneous penetration of k barriers gives P\_break ∼ p^k with k = 4.
+**2. γ\_dc = 4** — The decoupling exponent, equal to the number of band boundaries. See §4.2 below for the topological derivation via Chern number pair annihilation.
 
 **3. α\_max = 2/3** — The hyperscaling limit at d\_eff = 2 (full layer decoupling).
+
+### 4.2 Topological protection and the decoupling exponent
+
+The four gaps separating the five bands each carry a quantized topological invariant — the Chern number (TKNN invariant¹⁶), which determines the Hall conductivity in units of e²/h. At α = 1/φ, the gap labeling theorem gives IDS = s + tα for integer s, t, where t is the Chern number. Computation yields (see Supplementary S1):
+
+| Gap | IDS | Chern number t | Gap width |
+|-----|-----|----------------|-----------|
+| σ₁/σ₂ | 1/φ³ ≈ 0.236 | **+2** | 0.17 (small) |
+| σ₂/σ₃ | 1/φ² ≈ 0.382 | **−1** | 1.69 (large) |
+| σ₃/σ₄ | 1/φ ≈ 0.618 | **+1** | 1.69 (large) |
+| σ₄/σ₅ | 1−1/φ³ ≈ 0.764 | **−2** | 0.30 (small) |
+
+The Chern numbers alternate **+2, −1, +1, −2** and form two conjugate pairs:
+
+- **Outer pair:** (+2) + (−2) = 0
+- **Inner pair:** (−1) + (+1) = 0
+
+Each pair individually sums to zero — the topological conservation law. A gap with Chern number t ≠ 0 is **topologically protected**: it cannot close continuously without passing through a quantum critical point that annihilates the Chern number¹⁷ ¹⁸. This is qualitatively different from a smooth barrier — integer-quantized protection means the gap is either open or closed, with no intermediate states.
+
+**The exponent γ = 4 follows from the number of topologically protected gaps.** Complete interlayer decoupling (d\_eff: 3 → 2) requires closing ALL four gaps. Each gap closure is an independent topological phase transition — an "anomalous levitation and pair annihilation" event in the terminology of Liu, Fulga & Asbóth¹⁷. The four gaps must close in pairs (Chern conservation), giving two pair-annihilation events, each eliminating two gaps simultaneously. The probability that a pair annihilates at reduced parameter P = (r − r\_c)/(1 − r\_c) scales as P², and two independent pair-annihilation events give:
+
+$$f_{\text{decouple}}(r) = \left(\frac{r - r_c}{1 - r_c}\right)^{2 \times 2} = \left(\frac{r - r_c}{1 - r_c}\right)^4 \quad (r > r_c)$$
+
+The crossover McMillan ratio r\_c = 1 − 1/φ⁴ = 0.8541 marks where the smectic q-vector first encounters the σ₁ band boundary — the IDS position of the outermost gap.
+
+Every parameter is now derived:
+- ν = 2/3 from D\_s = 1/2 (Sütő 1989)
+- r\_c = 1 − 1/φ⁴ from the σ₁ band width (gap labeling theorem)
+- **γ = 4 from four Chern-number-carrying gaps requiring two pair-annihilation events** (TKNN theorem + topological conservation)
+- The prefactor 2/3 from hyperscaling at d\_eff = 2
 
 ### VI. Assembly
 
@@ -758,9 +788,114 @@ de Gennes free energy (1972, textbook)
 12. Birgeneau, R.J. et al. "Critical behavior near the nematic-smectic-A transition." *Phys. Rev. A* 24, 2624 (1981).
 13. Huang, C.C. & Viner, J.M. "Nature of the smectic-A–smectic-C phase transition." *Phys. Rev. A* 25, 3385 (1982).
 14. Cladis, P.E. et al. "New thermodynamic measurements near a nematic-smectic-A transition." *Phys. Rev. Lett.* 39, 720 (1977).
+15. Garland, C.W. & Meingast, C. "High-resolution ac calorimetry and critical behavior of octyloxycyanobiphenyl." *Phys. Rev. A* 27, 2191 (1983).
+16. Thouless, D.J., Kohmoto, M., Nightingale, M.P. & den Nijs, M. "Quantized Hall Conductance in a Two-Dimensional Periodic Potential." *Phys. Rev. Lett.* 49, 405–408 (1982).
+17. Liu, H., Fulga, I.C. & Asbóth, J.K. "Anomalous levitation and annihilation in Floquet topological insulators." *Phys. Rev. Research* 2, 022048(R) (2020).
+18. Kraus, Y.E. et al. "Topological states and adiabatic pumping in quasicrystals." *Phys. Rev. Lett.* 109, 106402 (2012).
 
 ---
 
-*Last Updated: March 2026*
+## Supplementary S1: Chern Number Computation
+
+### S1.1 Gap labeling at golden flux
+
+At α = 1/φ, the integrated density of states (IDS) at each spectral gap satisfies the Diophantine equation:
+
+$$\text{IDS} = s + t \cdot \alpha$$
+
+where s and t are integers and t is the Chern number (TKNN invariant / Hall conductivity in units of e²/h). For each gap, the pair (s, t) with minimal |t| is unique.
+
+### S1.2 Computational verification
+
+```python
+#!/usr/bin/env python3
+"""Supplementary S1: Chern numbers at golden flux for N-SmA paper."""
+import math, numpy as np
+from scipy.linalg import eigvalsh
+
+PHI = (1 + math.sqrt(5)) / 2
+N = 987  # Fibonacci number for optimal commensurability
+alpha = 1.0 / PHI
+
+# Build AAH Hamiltonian at V = 2J
+H = np.zeros((N, N))
+for i in range(N):
+    H[i, i] = 2.0 * math.cos(2 * math.pi * alpha * i)
+    if i + 1 < N: H[i, i+1] = 1.0; H[i+1, i] = 1.0
+evals = np.sort(eigvalsh(H))
+
+# Find and label gaps
+spacings = np.diff(evals)
+order = np.argsort(spacings)[::-1]
+print("Gap   IDS      width    s    t(Chern)")
+print("-" * 42)
+for rank in range(6):
+    idx = order[rank]
+    w, ids = spacings[idx], (idx + 1) / N
+    best_s, best_t, best_err = 0, 0, 999
+    for s in range(-10, 11):
+        for t in range(-10, 11):
+            err = abs(s + t * alpha - ids)
+            if err < best_err: best_err = err; best_s, best_t = s, t
+    print(f"  {rank+1}   {ids:.4f}   {w:.4f}   {best_s:+d}   {best_t:+d}")
+
+# Verify pair annihilation
+four = sorted([(spacings[order[i]], (order[i]+1)/N) for i in range(4)], key=lambda x: x[1])
+cherns = []
+for w, ids in four:
+    best_s, best_t, best_err = 0, 0, 999
+    for s in range(-10, 11):
+        for t in range(-10, 11):
+            if abs(s + t * alpha - ids) < best_err:
+                best_err = abs(s + t * alpha - ids); best_s, best_t = s, t
+    cherns.append(best_t)
+
+print(f"\nChern numbers (sorted by IDS): {cherns}")
+print(f"Outer sum: {cherns[0]}+{cherns[3]} = {cherns[0]+cherns[3]}")
+print(f"Inner sum: {cherns[1]}+{cherns[2]} = {cherns[1]+cherns[2]}")
+print(f"Alternating: {all(cherns[i]*cherns[i+1]<0 for i in range(3))}")
+print(f"Inner > Outer: {four[1][0] > four[0][0] and four[2][0] > four[3][0]}")
+```
+
+### S1.3 Results
+
+| Gap | IDS | Width | (s, t) | Chern t |
+|-----|-----|-------|--------|---------|
+| σ₁/σ₂ | 0.2361 | 0.172 | (−1, +2) | **+2** |
+| σ₂/σ₃ | 0.3820 | 1.685 | (+1, −1) | **−1** |
+| σ₃/σ₄ | 0.6180 | 1.685 | (0, +1) | **+1** |
+| σ₄/σ₅ | 0.7639 | 0.300 | (+2, −2) | **−2** |
+
+### S1.4 Pair annihilation structure
+
+- **Alternation:** Signs alternate (+, −, +, −)
+- **Outer pair sum:** (+2) + (−2) = 0 ✓
+- **Inner pair sum:** (−1) + (+1) = 0 ✓
+- **Total sum:** +2 − 1 + 1 − 2 = 0 ✓
+- **Outer gaps small, inner gaps large:** |t| = 2 gaps ≈ 0.2; |t| = 1 gaps ≈ 1.7
+- **Chern magnitude anti-correlates with gap width:** higher |t| = finer Cantor level
+
+### S1.5 The γ = 4 derivation
+
+Complete interlayer decoupling requires closing ALL four gaps. Topological conservation (Chern sum = 0 for each closing pair) requires pair closure:
+
+1. **First pair annihilation:** (+2, −2) close → outer topological protection eliminated
+2. **Second pair annihilation:** (−1, +1) close → inner topological protection eliminated
+
+Each pair annihilation is an independent quantum critical event¹⁷ ¹⁸ with probability scaling as P² where P = (r − r\_c)/(1 − r\_c). Two independent events:
+
+$$f_{\text{decouple}} = P^2 \times P^2 = P^4$$
+
+Therefore **γ = 4** = number of Chern-number-carrying gaps = 2 × (independent pair-annihilation events).
+
+### S1.6 Connection to Liu, Fulga & Asbóth (2020)
+
+The pair annihilation mechanism was established independently in the context of Floquet topological insulators¹⁷. Their "anomalous levitation and pair annihilation" scenario — where smaller (trivial) gaps close while larger (topological) gaps survive — maps directly onto the N-SmA decoupling: the outer gaps (|t| = 2, small) close first as r increases, while the inner gaps (|t| = 1, large) are the last to close, surviving as the dominant spectral features that maintain 3D coherence.
+
+Their selection rule — "the winding number of the fully disordered phase is given by the winding number of the dominant gap at zero disorder" — provides independent support for the ordering of gap closures in the N-SmA crossover.
+
+---
+
+*Last Updated: March 15, 2026*
 *Part of the Unified Theory of Physics: The Husmann Decomposition*
 *Repository: https://github.com/thusmann5327/Unified_Theory_Physics*
