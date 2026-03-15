@@ -283,6 +283,73 @@ assert err_lB < 0.05
 print(f"  ✓ VERIFIED")
 
 # ================================================================
+# PROOF 10: TOPOLOGICAL PAIR ANNIHILATION (5→3 COLLAPSE)
+# ================================================================
+print(f"\n{'=' * 72}")
+print("  PROOF 10: CHERN NUMBER PAIR ANNIHILATION")
+print(f"{'=' * 72}")
+
+alpha_golden = 1 / PHI
+evals_topo = aah_spectrum(alpha_golden, N_BIG)
+gaps_topo = find_gaps(evals_topo)
+
+# Assign Chern numbers to top 4 gaps (the five-band partition)
+chern_data = []
+for i, (w, ids) in enumerate(gaps_topo[:6]):
+    best_s, best_t, best_err = 0, 0, 999
+    for s in range(-5, 6):
+        for t in range(-5, 6):
+            err = abs(s + t * alpha_golden - ids)
+            if err < best_err:
+                best_err = err
+                best_s, best_t = s, t
+    if w > 0.01:
+        chern_data.append((w, ids, best_s, best_t))
+
+# Identify the four five-band gaps
+five_band = sorted(chern_data[:4], key=lambda x: x[1])
+print(f"\n  Five-band Chern numbers (sorted by IDS):")
+print(f"  {'IDS':>8s}  {'width':>7s}  {'Chern':>6s}  {'role':>12s}")
+print(f"  {'-' * 38}")
+
+inner_chern_sum = 0
+outer_chern_sum = 0
+for i, (w, ids, s, t) in enumerate(five_band):
+    if i == 0 or i == 3:
+        role = "OUTER (close)"
+        outer_chern_sum += t
+    else:
+        role = "INNER (keep)"
+        inner_chern_sum += t
+    print(f"  {ids:>8.4f}  {w:>7.4f}  {t:>+6d}  {role:>12s}")
+
+print(f"\n  Outer gap Chern sum (closing): {outer_chern_sum:+d}")
+print(f"  Inner gap Chern sum (surviving): {inner_chern_sum:+d}")
+
+# The key test: closing gaps must sum to zero
+assert outer_chern_sum == 0, f"Closing gaps Chern sum = {outer_chern_sum} ≠ 0"
+print(f"  ✓ VERIFIED: closing gaps have Chern sum = 0 (topological conservation)")
+
+# Check that surviving gaps flank observer with ±1
+assert inner_chern_sum == 0, f"Surviving gaps Chern sum = {inner_chern_sum} ≠ 0"
+print(f"  ✓ VERIFIED: surviving gaps have Chern sum = 0 (observer neutral)")
+
+# Check alternation
+cherns = [t for _, _, _, t in five_band]
+alternates = all(cherns[i] * cherns[i+1] < 0 for i in range(len(cherns)-1))
+assert alternates
+print(f"  ✓ VERIFIED: Chern numbers alternate sign: {[f'{t:+d}' for t in cherns]}")
+
+# Outer gaps are small, inner gaps are large
+outer_widths = [five_band[0][0], five_band[3][0]]
+inner_widths = [five_band[1][0], five_band[2][0]]
+assert all(iw > ow for iw in inner_widths for ow in outer_widths)
+print(f"  ✓ VERIFIED: inner gaps ({inner_widths[0]:.2f}) > outer gaps ({outer_widths[0]:.2f})")
+
+chern_collapse_pass = (outer_chern_sum == 0 and inner_chern_sum == 0 
+                       and alternates)
+
+# ================================================================
 # SUMMARY
 # ================================================================
 print(f"\n{'=' * 72}")
@@ -299,6 +366,7 @@ checks = [
     ("37×a_hBN ≈ l₀", err_37 < 1.0),
     ("φ²×r_c = √5", abs(product - SQRT5) < 1e-14),
     ("l_B/l₀ = 1/√(2π)", err_lB < 0.05),
+    ("Chern pair annihilation", chern_collapse_pass),
 ]
 
 all_pass = True
@@ -308,4 +376,4 @@ for name, passed in checks:
         all_pass = False
     print(f"  {status}  {name}")
 
-print(f"\n  {'ALL 9 PROOFS PASSED' if all_pass else 'SOME PROOFS FAILED'}")
+print(f"\n  {'ALL 10 PROOFS PASSED' if all_pass else 'SOME PROOFS FAILED'}")
