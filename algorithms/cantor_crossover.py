@@ -1,39 +1,60 @@
 #!/usr/bin/env python3
 """
-CANTOR CROSSOVER OPERATOR
-============================
+CANTOR CROSSOVER OPERATOR v2
+================================
 
-Generalized from gaba_engine.py TubulinDimer.gaba_collapse()
-March 14, 2026
+Extended March 14-15, 2026 — Hofstadter's Golden Butterfly
+
+v1 (March 14): Generalized from gaba_engine.py TubulinDimer.gaba_collapse()
+v2 (March 15): Added metallic mean hierarchy, Chern number computation,
+               topological pair annihilation, graphene/microtubule identifiers,
+               continued fraction nesting detection.
 
 The GABA engine models a single quantum measurement as a continuous
-collapse parameterized by gate_strength. Today we discovered that
-this same mathematical structure — continuous collapse through a
-fractal band boundary — governs critical exponents in at least
-two open problems in physics (N-SmA universality, QH plateau transition).
+collapse parameterized by gate_strength. The crossover operator
+generalizes this to ANY system at the AAH critical point (V = 2J),
+parameterized by metallic mean index n.
 
-This module extracts the general algorithm:
+The metallic mean hierarchy (x² = nx + 1) maps onto physical systems:
 
-  Given a system at the AAH critical point (V = 2J):
-  1. The five-band Cantor partition defines r_c = 1 - 1/phi^4
-  2. A control parameter x measures distance from criticality
-  3. The effective dimensionality is d_eff(x) = d - f_decouple(x)
-  4. Any critical exponent follows from hyperscaling
-  5. The MEASUREMENT OPERATOR determines which D_s governs observation
+  n = 1  (golden):  hydrogen, cosmological scales, LCD polarizers
+  n = 2  (silver):  helium shell
+  n = 3  (bronze):  bronze-mean quasicrystal (Majorana modes, Zeng 2024)
+  n = 13:           microtubule (13 protofilaments = F(7))
+  n = 53:           graphene magic angle (0.06% match)
+  n = 60:           graphene/hBN lattice mismatch (0.66% match)
 
-Three instances of the same operator:
+Five instances of the same operator:
 
   GABA gate:     gate_strength → entropy → collapse completeness
   N-SmA:         McMillan ratio r → d_eff → heat capacity α
   Quantum Hall:  effective V/J → D_s^(obs) → temperature scaling κ
+  Magic angle:   twist θ → moiré period → flat band condition
+  LCD polarizer: polarization angle → intensity → 5→3 projection
 
-One axiom: phi^2 = phi + 1
-One parameter: r_c = 1 - 1/phi^4
+One axiom: φ² = φ + 1
+One parameter: r_c = 1 - 1/φ⁴
+
+References:
+  Hofstadter (1976) Phys Rev B 14, 2239
+  Aubry & André (1980) Ann Israel Phys Soc 3, 133
+  Sütő (1989) J Stat Phys 56, 525
+  Bellissard et al (1992) Rev Math Phys 4, 1
+  Liu, Fulga & Asbóth (2020) Phys Rev Research 2, 022048(R)
+  Subramanyan et al (2021) arXiv:2112.12203
+  Zhang et al (2022) arXiv:2108.01708
+  Zheng, Timms & Kolodrubetz (2022) arXiv:2206.13926v2
+  Zeng et al (2024) Phys Rev B 109, L121403
+  Kobiałka et al (2024) Phys Rev B 110, 134508
+  Ji & Xu (2025) Commun Phys 8, 336
+  Varjas et al (2025) arXiv:2602.09769
+  Nuckolls et al (2025) Nature 639, 60
+  Satija (2025) arXiv:2507.13418
 """
 
 import math
-from dataclasses import dataclass
-from typing import Dict, Optional, Tuple
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Tuple
 
 # ============================================================
 # CONSTANTS
@@ -42,365 +63,253 @@ from typing import Dict, Optional, Tuple
 PHI = (1 + math.sqrt(5)) / 2
 SQRT5 = math.sqrt(5)
 
-# Universal crossover parameter from five-band Cantor partition
 R_C = 1 - 1 / PHI**4                        # = 0.8541
 GAMMA_DC = 4                                  # band boundaries
+D_S = 0.5                                     # Hausdorff dimension
+NU = 1.0 / (2.0 - D_S)                       # = 2/3
 
-# Proven spectral properties at AAH critical point
-D_S = 0.5                                     # Hausdorff dimension (Suto 1989)
-NU = 1.0 / (2.0 - D_S)                       # = 2/3 (correlation length)
-
-# Exact algebraic identity
-# phi^2 * r_c = sqrt(5)
 assert abs(PHI**2 * R_C - SQRT5) < 1e-14
 
-# Physical constants (for GABA mode)
-K_B = 1.380649e-23                            # J/K
-EV = 1.602176634e-19                          # J/eV
+K_B = 1.380649e-23; EV = 1.602176634e-19
+HBAR = 1.054571817e-34; H_PLANCK = 6.62607015e-34
+C_LIGHT = 299792458; E_CHARGE = 1.602176634e-19
 
-
-# ============================================================
-# THE CANTOR CROSSOVER OPERATOR
-# ============================================================
-
-def cantor_crossover(x: float,
-                     x_c: float = R_C,
-                     gamma: int = GAMMA_DC,
-                     d_full: int = 3) -> Dict:
-    """Cantor crossover: control parameter → effective dimension → exponents.
-
-    This is the generalization of TubulinDimer.gaba_collapse().
-
-    The GABA engine computes:
-        p_inside += (1 - p_inside) * gate_strength
-        entropy = -p*ln(p) - (1-p)*ln(1-p)
-
-    The crossover operator computes:
-        f_decouple = ((x - x_c) / (1 - x_c))^gamma    if x > x_c
-        d_eff = d_full - f_decouple
-        alpha = 2 - nu * d_eff                         (hyperscaling)
-
-    The connection: the GABA entropy curve IS the d_eff curve,
-    but the band-boundary structure (gamma = 4) sets the rate
-    instead of the binary gate dynamics.
-
-    Parameters
-    ----------
-    x : float
-        Control parameter (0 to 1).
-        N-SmA: McMillan ratio r = T_NA/T_NI
-        QH: effective V/J deviation from self-duality
-        GABA: gate_strength
-    x_c : float
-        Crossover threshold (default: r_c = 1 - 1/phi^4)
-    gamma : int
-        Decoupling exponent (default: 4 = band boundaries)
-    d_full : int
-        Full spatial dimension (default: 3)
-
-    Returns
-    -------
-    dict with:
-        f_decouple : fraction of dimensional reduction (0 to 1)
-        d_eff      : effective dimensionality
-        alpha      : heat capacity exponent (hyperscaling)
-        nu_eff     : effective correlation length exponent
-        below_xc   : True if x <= x_c (fully coupled regime)
-    """
-    if x <= x_c:
-        return {
-            'f_decouple': 0.0,
-            'd_eff': float(d_full),
-            'alpha': 2.0 - NU * d_full,
-            'nu_eff': NU,
-            'below_xc': True,
-        }
-
-    f_dec = ((x - x_c) / (1 - x_c)) ** gamma
-    d_eff = d_full - f_dec
-    alpha = 2.0 - NU * d_eff
-
-    return {
-        'f_decouple': f_dec,
-        'd_eff': d_eff,
-        'alpha': alpha,
-        'nu_eff': NU,
-        'below_xc': False,
-    }
-
-
-def alpha_nsma(r: float) -> float:
-    """Heat capacity exponent for the N-SmA transition.
-
-    alpha(r) = (2/3) * ((r - r_c) / (1 - r_c))^4    for r > r_c
-    alpha(r) = 0                                       for r <= r_c
-
-    Zero free parameters. RMS = 0.033 against 11 compounds.
-    """
-    result = cantor_crossover(r)
-    return result['alpha']
-
-
-def kappa_qh(disorder_level: float = 0.0) -> float:
-    """Temperature scaling exponent for the QH plateau transition.
-
-    Clean limit: kappa = r_c / 2 = 0.427  (vs exp 0.42 +/- 0.01)
-    With disorder: kappa = D_s^(obs)(W) * r_c
-
-    The measurement operator determines which D_s applies:
-    transport measurements project onto sigma_3 (observable sector).
-    """
-    if disorder_level <= 0:
-        return R_C / 2  # clean limit = D_s * r_c = 0.5 * 0.854
-    # For disordered systems, would need spectral computation
-    # Placeholder: linear interpolation between clean and Anderson limits
-    D_s_obs = D_S + disorder_level * (1.0 - D_S)
-    D_s_obs = min(1.0, D_s_obs)
-    return D_s_obs * R_C
-
-
-def kappa_qah() -> float:
-    """Temperature scaling exponent for the QAH insulator transition.
-
-    kappa = 1/phi^2 = 0.382  (vs exp 0.38 +/- 0.02)
-
-    Different topology (no Landau levels) → different formula.
-    """
-    return 1 / PHI**2
-
-
-def nu_noninteracting() -> float:
-    """Localization length exponent for non-interacting QH (CC model).
-
-    nu = phi^2 = 2.618  (vs CC model 2.593 +/- 0.006)
-    """
-    return PHI**2
-
-
-def nu_interacting() -> float:
-    """Localization length exponent for interacting QH (experiment).
-
-    nu = 2/r_c = 2.342  (vs exp 2.38)
-
-    Connected to non-interacting by: phi^2 * r_c = sqrt(5)
-    Therefore: nu_exp = 2*phi^2/sqrt(5)
-    """
-    return 2 / R_C
-
+J_HOPPING = 10.578
+L0 = C_LIGHT * HBAR / (2 * J_HOPPING * EV)
+A_GRAPHENE = 0.2462e-9; A_HBN = 0.2504e-9
+DELTA_GH = 1 - A_GRAPHENE / A_HBN
 
 # ============================================================
-# MEASUREMENT OPERATOR
+# METALLIC MEAN HIERARCHY
+# ============================================================
+
+def metallic_mean(n):
+    return (n + math.sqrt(n * n + 4)) / 2
+
+def metallic_alpha(n):
+    return 1.0 / metallic_mean(n)
+
+def continued_fraction(x, n_terms=15):
+    cf = []
+    for _ in range(n_terms):
+        a = int(x)
+        cf.append(a)
+        frac = x - a
+        if abs(frac) < 1e-10: break
+        x = 1.0 / frac
+    return cf
+
+def cf_nesting_depth(x, n_terms=12):
+    cf = continued_fraction(x, n_terms)
+    if len(cf) < 2: return (cf[0] if cf else 0, 0)
+    first = cf[1] if cf[0] == 0 else cf[0]
+    ones = sum(1 for i in range(2 if cf[0]==0 else 1, min(8, len(cf))) if cf[i]==1)
+    return (first, ones)
+
+# ============================================================
+# AAH SPECTRUM
+# ============================================================
+
+def aah_spectrum(alpha, N=610, V=2.0):
+    import numpy as np; from scipy.linalg import eigvalsh
+    H = np.zeros((N, N))
+    for i in range(N):
+        H[i, i] = V * math.cos(2 * math.pi * alpha * i)
+        if i+1 < N: H[i, i+1] = 1.0; H[i+1, i] = 1.0
+    return np.sort(eigvalsh(H))
+
+def find_gaps(evals, min_width=0.01):
+    import numpy as np
+    N = len(evals); spacings = np.diff(evals)
+    order = np.argsort(spacings)[::-1]
+    return [(spacings[idx], (idx+1)/N) for idx in order if spacings[idx] >= min_width]
+
+def box_counting_Ds(evals):
+    import numpy as np
+    E_min, E_max = evals[0], evals[-1]; E_range = E_max - E_min
+    xs = [math.log(2**k / E_range) for k in range(3, 10)]
+    ys = [math.log(len(set(int((E-E_min)/(E_range/2**k)) for E in evals))) for k in range(3, 10)]
+    x, y = np.array(xs), np.array(ys); n = len(x)
+    return (n*np.sum(x*y) - np.sum(x)*np.sum(y)) / (n*np.sum(x**2) - np.sum(x)**2)
+
+# ============================================================
+# CHERN NUMBERS
+# ============================================================
+
+def gap_label_chern(ids, alpha):
+    best_s, best_t, best_err = 0, 0, 999.0
+    for s in range(-10, 11):
+        for t in range(-10, 11):
+            err = abs(s + t * alpha - ids)
+            if err < best_err: best_err = err; best_s, best_t = s, t
+    return (best_s, best_t)
+
+def chern_numbers_at_alpha(alpha, N=987, n_gaps=6):
+    evals = aah_spectrum(alpha, N); gaps = find_gaps(evals)
+    results = []
+    for i, (w, ids) in enumerate(gaps[:n_gaps]):
+        s, t = gap_label_chern(ids, alpha)
+        results.append({'rank': i+1, 'width': w, 'ids': ids, 's': s, 't_chern': t})
+    return results
+
+# ============================================================
+# TOPOLOGICAL PAIR ANNIHILATION
 # ============================================================
 
 @dataclass
-class MeasurementOperator:
-    """The 5→3 collapse operator.
+class CollapseResult:
+    inner_gaps: List[Dict] = field(default_factory=list)
+    outer_gaps: List[Dict] = field(default_factory=list)
+    inner_chern_sum: int = 0
+    outer_chern_sum: int = 0
+    alternates: bool = False
+    inner_larger: bool = False
+    topologically_valid: bool = False
 
-    Three physical instances of the same mathematical object:
-
-    LCD polarizer:    projects polarization → intensity
-    GABA Cl- gate:    projects quantum state → classical readout
-    Transport probe:  projects full spectrum → observable gap hierarchy
-
-    In each case, the operator filters out dark-sector (sigma_2, sigma_4)
-    fine structure, leaving only the sigma_3 (observer sector) content.
-
-    The KEY LESSON from March 14, 2026:
-    Computing the FULL pre-collapse spectrum and comparing with experiment
-    fails — not because the computation is wrong, but because the
-    experiment only sees the post-collapse projection.
-
-    Full D_s (pre-collapse):      sensitive to fine Cantor gaps → fragile
-    Observable D_s (post-collapse): sensitive to main gaps only → robust
-    """
-    name: str
-    system: str
-
-    # Pre-collapse: full spectrum including dark sector
-    d_s_full: float = D_S
-
-    # Post-collapse: observable sector only (coarse gap hierarchy)
-    d_s_observable: float = D_S
-
-    @property
-    def collapse_ratio(self) -> float:
-        """How much of the spectral information survives collapse."""
-        if self.d_s_full > 0:
-            return self.d_s_observable / self.d_s_full
-        return 1.0
-
-    def kappa(self) -> float:
-        """Temperature scaling exponent using observable D_s."""
-        return self.d_s_observable * R_C
-
-    def apply_disorder(self, W: float):
-        """Model the effect of disorder strength W on both D_s measures.
-
-        Full D_s spikes rapidly (fine gaps fill first).
-        Observable D_s shifts slowly (main gaps are robust).
-        """
-        # Full D_s: hypersensitive to noise
-        self.d_s_full = D_S + (1.0 - D_S) * (1 - math.exp(-3 * W))
-
-        # Observable D_s: robust (main gaps survive)
-        self.d_s_observable = D_S + (1.0 - D_S) * (1 - math.exp(-0.5 * W))
-
+def analyze_collapse(alpha=None, N=987):
+    if alpha is None: alpha = 1.0 / PHI
+    cherns = chern_numbers_at_alpha(alpha, N, 6)
+    if len(cherns) < 4: return CollapseResult()
+    four = sorted(cherns[:4], key=lambda x: x['ids'])
+    r = CollapseResult()
+    r.outer_gaps = [four[0], four[3]]; r.inner_gaps = [four[1], four[2]]
+    r.outer_chern_sum = sum(g['t_chern'] for g in r.outer_gaps)
+    r.inner_chern_sum = sum(g['t_chern'] for g in r.inner_gaps)
+    ts = [g['t_chern'] for g in four]
+    r.alternates = all(ts[i]*ts[i+1] < 0 for i in range(len(ts)-1))
+    r.inner_larger = all(ig['width'] > og['width'] for ig in r.inner_gaps for og in r.outer_gaps)
+    r.topologically_valid = (r.outer_chern_sum == 0 and r.inner_chern_sum == 0
+                             and r.alternates and r.inner_larger)
+    return r
 
 # ============================================================
-# GABA ENGINE BRIDGE
+# PHYSICAL SYSTEM IDENTIFIERS
+# ============================================================
+
+def identify_graphene_hbn():
+    a60 = metallic_alpha(60); err = abs(a60 - DELTA_GH) / DELTA_GH * 100
+    return {'name': 'G/hBN mismatch', 'n': 60, 'alpha': a60, 'match_pct': err,
+            'lambda_max_nm': 60 * A_GRAPHENE * 1e9}
+
+def identify_magic_angle():
+    theta = math.radians(1.08); a53 = metallic_alpha(53)
+    err = abs(a53 - theta) / theta * 100
+    return {'name': 'Magic angle', 'n': 53, 'alpha': a53, 'match_pct': err,
+            'lambda_nm': 53 * A_GRAPHENE * 1e9}
+
+def identify_microtubule():
+    return {'name': 'Microtubule', 'n': 13, 'alpha': metallic_alpha(13),
+            'protofilaments': 13, 'helix_starts': 3, 'seams': 1,
+            'note': 'SSH topological insulator (Subramanyan 2021)'}
+
+def identify_l0():
+    B = H_PLANCK / (E_CHARGE * L0**2); lB = math.sqrt(HBAR / (E_CHARGE * B))
+    t = 1.0 / math.sqrt(2 * math.pi)
+    return {'l0_nm': L0*1e9, '38ag': 38*A_GRAPHENE*1e9, '37ahBN': 37*A_HBN*1e9,
+            'err38': abs(38*A_GRAPHENE - L0)/L0*100, 'err37': abs(37*A_HBN - L0)/L0*100,
+            'lB_over_l0': lB/L0, 'target': t, 'mag_err': abs(lB/L0 - t)/t*100}
+
+def band_structure(n, N=987):
+    alpha = metallic_alpha(n); evals = aah_spectrum(alpha, N); gaps = find_gaps(evals)
+    if len(gaps) < 2: return {'n': n, 'error': 'insufficient gaps'}
+    ids1 = min(gaps[0][1], gaps[1][1]); ids2 = max(gaps[0][1], gaps[1][1])
+    return {'n': n, 'alpha': alpha, 'ids1': ids1, 'ids2': ids2,
+            'band1': ids1, 'band2': ids2-ids1, 'band3': 1-ids2, 'D_s': box_counting_Ds(evals)}
+
+# ============================================================
+# CROSSOVER OPERATOR (preserved from v1)
+# ============================================================
+
+def cantor_crossover(x, x_c=R_C, gamma=GAMMA_DC, d_full=3):
+    if x <= x_c:
+        return {'f_decouple': 0.0, 'd_eff': float(d_full),
+                'alpha': 2.0 - NU * d_full, 'nu_eff': NU, 'below_xc': True}
+    f_dec = ((x - x_c) / (1 - x_c)) ** gamma
+    return {'f_decouple': f_dec, 'd_eff': d_full - f_dec,
+            'alpha': 2.0 - NU * (d_full - f_dec), 'nu_eff': NU, 'below_xc': False}
+
+def alpha_nsma(r): return cantor_crossover(r)['alpha']
+def kappa_qh(W=0.0): return R_C/2 if W <= 0 else min(1.0, D_S + W*(1-D_S))*R_C
+def kappa_qah(): return 1/PHI**2
+def nu_noninteracting(): return PHI**2
+def nu_interacting(): return 2/R_C
+
+# ============================================================
+# GABA ENGINE BRIDGE (preserved)
 # ============================================================
 
 class TubulinDimer:
-    """Minimal reproduction from gaba_engine.py v4.
-
-    The original seed that led to the N-SmA and QH results.
-
-    The structural isomorphism:
-        gate_strength  ↔  McMillan ratio r  ↔  effective V/J
-        p_inside       ↔  smectic order      ↔  localization
-        entropy        ↔  d_eff              ↔  D_s^(obs)
-        MATTER_FRAC    ↔  r_c                ↔  r_c
-    """
-    MATTER_FRAC = 1 / PHI ** (PHI ** 3)   # = 0.1302
-
-    def __init__(self, p_inside: float = 0.535):
-        self.p_inside = p_inside
-        self.collapsed = False
-
+    MATTER_FRAC = 1 / PHI ** (PHI ** 3)
+    def __init__(self, p_inside=0.535):
+        self.p_inside = p_inside; self.collapsed = False
     @property
-    def entropy(self) -> float:
+    def entropy(self):
         p = self.p_inside
-        if p <= 0 or p >= 1:
-            return 0.0
-        return -(p * math.log(p) + (1 - p) * math.log(1 - p))
-
-    def gaba_collapse(self, gate_strength: float = 1.0) -> float:
-        """The original collapse function.
-
-        Returns energy in eV. This is the function that started
-        the chain: its continuous entropy reduction, when mapped to
-        effective dimensionality, gives the N-SmA universality crossover.
-        """
-        if self.collapsed:
-            return 0.0
+        if p <= 0 or p >= 1: return 0.0
+        return -(p*math.log(p) + (1-p)*math.log(1-p))
+    def gaba_collapse(self, gate_strength=1.0):
+        if self.collapsed: return 0.0
         S_before = self.entropy
         self.p_inside += (1.0 - self.p_inside) * gate_strength
         S_after = self.entropy
         self.collapsed = gate_strength >= self.MATTER_FRAC
-        delta_S = S_before - S_after
-        return delta_S * K_B * 310 / EV
-
-    def to_crossover(self, gate_strength: float) -> Dict:
-        """Bridge: convert gate_strength to cantor_crossover output.
-
-        Maps the biological control parameter to the universal
-        crossover operator.
-        """
-        # Map gate_strength to effective McMillan ratio
-        r_min = 0.60
-        r = r_min + (1.0 - r_min) * gate_strength
-        return cantor_crossover(r)
-
-
-# ============================================================
-# FORMULA SUMMARY
-# ============================================================
-
-FORMULAS = """
-CANTOR CROSSOVER FORMULAS
-===========================
-
-All derived from one axiom (phi^2 = phi + 1) and one parameter
-(r_c = 1 - 1/phi^4 = 0.8541).
-
-UNIVERSAL CONSTANTS:
-  phi = (1+sqrt(5))/2 = 1.6180339887...
-  r_c = 1 - 1/phi^4   = 0.8541019662...
-  D_s = 1/2            (Cantor Hausdorff dimension)
-  nu  = 2/3            (correlation length exponent)
-  phi^2 * r_c = sqrt(5) (exact algebraic identity)
-
-N-SmA TRANSITION (SOLVED):
-  alpha(r) = (2/3) * ((r - r_c) / (1 - r_c))^4    [r > r_c]
-  alpha(r) = 0                                      [r <= r_c]
-  RMS = 0.033, 11/11 within 2-sigma, 0 free parameters
-
-QUANTUM HALL PLATEAU (STRONG CONJECTURE):
-  kappa      = r_c / 2     = 0.4271    (vs 0.42 +/- 0.01)
-  nu_CC      = phi^2       = 2.6180    (vs 2.593 +/- 0.006)
-  nu_exp     = 2 / r_c     = 2.3416    (vs 2.38)
-  kappa_QAH  = 1 / phi^2   = 0.3820    (vs 0.38 +/- 0.02)
-
-DISORDER CURVE (with measurement operator):
-  kappa(W) = D_s^(obs)(W) * r_c
-  where D_s^(obs) = observable (post-collapse) spectral dimension
-  NOT the full box-counting D_s (which includes dark-sector fine structure)
-
-GABA GATE (biological):
-  E_collapse = ln(2) * k_B * T = 18.5 meV per dimer
-  gate_strength ↔ McMillan ratio ↔ effective V/J
-  The measurement operator (GABA Cl- gate) determines
-  which D_s governs the classical readout.
-
-EXACT IDENTITIES:
-  1/phi + 1/phi^3 + 1/phi^4 = 1          (unity)
-  phi^2 * r_c = sqrt(5)                   (exponent connection)
-  nu_CC / nu_exp = sqrt(5) / 2            (non-interacting / interacting)
-  phi + 1/phi = sqrt(5)                   (fundamental)
-"""
-
+        return (S_before - S_after) * K_B * 310 / EV
+    def to_crossover(self, gs):
+        return cantor_crossover(0.60 + 0.40 * gs)
 
 # ============================================================
 # MAIN
 # ============================================================
 
 if __name__ == "__main__":
-    print("=" * 64)
-    print("  CANTOR CROSSOVER OPERATOR")
-    print("  Generalized from gaba_engine.py")
-    print("  One axiom: phi^2 = phi + 1")
-    print("=" * 64)
+    print("=" * 68)
+    print("  CANTOR CROSSOVER OPERATOR v2")
+    print("  Metallic Mean Hierarchy + Topological Pair Annihilation")
+    print("  One axiom: φ² = φ + 1")
+    print("=" * 68)
 
-    # --- Constants ---
-    print(f"\n  CONSTANTS:")
-    print(f"    phi   = {PHI:.10f}")
-    print(f"    r_c   = {R_C:.10f}")
-    print(f"    D_s   = {D_S}")
-    print(f"    nu    = {NU:.10f}")
-    print(f"    phi^2 * r_c = {PHI**2 * R_C:.10f} = sqrt(5)")
+    print(f"\n  φ = {PHI:.10f},  r_c = {R_C:.10f},  l₀ = {L0*1e9:.3f} nm")
+    print(f"  φ²×r_c = {PHI**2*R_C:.10f} = √5 ✓")
 
-    # --- N-SmA crossover ---
-    print(f"\n  N-SmA CROSSOVER:")
-    for r in [0.80, R_C, 0.87, 0.90, 0.95, 0.97, 0.99, 1.00]:
-        a = alpha_nsma(r)
-        print(f"    r = {r:.3f}  →  α = {a:.5f}")
+    print(f"\n  METALLIC MEAN HIERARCHY:")
+    print(f"  {'n':>4}  {'δ_n':>8}  {'α_n':>10}  {'system':>30}")
+    for n, lab in [(1,"golden/hydrogen"),(2,"silver/helium"),(3,"bronze/Majorana QC"),
+                   (13,"MICROTUBULE (F(7))"),(53,"MAGIC ANGLE"),(60,"G/hBN MISMATCH")]:
+        print(f"  {n:>4}  {metallic_mean(n):>8.4f}  {metallic_alpha(n):>10.6f}  {lab:>30}")
 
-    # --- QH exponents ---
-    print(f"\n  QUANTUM HALL EXPONENTS:")
-    print(f"    kappa (clean)    = {kappa_qh():.4f}  (exp: 0.42)")
-    print(f"    kappa (QAH)      = {kappa_qah():.4f}  (exp: 0.38)")
-    print(f"    nu (CC model)    = {nu_noninteracting():.4f}  (CC: 2.593)")
-    print(f"    nu (experiment)  = {nu_interacting():.4f}  (exp: 2.38)")
+    print(f"\n  PHYSICAL SYSTEMS:")
+    for fn in [identify_graphene_hbn, identify_magic_angle, identify_microtubule]:
+        d = fn(); print(f"    {d['name']}: n={d['n']}, {d}")
 
-    # --- Measurement operator demo ---
-    print(f"\n  MEASUREMENT OPERATOR (LCD polarizer insight):")
-    for W in [0.0, 0.1, 0.5, 1.0, 2.0]:
-        m = MeasurementOperator(name=f"W={W}", system="QH")
-        m.apply_disorder(W)
-        print(f"    W = {W:.1f}:  D_s(full) = {m.d_s_full:.3f}  "
-              f"D_s(obs) = {m.d_s_observable:.3f}  "
-              f"κ = {m.kappa():.4f}  "
-              f"ratio = {m.collapse_ratio:.3f}")
+    print(f"\n  CF NESTING: δ_G/hBN = [{', '.join(str(x) for x in continued_fraction(DELTA_GH, 8))}]")
+    first, ones = cf_nesting_depth(DELTA_GH)
+    print(f"    Golden [1,1,1,...] nested after quotient {first} ({ones} consecutive 1's)")
 
-    # --- GABA bridge ---
-    print(f"\n  GABA ENGINE BRIDGE:")
-    dimer = TubulinDimer()
-    for gs in [0.0, 0.25, 0.5, 0.75, 1.0]:
-        d = TubulinDimer()
-        result = d.to_crossover(gs)
-        print(f"    gate = {gs:.2f}  →  d_eff = {result['d_eff']:.3f}  "
-              f"α = {result['alpha']:.4f}  "
-              f"{'(below r_c)' if result['below_xc'] else ''}")
+    l = identify_l0()
+    print(f"\n  l₀ = {l['l0_nm']:.3f} nm: 38×a_g={l['38ag']:.3f}nm ({l['err38']:.2f}%), "
+          f"37×a_hBN={l['37ahBN']:.3f}nm ({l['err37']:.2f}%)")
+    print(f"    l_B/l₀ = {l['lB_over_l0']:.6f} ≈ 1/√(2π) = {l['target']:.6f} ({l['mag_err']:.3f}%)")
 
-    # --- Formula sheet ---
-    print(FORMULAS)
+    print(f"\n  N-SmA: ", end="")
+    for r in [0.80, R_C, 0.90, 0.95, 1.00]:
+        print(f"r={r:.2f}→α={alpha_nsma(r):.4f}  ", end="")
+    print()
+
+    print(f"\n  QH: κ={kappa_qh():.4f}(0.42), κ_QAH={kappa_qah():.4f}(0.38), "
+          f"ν_CC={nu_noninteracting():.4f}(2.593), ν_exp={nu_interacting():.4f}(2.38)")
+
+    print(f"\n  BAND STRUCTURE vs n:")
+    print(f"  {'n':>4}  {'band1':>7}  {'band2':>7}  {'band3':>7}  {'D_s':>5}")
+    for n in [1, 2, 3, 5, 8, 13, 53, 60]:
+        b = band_structure(n)
+        if 'error' not in b:
+            print(f"  {n:>4}  {b['band1']:>7.4f}  {b['band2']:>7.4f}  {b['band3']:>7.4f}  {b['D_s']:>5.3f}")
+
+    print(f"\n  CHERN NUMBERS (α=1/φ):")
+    for c in chern_numbers_at_alpha(1/PHI, 987, 6):
+        print(f"    IDS={c['ids']:.4f}  width={c['width']:.4f}  t={c['t_chern']:+d}")
+
+    print(f"\n  5→3 COLLAPSE:")
+    col = analyze_collapse()
+    print(f"    Outer sum={col.outer_chern_sum:+d}, Inner sum={col.inner_chern_sum:+d}, "
+          f"Alternates={col.alternates}, Valid={col.topologically_valid}")
