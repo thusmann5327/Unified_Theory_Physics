@@ -300,22 +300,93 @@ The identity φ² × r\_c = √5 is exact algebra regardless of whether ν = φ�
 
 ---
 
-## VI. Chern Numbers from Gap Labeling
+## VI. Chern Numbers and Topological Collapse
+
+### VI.A. Gap Labeling at Golden Flux
 
 At α = 1/φ, the gap labeling theorem assigns Chern numbers (Hall conductivities in units of e²/h) to each gap. The IDS at a gap satisfies:
 
 $$\text{IDS} = s + t \cdot \alpha$$
 
-where s and t are integers and t is the Chern number. For the five-band partition:
+where s and t are integers and t is the Chern number (TKNN invariant). For the five-band partition:
 
-| Gap | IDS | (s, t) | Chern number | σ\_xy (e²/h) |
-|-----|-----|--------|-------------|-------------|
-| σ₁/σ₂ | 1/φ⁴ ≈ 0.146 | (0, -1) | −1 | −1 |
-| σ₂/σ₃ | 1/φ² ≈ 0.382 | (0, 1) | 1 | 1 |
-| σ₃/σ₄ | 1/φ ≈ 0.618 | (1, -1) | −1 | −1 |
-| σ₄/σ₅ | 1 − 1/φ⁴ ≈ 0.854 | (1, 1) | 1 | 1 |
+| Gap | IDS | (s, t) | Chern | Gap width |
+|-----|-----|--------|-------|-----------|
+| σ₁/σ₂ | 1/φ³ ≈ 0.236 | (−1, +2) | **+2** | small (0.17) |
+| σ₂/σ₃ | 1/φ² ≈ 0.382 | (1, −1) | **−1** | **large (1.69)** |
+| σ₃/σ₄ | 1/φ ≈ 0.618 | (0, +1) | **+1** | **large (1.69)** |
+| σ₄/σ₅ | 1 − 1/φ³ ≈ 0.764 | (2, −2) | **−2** | small (0.30) |
 
-The Chern numbers alternate ±1 across the five-band structure. The total Chern number (sum over all filled bands below each gap) gives the quantized Hall conductivity. At golden flux, the quantum Hall effect exhibits a Fibonacci-indexed sequence of plateaux.
+The Chern numbers alternate **+2, −1, +1, −2** across the four gaps. They form two mirror pairs: the inner pair (−1, +1) flanking the observer band σ₃, and the outer pair (+2, −2) at the spectrum edges. The inner pair has |t| = 1 (fundamental channels), while the outer pair has |t| = 2 (doubled channels reflecting the finer Cantor sub-structure at the endpoints).
+
+### VI.B. Cumulative Hall Conductivity
+
+The cumulative Chern number — the total Hall conductivity when all bands below a gap are filled — reveals the topological accounting:
+
+| Fill to gap | Individual Chern | Cumulative | Note |
+|------------|-----------------|------------|------|
+| σ₁/σ₂ (0.236) | +2 | **+2** | Outer gap |
+| σ₂/σ₃ (0.382) | −1 | **+1** | Inner gap |
+| σ₃/σ₄ (0.618) | +1 | **+2** | Inner gap |
+| σ₄/σ₅ (0.764) | −2 | **0** | Outer gap (returns to zero) |
+
+The cumulative Chern number returns to **zero** after filling all bands — the total topological charge is conserved. The inner gaps carry opposite Chern numbers (−1, +1) that flank the observer symmetrically.
+
+### VI.C. The 5→3 Collapse as Topological Pair Annihilation
+
+The 5→3 band collapse is not arbitrary. It is determined by the Chern number structure. Here is the mechanism:
+
+**Which gaps survive:** The two **largest** gaps (at IDS = 0.382 and 0.618, width 1.69) survive the collapse. These are the inner gaps with Chern numbers −1 and +1. They define the boundaries of the observer sector σ₃.
+
+**Which gaps close:** The two **smaller** gaps (at IDS = 0.236 and 0.764, widths 0.17 and 0.30) close during the collapse. These are the outer gaps with Chern numbers +2 and −2.
+
+**What happens to the bands:**
+
+```
+BEFORE (5 bands):
+  σ₁     │gap(+2)│    σ₂     │gap(−1)│    σ₃     │gap(+1)│    σ₄     │gap(−2)│    σ₅
+ (1/φ³)  │ CLOSES │  (1/φ⁴)   │SURVIVES│  (1/φ³)   │SURVIVES│  (1/φ⁴)   │ CLOSES │ (1/φ³)
+endpoint │        │   dark    │        │ observer  │        │   dark    │        │endpoint
+
+AFTER (3 bands):
+  σ₁' = σ₁+σ₂       │  gap(−1)  │       σ₃' = σ₃       │  gap(+1)  │       σ₅' = σ₄+σ₅
+  (matter+conduit)    │ SURVIVES  │      (observer)       │ SURVIVES  │      (conduit+matter)
+```
+
+Each endpoint band **absorbs its adjacent dark band** by closing their shared gap. The +2 Chern at σ₁/σ₂ annihilates with the −2 Chern at σ₄/σ₅ — they are topological conjugates that cancel globally (+2 + (−2) = 0). The doubled Chern numbers at the outer gaps (|t| = 2 vs |t| = 1 at the inner gaps) reflect the finer Cantor sub-structure at the endpoints: each outer gap carries two topological channels because it sits at a deeper level of the Fibonacci hierarchy.
+
+### VI.D. Why the Observer Band Is Topologically Neutral
+
+After collapse, the observer band σ₃ is flanked by Chern numbers **−1 on the left** and **+1 on the right**. The total topological charge surrounding σ₃ is −1 + (+1) = 0. The observer sector is **topologically neutral** — it has equal and opposite Chern numbers on both sides.
+
+This is not a coincidence. It is the condition for unbiased measurement. A measurement operator that couples preferentially to one topological sector would produce systematically biased observations. The 5→3 collapse produces the unique 3-band structure where the observer is topologically balanced.
+
+### VI.E. The Annihilation Selection Rule
+
+Not all gap-closing patterns are topologically allowed. The collapse must obey:
+
+**Rule:** The Chern numbers of the closing gaps must sum to zero.
+
+Closing gaps: (+2) + (−2) = 0. ✓
+
+This is a topological conservation law. The total Chern number is a topological invariant — it cannot change under continuous deformation. The 5→3 collapse is a continuous process (gaps narrow to zero width), so only Chern-number-conserving closures are permitted. The outer pair (+2, −2) sums to zero, satisfying the constraint.
+
+Note that the inner pair also sums to zero: (−1) + (+1) = 0. Both pairs are individually neutral. This double neutrality — closing pair sums to zero AND surviving pair sums to zero — is a stronger condition than bare conservation. It means the 5→3 collapse preserves topological neutrality at every stage, not just globally.
+
+### VI.F. Fibonacci-Indexed Hall Plateaux
+
+At golden flux, the quantum Hall plateaux follow a Fibonacci-indexed sequence. Each gap in the Cantor hierarchy has IDS = {m/φ} mod 1, and the Chern number t is determined by the Diophantine equation IDS = s + tα with |t| minimized. The first several gaps beyond the five-band level:
+
+| IDS | Chern t | Gap level |
+|-----|---------|----------|
+| 0.236 | +2 | Level 2 (five-band outer) |
+| 0.382 | −1 | Level 1 (five-band inner) |
+| 0.618 | +1 | Level 1 (five-band inner) |
+| 0.764 | −2 | Level 2 (five-band outer) |
+| 0.146 | −3 | Level 3 |
+| 0.854 | +3 | Level 3 |
+
+The Chern numbers grow at deeper Cantor levels — |t| = 1 at the inner five-band gaps, |t| = 2 at the outer five-band gaps, |t| = 3 at the next level — reflecting the self-similar structure of the butterfly. The Chern magnitude indexes the Cantor hierarchy depth. This is the Fibonacci-indexed Hall conductivity sequence that the golden flux uniquely produces.
 
 ---
 
