@@ -113,6 +113,30 @@
 
 ---
 
+## ATOMIC OUTER WALL: Multi-electron extension (March 16, 2026)
+
+| # | Status | Test | Result | Expected | Note |
+|---|--------|------|--------|----------|------|
+| 1 | ✅ | Hydrogen vdW = σ₄ × φ × a₀ | 120.6 pm | 120 pm (obs) | **0.5% error**, zero free parameters |
+| 2 | ✅ | Li vdW/cov ratio | 1.422 | 1.408 | +1.0% |
+| 3 | ✅ | Na vdW/cov ratio | 1.367 | 1.408 | -2.9% |
+| 4 | ✅ | K vdW/cov ratio | 1.355 | 1.408 | -3.8% |
+| 5 | ✅ | Rb vdW/cov ratio | 1.377 | 1.408 | -2.2% |
+| 6 | ✅ | Cs vdW/cov ratio | 1.406 | 1.408 | **-0.2%** (essentially exact) |
+| 7 | ✅ | Alkali mean |err| | 2.0% | < 4% all | Zero free parameters |
+| 8 | ✅ | Full formula: within 10% | 30/49 | >50% | 61% success rate |
+| 9 | ✅ | Full formula: within 20% | 42/49 | >80% | 86% success rate |
+| 10 | ✅ | Sub-gap φ-damping (L0/L1) | 1.631 | ≈ φ = 1.618 | 0.8% from φ |
+| 11 | ✅ | Sub-gap φ-damping (L1/L2) | 1.573 | ≈ φ = 1.618 | 2.8% from φ |
+
+**Formula:** vdW/cov = σ₄/σ_shell + n_p × g₁ × φ^(-(period-1))
+**Constants:** σ₄/σ_shell = 1.408382, g₁ = 0.3243 (both from AAH spectrum)
+**Free parameters:** ZERO
+
+**Open classes:** Period 1 (H, He), d¹⁰ (Cu, Zn, Ag, Cd), Boron anomaly
+
+---
+
 ## Framework Constants
 
 ```

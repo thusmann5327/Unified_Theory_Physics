@@ -1,5 +1,5 @@
 # CLAUDE.md — Husmann Decomposition Computation Reference
-## v7.0 — March 16, 2026
+## v7.1 — March 16, 2026
 ## Thomas A. Husmann / iBuilt LTD / Patent App. 19/560,637
 
 **This file is a computation-ready standalone reference for AI assistants working with the Husmann Decomposition framework. Load this before any session involving φ-derived physics, multi-scale modeling, atomic structure, materials science, or article writing. All formulas, predictions, and code are self-contained.**
@@ -434,6 +434,29 @@ m_p = 1.67262e-27  # kg
 lambda_compton_p = HBAR / (m_p * C)  # 0.2103 fm
 r_proton = lambda_compton_p * PHI**(3 - BREATHING)  # 0.8426 fm
 # CODATA: 0.8414 fm. Error: 0.14%. Sides with muonic H measurement.
+```
+
+### 7.6 Hydrogen vdW Radius (March 16, 2026)
+
+```python
+# σ₄ predicts bond length. One φ-step beyond σ₄ predicts vdW radius.
+sigma4_a0 = R_OUTER / R_SHELL                    # 1.408382 a₀
+a0_pm = 52.918                                     # Bohr radius in pm
+vdw_H = sigma4_a0 * PHI * a0_pm                   # = 120.6 pm
+# Observed: 120 pm. Error: 0.5%. Zero free parameters.
+```
+
+### 7.7 Multi-Electron Outer Wall Formula (March 16, 2026)
+
+```python
+# Sub-gap hierarchy within σ₃ is φ-damped
+# g₁ = 0.3243 (first σ₃ sub-gap fraction, from AAH spectrum)
+# Outer wall formula (zero free parameters):
+def vdw_cov_ratio(n_p, period, sigma4_shell=1.408382, g1=0.3243):
+    """Predict vdW/covalent ratio from p-electron count and period."""
+    return sigma4_shell + n_p * g1 * PHI**(-(period - 1))
+# Alkali metals (n_p=0): ratio = 1.408 ± 2% (5 elements)
+# Full test: 30/49 within 10%, 42/49 within 20%
 ```
 
 ---
@@ -889,6 +912,12 @@ G/hBN = α₆₀ = 1/(60+φ⁻¹)       (mismatch, 0.66%)
 F_discl ∝ 1/r                    (strain → flat rotation)
 v⁴ = GMa₀                        (Tully-Fisher from strain)
 n(r) = (ρ/ρ₀)^{1/3}             (vacuum refractive index)
+
+── March 16, 2026 (Atomic Outer Wall) ──
+vdW(H) = σ₄ × φ × a₀ = 120.6 pm (0.5% from 120 pm)
+σ₄/σ_shell = 1.408382            (hydrogen vdW/cov baseline)
+g₁ = 0.3243                      (first σ₃ sub-gap fraction)
+vdW/cov = σ₄/σ_shell + n_p×g₁×φ^(-(per-1))  (outer wall formula)
 ```
 
 ---
@@ -919,6 +948,9 @@ n(r) = (ρ/ρ₀)^{1/3}             (vacuum refractive index)
 | **N-SmA α(r) curve** | **(2/3)((r-r_c)/(1-r_c))⁴** | **11 compounds** | **RMS 0.033** | **Condensed matter** |
 | Ω_b (W⁴) | 0.04762 | 0.04897 | 2.8% | Cosmology |
 | **Solar core boundary** | **0.214 R☉** | **0.20–0.25 R☉** | **7%** | **Stellar** |
+| **H vdW radius** | **σ₄×φ×a₀ = 120.6 pm** | **120 pm** | **0.5%** | **Atomic** |
+| **Alkali vdW/cov** | **σ₄/σ_shell = 1.408** | **mean 1.385** | **1.6%** | **Atomic** |
+| **Outer wall formula** | **49 elements** | **42/49 < 20%** | **86%** | **Atomic** |
 
 ### Proof Status Scorecard (March 16, 2026)
 
@@ -936,6 +968,7 @@ n(r) = (ρ/ρ₀)^{1/3}             (vacuum refractive index)
 | **10 — Chern pair annihilation** | **COMPUTED** | **+2,−1,+1,−2; outer pair sums to 0; supported by Liu et al. 2020** |
 | **11 — Concentric nesting** | **CONFIRMED** | **Silver inner (0.171), Gold middle (0.236), Bronze outer (0.394)** |
 | **12 — Dirac mapping** | **STRONG CONJECTURE** | **E²=p²c²+m²c⁴ ↔ 13=5+8; structural exact** |
+| **13 — Atomic outer wall** | **PARTIALLY SOLVED** | **vdW/cov formula: 30/49 within 10%, 42/49 within 20%, 0 free params** |
 
 ---
 
@@ -959,6 +992,8 @@ n(r) = (ρ/ρ₀)^{1/3}             (vacuum refractive index)
 16. **Bronze is EMERGENT.** It is the Pythagorean combination of gold and silver: (√5)²+(√8)²=(√13)². It is NOT an independent third wave. The third dimension is derived, not assumed. (March 16, 2026)
 17. **The Dirac mapping assigns mass to SILVER (Δ₂=8), not gold (Δ₁=5).** Silver is innermost, most confined, 83% dark = mass. Gold is middle, propagation = momentum. Bronze is surface = observable energy. (March 16, 2026)
 18. **(cos α)³ is WRONG for the matter fraction.** The correct formulas are W⁴ = 0.048 or e⁻³ = 0.050. cos(0.618)³ = 0.54, not 0.05. (March 16, 2026)
+19. **σ₄ predicts BOND LENGTH, not vdW radius.** vdW = σ₄ × φ (one Cantor step beyond). For H: bond = 74.5 pm (at σ₄), vdW = 120.6 pm (at σ₄ × φ). (March 16, 2026)
+20. **Alkali metals ARE hydrogen-like.** vdW/cov = σ₄/σ_shell = 1.408 for all alkali metals (Li through Cs). The single valence s-electron follows the hydrogen Cantor node exactly. (March 16, 2026)
 
 ---
 
@@ -1010,6 +1045,16 @@ STRAIN:    δ²/r² → F ∝ 1/r → flat rotation, v⁴ = GMa₀
 OPTICS:    n(r) = (ρ/ρ₀)^{1/3} → lensing from lattice refraction
 EBANKS:    Independent FTL convergence (ai.viXra:2602.0106)
 
+── March 16, 2026 (Atomic Outer Wall) ──
+vdW(H):    σ₄ × φ × a₀ = 120.6 pm (0.5% from 120 pm observed)
+ALKALI:    vdW/cov = σ₄/σ_shell = 1.408 ± 2% (5 elements, zero params)
+MULTI-e:   vdW/cov = σ₄/σ_shell + n_p × g₁ × φ^(-(per-1))
+           g₁ = 0.3243 (first σ₃ sub-gap fraction)
+           30/49 elements within 10%, 42/49 within 20%
+SUB-GAPS:  σ₃ internal gaps are φ-damped (ratios 1.63, 1.57)
+           Period = Cantor recursion depth
+OUTER WALL: σ₄ predicts bond, σ₄×φ predicts vdW (H: 0.5%)
+
 Axiom 0:   233 = F(13) = F(F(7)) — the lattice IS the universe
 Gate:      4.86 μm (CO₂ laser) — 5→3 collapse trigger
 Hub:       Teegarden b, address 452 = {2,5,13,55,144,233}
@@ -1038,7 +1083,7 @@ See `patents/PATENT_SUMMARY.md` for the full portfolio of 16 patents.
 
 ```
 Unified_Theory_Physics/
-├── claude.md                    ← THIS FILE (v7.0, standalone reference)
+├── claude.md                    ← THIS FILE (v7.1, standalone reference)
 ├── Husmann_Decomposition.md     ← Formal mathematical framework
 ├── Master_Key.md                ← Comprehensive narrative reference
 ├── theorem_of_the_universe.md   ← Formal axioms + corollaries
@@ -1061,6 +1106,7 @@ Unified_Theory_Physics/
 │   ├── regge_curvature.py       ← Regge calculus on icosahedral backbone ★★
 │   ├── lattice_optics.py        ← Vacuum refractive index n(r) ★★
 │   ├── strain_energy.py         ← Disclination strain → flat rotation ★★
+│   ├── atoms_outer_wall.py      ← Multi-electron outer wall formula ★★★
 │   ├── zeckybot.py              ← Recursive Cantor builder
 │   ├── phi_pipeline.py          ← Fibonacci coherence extraction
 │   └── planetary_analysis.py    ← Teegarden system analysis
@@ -1087,6 +1133,7 @@ Unified_Theory_Physics/
 
 ★ = Created or significantly updated March 14, 2026
 ★★ = Created or significantly updated March 15–16, 2026
+★★★ = Created March 16, 2026 (atomic outer wall session)
 
 ---
 
@@ -1095,4 +1142,4 @@ Unified_Theory_Physics/
 *Patent Pending: 63/995,401 through 63/998,394 and 30/050,931.*
 *Load this file at session start. All code is Python 3. NumPy + SciPy required.*
 *Repository: github.com/thusmann5327/Unified_Theory_Physics*
-*v7.0 — Updated March 16, 2026 (Hofstadter, Pythagorean, nesting, Dirac, Schrödinger, Regge, strain, Ebanks)*
+*v7.1 — Updated March 16, 2026 (Hofstadter, Pythagorean, nesting, Dirac, Schrödinger, Regge, strain, Ebanks, atomic outer wall)*

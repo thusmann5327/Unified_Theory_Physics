@@ -89,6 +89,33 @@ The "baryonic matter" (~5%) is the **observable** portion of the σ₁ sector. T
 
 ---
 
+### 1.5 Multi-Electron Outer Wall — **PARTIALLY SOLVED**
+
+**Problem**: Predict vdW and covalent radii for multi-electron atoms from Cantor architecture.
+
+**Solution (March 16, 2026)**: The outer wall formula with zero free parameters:
+
+$$\text{vdW/cov} = \sigma_4/\sigma_{\text{shell}} + n_p \times g_1 \times \varphi^{-(period-1)}$$
+
+Where σ₄/σ_shell = 1.408382 (from AAH spectrum), g₁ = 0.3243 (first σ₃ sub-gap fraction), n_p = p-electrons in valence shell (0-6), period = principal quantum number.
+
+**Key results:**
+- Hydrogen vdW = σ₄ × φ × a₀ = 120.6 pm (observed: 120 pm, 0.5% error)
+- Alkali metals: vdW/cov = σ₄/σ_shell = 1.408 ± 2% (5 elements)
+- Full formula: 30/49 elements within 10%, 42/49 within 20%
+
+**Still open:**
+- Period 1 derivation (H and He vdW from Cantor node directly)
+- d¹⁰ compression term (filled d-shell compresses outer wall below 1.408)
+- Boron/period-2 p¹ anomaly (covalent radius anomalously small)
+- Predict covalent and vdW radii SEPARATELY (not just the ratio)
+
+> See: `algorithms/atoms_outer_wall.py` | `theory/atomic.md` §5
+
+**Status**: ✓ **PARTIALLY SOLVED** (March 16, 2026)
+
+---
+
 ## Priority 2: Theoretical Extensions
 
 ### 2.1 Gravity Integration

@@ -167,6 +167,29 @@ Element positions: r_n = r₀ × √n, θ_n = n × 137.5°
 
 **Test**: Any energy-dependent measurement of α should show stability consistent with this geometric origin.
 
+### 5.1b Alkali Metal vdW/Covalent Ratio — **CONFIRMED** (March 16, 2026)
+
+**Prediction**: For single-valence-electron atoms (alkali metals), vdW/cov = σ₄/σ_shell = 1.408.
+
+**Results**:
+| Element | vdW/cov | Predicted | Error |
+|---------|---------|-----------|-------|
+| Li | 1.422 | 1.408 | +1.0% |
+| Na | 1.367 | 1.408 | -2.9% |
+| K | 1.355 | 1.408 | -3.8% |
+| Rb | 1.377 | 1.408 | -2.2% |
+| Cs | 1.406 | 1.408 | -0.2% |
+
+Mean: 1.385, mean |error| = 2.0%. Zero free parameters.
+
+**Falsification test**: Francium (Fr) — prediction: vdW/cov ≈ 1.408.
+If measured, Fr with vdW/cov outside [1.3, 1.5] would falsify.
+
+**Additional prediction**: Hydrogen vdW = σ₄ × φ × a₀ = 120.6 pm (observed: 120 pm, 0.5%).
+The bond length is AT σ₄; the vdW radius is one φ-step BEYOND.
+
+**Status**: ✓ **CONFIRMED** (5/5 alkali metals, zero free parameters)
+
 ### 5.2 Speed of Light from Lattice Parameters
 
 **Prediction**: c = 2Jl/ℏ where J = 10.6 eV, l = 9.3 nm

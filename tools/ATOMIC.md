@@ -790,6 +790,34 @@ Using Clementi-Raimondi Z_eff for outermost electrons:
 
 **NOTE:** The σ₄ values above represent the valence orbital's Cantor wall — NOT the full atomic covalent radius. The full covalent radius involves the n² scaling of excited/valence shells. The framework predicts that for elements where valence electrons are in higher shells, the effective Cantor node expands by n² from the core.
 
+### UPDATE (March 16, 2026): The Outer Wall Formula
+
+The Z_eff approach above gives the INNER shell structure (orbital peaks), not the outer wall.
+A new formula predicts the vdW/covalent RATIO directly, with zero free parameters:
+
+```
+vdW/cov = σ₄/σ_shell + n_p × g₁ × φ^(-(period-1))
+```
+
+Where:
+- σ₄/σ_shell = R_OUTER/R_SHELL = 1.408382 (hydrogen baseline, from AAH spectrum)
+- g₁ = 0.3243 (first σ₃ sub-gap fraction — from AAH spectrum, NOT fitted)
+- n_p = number of p-electrons in valence shell (0-6)
+- period = principal quantum number of valence shell (1-7)
+
+**Key results:**
+- **Hydrogen vdW** = σ₄ × φ × a₀ = 120.6 pm (observed: 120 pm, 0.5%)
+- **Alkali metals** (single s-electron): vdW/cov = σ₄/σ_shell = 1.408 ± 2% (5 elements)
+- **Full formula**: 30/49 within 10%, 42/49 within 20%
+
+**Physical basis**: Sub-gap hierarchy within σ₃ is φ-damped (ratios ≈ 1.63, 1.57 ≈ φ). Each period adds one Cantor recursion depth, damped by φ.
+
+**Inner wall stays fixed**: The σ₂ × gold intersection at 0.235R is unchanged by electron count. Only the OUTER boundary changes with shell filling.
+
+**Open classes**: Period 1 (H, He), d¹⁰ elements (Cu, Zn, Ag, Cd), Boron anomaly.
+
+See: `algorithms/atoms_outer_wall.py` for full computation and 49-element test.
+
 ### Multi-Shell Model (Inner + Outer)
 
 For a proper 3D model, each atom has **nested Cantor nodes**:

@@ -61,6 +61,10 @@ try:
         strain_energy_density, disclination_force, rotation_velocity,
         flat_velocity, wall_fraction_to_acceleration
     )
+    from atoms_outer_wall import (
+        vdw_over_cov, derive_all_constants as derive_outer_wall_constants,
+        compute_sigma3_subgaps
+    )
 except ImportError:
     # Modules may not be on path if UNIVERSE.py is run from a different directory
     pass
