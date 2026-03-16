@@ -1,4 +1,4 @@
-# First 3D AAH Eigenstates at Metallic Mean Frequencies
+# 3D AAH Eigenstates — N=13 vs N=34 Comparison
 
 ## Experimental Record — March 16, 2026
 
@@ -8,111 +8,105 @@
 
 ## Setup
 
-Three-dimensional Aubry-André-Harper Hamiltonian at the self-dual critical point V = 2J, constructed as the tensor sum of three 1D AAH Hamiltonians:
+3D AAH at V=2J, tensor sum of three 1D Hamiltonians. Two configurations at each N:
 
-$$H_{3D} = H_x \otimes I \otimes I + I \otimes H_y \otimes I + I \otimes I \otimes H_z$$
+- **Isotropic bronze:** α = 0.3028 on all three axes
+- **Anisotropic:** α_silver = 0.4142 (x), α_gold = 0.6180 (y), α_bronze = 0.3028 (z)
 
-Each 1D Hamiltonian:
-
-$$H\psi(n) = J[\psi(n+1) + \psi(n-1)] + V\cos(2\pi\alpha \cdot n)\psi(n)$$
-
-with J = 1, V = 2 (critical point).
-
-Lattice size: N = 13 sites per axis (13³ = 2197 total states).
-
-N = 13 was chosen because 13 = F(7), the seventh Fibonacci number and the discriminant of the bronze metallic mean (Δ₃ = 3² + 4 = 13).
-
-## Frequencies
-
-| Axis | Metallic mean | n | Frequency α = 1/δ_n |
-|---|---|---|---|
-| x | Silver | 2 | 0.4142 (= √2 − 1) |
-| y | Gold | 1 | 0.6180 (= 1/φ) |
-| z | Bronze | 3 | 0.3028 (= (√13−3)/2) |
-
-## Method
-
-- Sparse matrix construction using `scipy.sparse.kron` and `scipy.sparse.diags`
-- 20 eigenstates nearest to E = 0 found via shift-invert Lanczos (`scipy.sparse.linalg.eigsh`, sigma=0)
-- Eigenvectors reshaped to 3D density |ψ(x,y,z)|²
-- Radial profile computed from lattice center (site 6,6,6), binned by distance
-
-## Experiment 1: Isotropic Bronze
-
-All three axes set to α_bronze = 0.3028.
-
-**Eigenvalues nearest E = 0:**
-
-0.0033, 0.0033, 0.0033, 0.0033, 0.0033
-
-(Five-fold near-degeneracy at E ≈ 0.003)
-
-**Radial density profile (state closest to E = 0):**
-
-| r/R | ρ(r) | Cantor node ratio |
-|---|---|---|
-| 0.083 | 0.000001 | 0.073 (core) |
-| 0.250 | 0.000094 | 0.235 (inner wall) |
-| 0.417 | 0.000342 | 0.397 (shell) |
-| 0.583 | 0.000533 | 0.559 (outer wall) |
-| 0.750 | 0.000436 | — |
-| 0.917 | 0.000174 | — |
-
-**Observation:** Density increases from core to outer wall, peaks at r/R ≈ 0.583 (near the Cantor outer wall ratio 0.559), then decreases beyond.
-
-## Experiment 2: Anisotropic (Silver / Gold / Bronze)
-
-x-axis: α_silver = 0.4142, y-axis: α_gold = 0.6180, z-axis: α_bronze = 0.3028.
-
-**Eigenvalues nearest E = 0:**
-
-0.0013, −0.0032, −0.0036, −0.0081, −0.0081
-
-(Degeneracy broken — five distinct eigenvalues)
-
-**Radial density profile (state closest to E = 0):**
-
-| r/R | ρ(r) |
-|---|---|
-| 0.083 | 0.000016 |
-| 0.250 | 0.000021 |
-| 0.417 | 0.000132 |
-| 0.583 | 0.000308 |
-| 0.750 | 0.000608 |
-| 0.917 | 0.000565 |
-
-**Observation:** Density peaks at r/R ≈ 0.750, shifted outward compared to isotropic case. The three different frequencies break spherical symmetry.
-
-## Experiment 3: Factorization Test
-
-Question: Are the eigenvalues of the isotropic bronze Hamiltonian (α_bronze on all three axes) the same as the anisotropic Hamiltonian (α_silver, α_gold, α_bronze)?
-
-**Result:** 20/20 eigenvalues near E = 0 matched within tolerance 0.01.
-
-**Observation:** At N = 13, the near-zero eigenvalues of the isotropic and anisotropic systems overlap. This is consistent with bronze being a combination of silver and gold, but N = 13 provides only 6 radial bins and minimal Cantor hierarchy depth. The test needs repetition at N = 34 and N = 55 to be conclusive.
-
-## What Was Computed
-
-- First-ever 3D AAH eigenstates at three distinct metallic mean frequencies
-- Radial density profiles of the lowest-energy states near E = 0
-- Comparison between isotropic (single frequency) and anisotropic (three frequencies) configurations
-- Eigenvalue overlap test between configurations
-
-## What Was Not Computed
-
-- Chern numbers of the 3D bands
-- Higher-N convergence (N = 34, 55, 233)
-- Angular density profiles (orbital structure)
-- Comparison with hydrogen radial wavefunctions
-- Band-edge identification in the full 3D spectrum
-- Time evolution or dynamics
-
-## Code
-
-The computation is fully contained in `atoms_from_scratch.py` (Python 3, requires NumPy and SciPy). Runs in < 1 second on any modern machine at N = 13.
-
-Repository: https://github.com/thusmann5327/Unified_Theory_Physics
+Eigenstates nearest E = 0 via shift-invert Lanczos. Radial density from lattice center.
 
 ---
 
-*Recorded March 16, 2026. No interpretation beyond the stated observations.*
+## N = 13 (2,197 states, 0.2s)
+
+### Isotropic Bronze — E = 0.003 (degenerate)
+
+| r/R | ρ(r) |
+|---|---|
+| 0.042 | 0.000002 |
+| 0.208 | 0.000097 |
+| 0.375 | 0.000289 |
+| **0.458** | **0.000940** ← peak |
+| 0.625 | 0.000601 |
+| 0.792 | 0.000379 |
+| 0.958 | 0.000217 |
+
+Peak at r/R ≈ 0.46. Broad distribution, middle-to-outer.
+
+### Anisotropic — E = 0.001, −0.003, −0.004 (broken degeneracy)
+
+| r/R | ρ(r) |
+|---|---|
+| 0.042 | 0.000016 |
+| 0.375 | 0.000118 |
+| 0.625 | 0.000527 |
+| **0.792** | **0.000922** ← peak |
+| 0.958 | 0.000443 |
+
+Peak at r/R ≈ 0.79. Pushed outward.
+
+---
+
+## N = 34 (39,304 states, 19–39s)
+
+### Isotropic Bronze — E = 0.000 (degenerate, closer to zero)
+
+| r/R | ρ(r) |
+|---|---|
+| **0.029** | **0.000479** ← peak 1 |
+| 0.088 | 0.000355 |
+| 0.147 | 0.000267 |
+| 0.206 | 0.000127 |
+| 0.265 | 0.000431 |
+| **0.324** | **0.000587** ← peak 2 |
+| 0.382 | 0.000192 |
+| 0.500 | 0.000124 |
+| 0.618 | 0.000042 |
+| 0.794 | 0.000011 |
+| 0.971 | 0.000003 |
+
+Two peaks: core (r/R ≈ 0.03) and shell (r/R ≈ 0.32). Monotonic falloff beyond. State localizes at center.
+
+### Anisotropic — E ≈ 0.000 (near-degenerate)
+
+| r/R | ρ(r) |
+|---|---|
+| 0.029 | 0.000000 |
+| 0.206 | 0.000000 |
+| 0.382 | 0.000002 |
+| 0.559 | 0.000004 |
+| 0.676 | 0.000014 |
+| 0.794 | 0.000028 |
+| 0.912 | 0.000021 |
+| **0.971** | **0.000048** ← peak |
+
+Density at the edge. Monotonic increase center to surface. This is a surface/edge state.
+
+---
+
+## Observations
+
+1. **N=13 and N=34 give qualitatively different profiles.** The N=13 result is not a scaled version of N=34. The Cantor hierarchy changes character as more levels develop.
+
+2. **Isotropic bronze at N=34 localizes at center with two peaks.** Peaks at r/R ≈ 0.03 and ≈ 0.32. Suggestive of core + shell structure. Does not align precisely with Cantor ratios 0.073 and 0.235 — resolution may be insufficient, or the structure may be different from the 1D prediction.
+
+3. **Anisotropic at N=34 is a surface state.** When three different frequencies are used, the E ≈ 0 state localizes at the lattice boundary. This may be a topological edge state or finite-size artifact.
+
+4. **Eigenvalues converge to E = 0 with increasing N.** N=13: E ≈ 0.003. N=34: E ≈ 0.000. Band-edge states sharpen as Cantor hierarchy deepens.
+
+5. **The two configurations diverge at N=34.** At N=13 they overlapped. At N=34 they are qualitatively different (center-localized vs edge-localized). Bronze may not factorize at sufficient depth.
+
+---
+
+## Next Steps
+
+- N = 55 (166K states, ~5–10 min): do the two peaks in isotropic bronze sharpen toward Cantor ratios?
+- N = 89 (705K states, ~1 hr): full convergence test
+- Angular profiles: does the anisotropic state show orbital-like angular structure?
+- Multiple eigenstates: are there s-like, p-like, d-like states in the near-E=0 spectrum?
+- Chern numbers of the 3D bands
+
+---
+
+*Recorded March 16, 2026.*
+*Code: atoms_from_scratch.py, atoms_n34.py*
