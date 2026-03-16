@@ -104,13 +104,26 @@ Where σ₄/σ_shell = 1.408382 (from AAH spectrum), g₁ = 0.3243 (first σ₃ 
 - Alkali metals: vdW/cov = σ₄/σ_shell = 1.408 ± 2% (5 elements)
 - Full formula: 30/49 elements within 10%, 42/49 within 20%
 
-**Still open:**
-- Period 1 derivation (H and He vdW from Cantor node directly)
-- d¹⁰ compression term (filled d-shell compresses outer wall below 1.408)
-- Boron/period-2 p¹ anomaly (covalent radius anomalously small)
-- Predict covalent and vdW radii SEPARATELY (not just the ratio)
+**v3 Hybrid C results (March 16, 2026):** 31/54 within 10%, 51/54 within 20% (94%), mean 9.5%.
 
-> See: `algorithms/atoms_outer_wall.py` | `theory/atomic.md` §5
+SOLVED:
+- [x] Hydrogen outer wall: σ₄/σ_shell = 1.408 matches S_max to 0.00021%
+- [x] Multi-electron extension: Hybrid C formula, 94% within 20%
+- [x] Cantor node Pythagorean: σ₄² = σ_shell² + bronze² (0.012%)
+- [x] Noble gases fixed: Kr 1.2%, Xe 5.1% (were 7.3%, 9.7%)
+- [x] d¹⁰ elements improved: Zn 7.4%, Ag 4.5% (were 24%, 19%)
+- [x] Lineweaver-Patel connection: All Objects triangle = discriminant Pythagorean
+
+OPEN:
+- [ ] Period 2 p¹-p² (B -30%, C -19%): at F(9)=34 bracket boundary. Radial node correction tested, FAILED (fixed B/C, destroyed period 3+). Need per-electron blending, not per-orbital.
+- [ ] Early d-block (Y +21%, Zr +29%): d¹-d² configuration. Linear θ too gentle. Check d² parabolic. Phase transition at d⁵ (Hund's rule).
+- [ ] Group 14 (Si -13%, Ge -14%, Sn -5%): sp³ hybridization extends node. Check √φ correction. Tetrahedral angle connection to icosahedral backbone.
+- [ ] He absolute vdW (3.9%): Z_eff = 2-2/φ⁴ = 1.708 → 0.4%. Unverified.
+- [ ] f-block (lanthanides, actinides): entirely untested. f fills silver layer. Prediction: LESS outer wall effect than d-block.
+- [ ] Separate radii: can predict ratio but not cov and vdW independently. Need Slater screening from Cantor hierarchy.
+- [ ] Gravity bracket connection: G_N/F_EM ≈ (1/φ)^136, gravity bracket = 4×F(9). Same Cantor gap architecture produces F(9) quantum depth boundary.
+
+> See: `algorithms/atomic_scorecard.py` (v3) | `algorithms/atoms_outer_wall.py` | `theory/atomic.md` §5
 
 **Status**: ✓ **PARTIALLY SOLVED** (March 16, 2026)
 

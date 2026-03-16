@@ -23,11 +23,27 @@ Core computational engines and signal processing pipelines.
 | [`interbrain_sim.py`](interbrain_sim.py) | 502B | Two-person brain coupling simulation via φ-coherence |
 | [`stim_protocols.py`](stim_protocols.py) | 974B | Stimulation waveform generation (protocols A/B/C) |
 
+### Atomic Physics
+
+| File | Size | Description |
+|------|------|-------------|
+| [`atomic_scorecard.py`](atomic_scorecard.py) | ~15K | **Full atomic prediction suite (v3)** — Hybrid C mode-selected formula for 56 elements. 140 total tests. `--summary`, `--element Z`, or full report |
+| [`atoms_outer_wall.py`](atoms_outer_wall.py) | ~22K | Multi-electron outer wall formula — derives all constants from AAH spectrum, tests 50 elements |
+
 ### Companion Scripts
 
 | File | Size | Description |
 |------|------|-------------|
 | [`planetary_analysis.py`](planetary_analysis.py) | 25K | Teegarden system analysis — standalone planetary frequency address computation |
+
+### March 15–16, 2026 Extensions
+
+| File | Size | Description |
+|------|------|-------------|
+| [`cantor_crossover.py`](cantor_crossover.py) | ~8K | Universal crossover operator — N-SmA, QH, GABA gate |
+| [`regge_curvature.py`](regge_curvature.py) | ~5K | Regge calculus on icosahedral backbone (standard physics) |
+| [`lattice_optics.py`](lattice_optics.py) | ~4K | Vacuum refractive index n(r) = (ρ/ρ₀)^{1/3} |
+| [`strain_energy.py`](strain_energy.py) | ~5K | Disclination strain → flat rotation curves, Tully-Fisher |
 
 ---
 

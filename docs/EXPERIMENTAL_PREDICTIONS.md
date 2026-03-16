@@ -190,6 +190,22 @@ The bond length is AT σ₄; the vdW radius is one φ-step BEYOND.
 
 **Status**: ✓ **CONFIRMED** (5/5 alkali metals, zero free parameters)
 
+### 5.1c Quantum Depth at the F(9) Boundary (March 16, 2026)
+
+**Prediction**: Atoms with quantum depth ≤ F(9) = 34 brackets (period 2 p-block) should show anomalous covalent radii relative to their vdW radii. The ratio vdW/cov for B and C is 2.29 and 2.24 — far above the period-2 formula prediction of 1.61 and 1.81. This is because their 2p orbitals have ZERO radial nodes, placing them at the Fibonacci gap boundary in the Cantor hierarchy.
+
+**Test**: Measure the pressure-dependent vdW radius of B and C in noble gas matrices. If the discrepancy is due to the covalent radius being anomalously small (not the vdW being anomalously large), then the vdW should match the formula's prediction of ~135 pm (B) and ~138 pm (C) when measured independently of covalent bonding.
+
+**Test**: The signed error of the ratio formula should correlate with the Compton-to-vdW bracket distance (quantum depth). Measured correlation: r = 0.43 (all atoms), r = 0.67 (p-block only). This is a framework prediction that can be tested against improved atomic radius measurements.
+
+### 5.1d Lineweaver-Patel Triangle Span (March 16, 2026)
+
+**Prediction**: The number of φ-brackets between the Planck length and the Hubble radius is N = 294. This gives α⁻¹ = N × W = 137.3 (0.22%). Any improvement in the measurement of the Hubble radius or Planck length that changes the bracket count from 294 would require a corresponding change in the predicted α.
+
+### 5.1e Gravity Bracket = 4 × F(9) (March 16, 2026)
+
+**Prediction**: The gravitational-to-electromagnetic force ratio G_N/F_EM ≈ (1/φ)^136 where 136 = 4 × F(9) = 4 × 34. The factor 4 is the number of Chern-carrying gaps (γ = GAMMA_DC from cantor_crossover.py). F(9) = 34 is the gap count in D=233. The gravity bracket position is not a free parameter — it's 4 times the gap count.
+
 ### 5.2 Speed of Light from Lattice Parameters
 
 **Prediction**: c = 2Jl/ℏ where J = 10.6 eV, l = 9.3 nm

@@ -446,17 +446,28 @@ vdw_H = sigma4_a0 * PHI * a0_pm                   # = 120.6 pm
 # Observed: 120 pm. Error: 0.5%. Zero free parameters.
 ```
 
-### 7.7 Multi-Electron Outer Wall Formula (March 16, 2026)
+### 7.7 Multi-Electron Outer Wall Formula — Hybrid C (March 16, 2026)
 
 ```python
-# Sub-gap hierarchy within σ₃ is φ-damped
-# g₁ = 0.3243 (first σ₃ sub-gap fraction, from AAH spectrum)
-# Outer wall formula (zero free parameters):
-def vdw_cov_ratio(n_p, period, sigma4_shell=1.408382, g1=0.3243):
-    """Predict vdW/covalent ratio from p-electron count and period."""
-    return sigma4_shell + n_p * g1 * PHI**(-(period - 1))
-# Alkali metals (n_p=0): ratio = 1.408 ± 2% (5 elements)
-# Full test: 30/49 within 10%, 42/49 within 20%
+# Constants from AAH spectrum:
+BASE = R_OUTER / R_SHELL                               # 1.408382
+G1 = 0.324325                                           # first σ₃ sub-gap fraction
+BOS = 0.394 / R_SHELL                                   # 0.992022 (bronze_σ₃/σ_shell)
+DARK_GOLD = 0.290                                        # gold axis dark fraction
+
+# Hybrid C — mode selected by electron block:
+# s/p-block:  ratio = BASE + n_p × G1 × φ^(-(per-1))         [additive]
+# d-block:    ratio = √(1 + (θ × BOS)²),  θ = 1-(n_d/10)×0.29  [Pythagorean]
+# noble gas:  ratio = √(1 + (θ × BOS)²),  θ = 1+n_p×(G1/BOS)×φ^(-(per-1))
+
+# n_d counts ONLY valence d-electrons (d-block). Core d in p/s/ng excluded.
+# Score: 31/54 <10%, 51/54 <20% (94%), mean 9.5%, 0 free parameters.
+# Run: python3 algorithms/atomic_scorecard.py --element Z
+
+# Cantor Node Pythagorean: σ₄² = σ_shell² + bronze_σ₃² (0.012%)
+# Quantum depth: bz(r_vdw) - bz(λ_Compton) ≈ 33-40 brackets for all atoms
+# F(9) = 34 = Fibonacci gap boundary. Period 2 p-block at depth 33-34.
+# Gravity bracket = 4 × F(9) = 136 (double-fold interference center).
 ```
 
 ---
@@ -950,7 +961,7 @@ vdW/cov = σ₄/σ_shell + n_p×g₁×φ^(-(per-1))  (outer wall formula)
 | **Solar core boundary** | **0.214 R☉** | **0.20–0.25 R☉** | **7%** | **Stellar** |
 | **H vdW radius** | **σ₄×φ×a₀ = 120.6 pm** | **120 pm** | **0.5%** | **Atomic** |
 | **Alkali vdW/cov** | **σ₄/σ_shell = 1.408** | **mean 1.385** | **1.6%** | **Atomic** |
-| **Outer wall formula** | **49 elements** | **42/49 < 20%** | **86%** | **Atomic** |
+| **Outer wall Hybrid C** | **54 elements** | **51/54 < 20%** | **94%** | **Atomic** |
 
 ### Proof Status Scorecard (March 16, 2026)
 
@@ -968,7 +979,7 @@ vdW/cov = σ₄/σ_shell + n_p×g₁×φ^(-(per-1))  (outer wall formula)
 | **10 — Chern pair annihilation** | **COMPUTED** | **+2,−1,+1,−2; outer pair sums to 0; supported by Liu et al. 2020** |
 | **11 — Concentric nesting** | **CONFIRMED** | **Silver inner (0.171), Gold middle (0.236), Bronze outer (0.394)** |
 | **12 — Dirac mapping** | **STRONG CONJECTURE** | **E²=p²c²+m²c⁴ ↔ 13=5+8; structural exact** |
-| **13 — Atomic outer wall** | **PARTIALLY SOLVED** | **vdW/cov formula: 30/49 within 10%, 42/49 within 20%, 0 free params** |
+| **13 — Atomic outer wall** | **PARTIALLY SOLVED** | **Hybrid C: 31/54 within 10%, 51/54 within 20% (94%), mean 9.5%, 0 free params** |
 
 ---
 
@@ -1048,9 +1059,9 @@ EBANKS:    Independent FTL convergence (ai.viXra:2602.0106)
 ── March 16, 2026 (Atomic Outer Wall) ──
 vdW(H):    σ₄ × φ × a₀ = 120.6 pm (0.5% from 120 pm observed)
 ALKALI:    vdW/cov = σ₄/σ_shell = 1.408 ± 2% (5 elements, zero params)
-MULTI-e:   vdW/cov = σ₄/σ_shell + n_p × g₁ × φ^(-(per-1))
-           g₁ = 0.3243 (first σ₃ sub-gap fraction)
-           30/49 elements within 10%, 42/49 within 20%
+HYBRID C:  s/p: BASE + n_p×g₁×φ^(-(per-1))  d: √(1+(θ×BOS)²)  ng: √(1+(θ×BOS)²)
+           g₁ = 0.3243, BOS = 0.992, dark_gold = 0.290
+           31/54 within 10%, 51/54 within 20% (94%), mean 9.5%
 SUB-GAPS:  σ₃ internal gaps are φ-damped (ratios 1.63, 1.57)
            Period = Cantor recursion depth
 OUTER WALL: σ₄ predicts bond, σ₄×φ predicts vdW (H: 0.5%)
