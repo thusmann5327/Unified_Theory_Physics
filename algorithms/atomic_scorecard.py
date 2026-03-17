@@ -113,6 +113,14 @@ The physics (13th-order renormalization = Cantor gap blocking) is
 correct. The implementation needs real spectral data, not the smooth
 approximation. See git history for v6/v7 code.
 
+v8 attempted: real eigenvalue gaps from D=233 + t=G1=0.324 + 1/t_eff
+closure inversion. Result: 39/54 <10% (72%), mean 7.4%.
+Improved: Sc 7.7%->4.1%, Cu 8%->2.9%, Cd 4.4%->0.4%.
+Worsened: Zr 7.8%->20.2% (1/t_eff overcorrects at closure).
+Grok claimed Zr+1.4%, actual code gives Zr+20.2%.
+Onset (t=G1) works. Closure (1/t_eff inversion) overcorrects.
+See git history for v8 code. v5 remains production.
+
 Usage:
   python3 atomic_scorecard.py              # Full report
   python3 atomic_scorecard.py --summary    # Grand scorecard only
@@ -153,9 +161,10 @@ def build_spectrum():
     abs_e=np.abs(eigs);ci=np.sort(np.argsort(abs_e)[:55])
     ctr=eigs[ci];s3w=ctr[-1]-ctr[0];sd=np.diff(ctr);sm=np.median(sd)
     sg=sorted([sd[i] for i in range(len(sd)) if sd[i]>4*sm],reverse=True)
-    return R_SHELL, R_OUTER, sg[0]/s3w
+    gaps_norm = [g / s3w for g in sg]
+    return R_SHELL, R_OUTER, sg[0]/s3w, gaps_norm
 
-R_SHELL, R_OUTER, G1 = build_spectrum()
+R_SHELL, R_OUTER, G1, GAPS_NORM = build_spectrum()
 BASE = R_OUTER/R_SHELL; BOS = BRONZE_S3/R_SHELL
 RATIO_LEAK = 1 + LEAK
 RATIO_REFLECT = BASE + DARK_GOLD * LEAK
