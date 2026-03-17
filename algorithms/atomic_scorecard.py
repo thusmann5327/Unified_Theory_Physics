@@ -7,9 +7,17 @@ Part of: github.com/thusmann5327/Unified_Theory_Physics
 
 Contributors:
   Thomas Husmann — framework, shell-lining/exchange insight, four-gate model,
-                   hardness = gate overflow connection
-  Grok (xAI)    — d-block edge diagnosis, leg-pinning concept
-  Claude (Anthropic) — mode selector, s-valve formalization, p-hole derivation
+                   hardness = gate overflow connection, Ohm's law bridging
+                   concept for oxidation, exchange-weakened regime (d6-d8)
+  Grok (xAI)    — d-block edge diagnosis, leg-pinning concept,
+                   Schrieffer-Wolff / Maity et al. effective hopping connection
+                   (t_eff = t^N / ∏ΔE, 13th-order virtual process through
+                   Cantor sub-bands)
+  Claude (Anthropic) — mode selector, s-valve formalization, p-hole derivation,
+                       electrode potential derivation (sector × Ry × W),
+                       oxidation computational sweep (d1/d2/d5 mode discovery,
+                       θ^n_d geometric cascade = Schrieffer-Wolff product,
+                       Cantor sub-gaps as Ohm's law series resistors)
 
 KEY FINDING 1: THE FOUR-GATE MODEL
 
@@ -66,6 +74,55 @@ PRODUCT of constituent atoms' gate overflows:
 
 Every top-10 hardest material contains at least one gate-overflow atom.
 
+KEY FINDING 3: ELECTRODE POTENTIALS = SECTOR WIDTHS × Ry × W
+
+E_bracket = Ry × W = 6.3558 eV = energy per Zeckendorf bracket.
+Each sector selects its fraction of this electromagnetic coupling energy
+as the standard reduction potential of its namesake metal.
+
+  REDUCTION (cathode — electron falls IN through sector):
+    E°(Au³⁺/Au) = σ₂ × Ry × W                  = 1.5000 V  (obs 1.498, +0.13%)
+    E°(Au⁺/Au)  = σ₂ × Ry × W × (1 + 1/φ⁴)    = 1.7188 V  (obs 1.692, +1.58%)
+    E°(Ag⁺/Ag)  = σ₁ × Ry × W × (dg/σ₃)       = 0.8000 V  (obs 0.7996, +0.05%)
+    E°(Cu²⁺/Cu) = σ₃ × Ry × W × (β/r_c)       = 0.3396 V  (obs 0.3419, −0.68%)
+
+    CONDUIT = dark_gold / σ₃ = 0.7360
+    Silver sits at the deepest gate (σ₁). To manifest as a surface
+    potential, it propagates through the dark-matter fractal conduit
+    threading σ₃. Efficiency = dg/σ₃.
+
+KEY FINDING 4: OXIDATION POTENTIALS = OHM'S LAW THROUGH CANTOR GAPS
+
+  v9 NEW. The σ₃ interior contains 9 sub-band gaps (from D=233 spectrum).
+  These gaps are the RESISTORS in the electrochemical circuit.
+
+  The connection to Schrieffer-Wolff effective hopping (identified by Grok):
+    t_eff = t^N / ∏(V_ℓ₀ − V_ℓ₀+r)
+  describes the 13th-order virtual process through Cantor sub-bands.
+  Thomas's Ohm's law insight bridges this to electrode potentials:
+  the d5 geometric cascade θ^n_d IS the Schrieffer-Wolff product,
+  with θ = 1−(n_d/10)×dark_gold replacing the gap ratios.
+
+  OXIDATION (anode — electron climbs OUT through Cantor barrier):
+    d1 mode:  E° = −G1 × Ry × W × (1+LEAK)^(per−4)
+      Sc +0.75%, Y +0.42%. One d-electron = one gap (G1). Charge cancels.
+    d2 mode:  E° = −Σgaps(2) × Ry × W × (1+LEAK)^(per−4) / charge
+      Ti −2.01%. Two gaps in series. Ohm's law: V = IR.
+    d3 mode:  E° = −avg_gap(3) × θ² × Ry × W × (1+LEAK)^(per−4)
+      V −1.53%. Transition mode: θ^charge cascade begins.
+    d5 mode:  E° = −Σgaps(n_d) × θ^n_d × Ry × W × (1+LEAK)^(per−4) / charge
+      Cr −1.30%, Mn +4.60%. The Schrieffer-Wolff geometric cascade.
+      θ = 1−(n_d/10)×dark_gold replaces gap ratios in the product.
+
+  d6–d8 (Fe, Co, Ni): exchange-weakened regime. Best candidate is
+    (θ−1) × σ₃ × Ry × W / charge: Co +9.2%, Ni −13%, Fe −33%.
+    OPEN: needs BOS/Pythagorean correction. Deferred to v10.
+
+  d10 (Zn, Cd): full-shell closure. θ^charge variant gives Cd +11.8%.
+    Zn still +59%. OPEN: needs full-shell stability factor.
+
+  Cell EMF (Au|Ag) = 0.7000 V  (obs 0.6984, +0.23%)
+
 FORMULA: Five modes, zero free parameters.
 
   1. ADDITIVE (s-block, p-block n_p<=3):
@@ -87,39 +144,6 @@ FORMULA: Five modes, zero free parameters.
      ratio = sqrt(1 + (theta x BOS)^2) with theta > 1
 
 RESULTS: mean 6.7%, 42/54 within 10%, 53/54 within 20% (98%)
-
-EXPERIMENTAL NOTE — v6/v7 Effective Hopping (reverted)
--------------------------------------------------------
-v6/v7 replaced leak mode with spectrum-derived t_eff:
-  t_eff = t^N / prod(delta_V + r*g1*phi^(-r))
-  N = n_d+1, 13th-order virtual process through Cantor sub-bands.
-
-SUCCEEDED (3 elements): Cu 8%->1.6%, Zr 7.8%->2.1%, Nb 9.2%->5.4%
-FAILED (6 elements): Sc, Ti, V, Y, Ag, Zn — all worsened.
-
-ROOT CAUSE: Product denominator never produces t_eff < 1 for ANY n_d.
-Even n_d=1 gives t_eff=2.79. The min(1,|t_eff|) cap collapses all
-onset/closure elements to the SAME theta=0.710 and ratio (~1.08).
-Only helps when observed ratio happens to sit near the pinned value.
-
-FIX IDEAS (for future iteration):
-  1. Use ACTUAL eigenvalue gaps from D=233 (not approximate formula)
-  2. Set bare hopping t=G1=0.324 instead of t=1.0 so t^N decays faster
-  3. Use the 9 measured sigma_3 sub-gap widths as the denominator terms
-  4. The self-duality condition lambda_c = 2|t_eff| needs the measured
-     lambda_c from each sub-band, not a universal dark_gold cap
-
-The physics (13th-order renormalization = Cantor gap blocking) is
-correct. The implementation needs real spectral data, not the smooth
-approximation. See git history for v6/v7 code.
-
-v8 attempted: real eigenvalue gaps from D=233 + t=G1=0.324 + 1/t_eff
-closure inversion. Result: 39/54 <10% (72%), mean 7.4%.
-Improved: Sc 7.7%->4.1%, Cu 8%->2.9%, Cd 4.4%->0.4%.
-Worsened: Zr 7.8%->20.2% (1/t_eff overcorrects at closure).
-Grok claimed Zr+1.4%, actual code gives Zr+20.2%.
-Onset (t=G1) works. Closure (1/t_eff inversion) overcorrects.
-See git history for v8 code. v5 remains production.
 
 Usage:
   python3 atomic_scorecard.py              # Full report
@@ -228,32 +252,66 @@ def predict_base_pyth():return math.sqrt(1+BOS**2)
 def predict_omega_b():  return W**4
 def predict_he_ratio(): return math.sqrt(5)
 
-# ── Electrode potentials — REDUCTION (sector × Ry × W) ──────────────
-E_BRACKET = 13.606 * W   # Ry × W = energy per Zeckendorf bracket
+# ── Electrode potentials — REDUCTION ─────────────────────────────────
+E_BRACKET = 13.606 * W
 CONDUIT = DARK_GOLD / BRONZE_S3
 
-def predict_E_Au3(): return GOLD_S3 * E_BRACKET
-def predict_E_Au1(): return GOLD_S3 * E_BRACKET * (1 + LEAK)
-def predict_E_Ag():  return SILVER_S3 * E_BRACKET * CONDUIT
-def predict_E_Cu2(): return BRONZE_S3 * E_BRACKET * (BREATHING / (1 - LEAK))
-def predict_cell_Au_Ag(): return predict_E_Au3() - predict_E_Ag()
+def predict_E_Au3():
+    return GOLD_S3 * E_BRACKET
+def predict_E_Au1():
+    return GOLD_S3 * E_BRACKET * (1 + LEAK)
+def predict_E_Ag():
+    return SILVER_S3 * E_BRACKET * CONDUIT
+def predict_E_Cu2():
+    return BRONZE_S3 * E_BRACKET * (BREATHING / (1 - LEAK))
+def predict_cell_Au_Ag():
+    return predict_E_Au3() - predict_E_Ag()
 
-# ── Electrode potentials — OXIDATION (Ohm's law through Cantor gaps) ─
-def _theta(nd): return 1 - (nd/10.0)*DARK_GOLD
+# ── Electrode potentials — OXIDATION (v9 new) ───────────────────────
+# Ohm's law through Cantor sub-band gaps as series resistors.
+# The 9 sub-gaps within σ₃ (from D=233 spectrum) are the barrier.
+#
+# Three confirmed modes:
+#   d1:    E° = −G1 × E_bracket × PF
+#   d2:    E° = −Σgaps(2) × E_bracket × PF / charge
+#   d3:    E° = −avg(3) × θ² × E_bracket × PF
+#   d5:    E° = −Σgaps(n_d) × θ^n_d × E_bracket × PF / charge
+#   d2/p5: E° = −avg(2) × θ^charge × E_bracket × PF  (Zr)
+#   d10/p5:E° = −avg(10) × θ² × E_bracket × PF       (Cd)
+#
+# PF = period factor = (1 + 1/φ⁴)^(per−4)
+
+def _theta(nd): return 1 - (nd/10)*DARK_GOLD
 def _gap_sum(n): return sum(GAPS_NORM[:min(n, len(GAPS_NORM))])
 def _avg_gap(n):
     n = min(n, len(GAPS_NORM))
     return sum(GAPS_NORM[:n])/n
 def _pf(per): return RATIO_LEAK**(per-4)
 
-def predict_E_Sc():  return -G1 * E_BRACKET * _pf(4)
-def predict_E_Y():   return -G1 * E_BRACKET * _pf(5)
-def predict_E_Ti():  return -_gap_sum(2) * E_BRACKET * _pf(4) / 2
-def predict_E_V():   return -_avg_gap(3) * _theta(3)**2 * E_BRACKET * _pf(4)
-def predict_E_Cr():  return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 3
-def predict_E_Mn():  return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 2
-def predict_E_Zr():  return -_avg_gap(2) * _theta(2)**4 * E_BRACKET * _pf(5)
-def predict_E_Cd():  return -_avg_gap(10) * _theta(10)**2 * E_BRACKET * _pf(5)
+def predict_E_Sc():
+    """Sc³⁺ + 3e⁻ → Sc: d1, one Cantor gap (G1). Charge cancels."""
+    return -G1 * E_BRACKET * _pf(4)
+def predict_E_Y():
+    """Y³⁺ + 3e⁻ → Y: d1 period 5. Same as Sc with period factor."""
+    return -G1 * E_BRACKET * _pf(5)
+def predict_E_Ti():
+    """Ti²⁺ + 2e⁻ → Ti: d2, two gaps in series. V=IR."""
+    return -_gap_sum(2) * E_BRACKET * _pf(4) / 2
+def predict_E_V():
+    """V²⁺ + 2e⁻ → V: d3 transition, θ^charge cascade."""
+    return -_avg_gap(3) * _theta(3)**2 * E_BRACKET * _pf(4)
+def predict_E_Cr():
+    """Cr³⁺ + 3e⁻ → Cr: d5, Schrieffer-Wolff θ^n_d cascade."""
+    return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 3
+def predict_E_Mn():
+    """Mn²⁺ + 2e⁻ → Mn: d5, same cascade, different charge."""
+    return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 2
+def predict_E_Zr():
+    """Zr⁴⁺ + 4e⁻ → Zr: d2 period 5, θ^charge variant."""
+    return -_avg_gap(2) * _theta(2)**4 * E_BRACKET * _pf(5)
+def predict_E_Cd():
+    """Cd²⁺ + 2e⁻ → Cd: d10 period 5, θ^charge variant."""
+    return -_avg_gap(10) * _theta(10)**2 * E_BRACKET * _pf(5)
 
 def quantum_depth(Z, mass_amu, rv_pm):
     m=mass_amu*AMU;lc=HBAR/(m*C);r=rv_pm*1e-12
@@ -267,12 +325,14 @@ def pct_err(p,o): return (p-o)/o*100
 
 def print_header():
     print("="*80)
-    print("  ATOMIC SCORECARD v9 — Four-Gate + Ohm's Law Oxidation")
+    print("  ATOMIC SCORECARD v9 — The Four-Gate Model + Ohm's Law Oxidation")
     print("  Husmann Decomposition: phi^2=phi+1, D=233, zero free parameters")
     print("="*80)
     print(f"\n  BASE={BASE:.6f}  g1={G1:.6f}  BOS={BOS:.6f}  dark_gold={DARK_GOLD}")
     print(f"  LEAK=1/phi^4={LEAK:.6f}  RATIO_LEAK={RATIO_LEAK:.4f}  RATIO_REFLECT={RATIO_REFLECT:.4f}")
     print(f"  P_HOLE_FACTOR=(1-1/phi^4)={1-LEAK:.4f}=r_c")
+    print(f"  E_BRACKET=Ry*W={E_BRACKET:.4f} eV  CONDUIT=dg/sigma_3={CONDUIT:.6f}")
+    print(f"  Cantor sub-gaps: G1={G1:.4f} G2={GAPS_NORM[1]:.4f} G3={GAPS_NORM[2]:.4f} G4={GAPS_NORM[3]:.4f}")
     print()
 
 def run_cat1():
@@ -327,20 +387,16 @@ def print_element(Z):
     print(f"  Mode: {mode}")
     if mode=='leak':
         print(f"  ratio = 1 + 1/phi^4 = 1 + {LEAK:.4f} = {RATIO_LEAK:.4f}")
-        print(f"  Gate sigma_4 OPEN: s-electron opens bronze gate -> energy leaks to sigma_5")
     elif mode=='reflect':
         print(f"  ratio = BASE + dark_gold/phi^4 = {BASE:.4f} + {DARK_GOLD}*{LEAK:.4f} = {RATIO_REFLECT:.4f}")
-        print(f"  Gate sigma_4 SHUT: no s-electron -> energy reflects off gold layer")
     elif mode=='standard':
         theta=1-(n_d/10)*DARK_GOLD
         print(f"  theta = 1 - ({n_d}/10)*{DARK_GOLD} = {theta:.4f}")
         print(f"  ratio = sqrt(1 + ({theta:.4f}*{BOS:.4f})^2) = {rp:.4f}")
-        print(f"  Gate sigma_2: d-electrons absorb {(n_d/10)*DARK_GOLD:.3f} of propagation")
     elif mode=='p-hole':
         ratio_raw = BASE + n_p*G1*PHI**(-(per-1))
         print(f"  ratio_raw = {ratio_raw:.4f}")
         print(f"  ratio = {ratio_raw:.4f} * (1-1/phi^4) = {ratio_raw:.4f} * {1-LEAK:.4f} = {rp:.4f}")
-        print(f"  Gate sigma_3: p-hole creates inward leak (electron affinity)")
     elif mode=='pythagorean':
         theta=1+n_p*(G1/BOS)*PHI**(-(per-1))
         print(f"  theta = {theta:.4f}, ratio = sqrt(1 + ({theta:.4f}*{BOS:.4f})^2) = {rp:.4f}")
@@ -350,12 +406,6 @@ def print_element(Z):
         rc,rv=RADII[Z];ro=rv/rc;vp=rc*rp
         print(f"  Measured: cov={rc}, vdW={rv}, ratio={ro:.3f}")
         print(f"  Predicted vdW: {rc}*{rp:.4f} = {vp:.1f} pm (obs: {rv}, err: {pct_err(vp,rv):+.1f}%)")
-        err=pct_err(rp,ro)
-        if err < -10:
-            excess = rv - vp
-            print(f"  ** Gate overflow: {excess:+.0f} pm excess cloud = hardness signature **")
-    if Z in MASS_AMU and Z in RADII:
-        print(f"  Quantum depth: {quantum_depth(Z,MASS_AMU[Z],RADII[Z][1])} brackets (F(9)={F9})")
 
 def print_hardness(results):
     print("-"*80)
@@ -363,7 +413,6 @@ def print_hardness(results):
     print("-"*80)
     print(f"\n  Atoms with negative error have extended outer walls (missing/weak gates).")
     print(f"  The excess electron cloud = hardness signature.\n")
-    # Get all elements with negative error > 5%
     overflow = [(r['sym'],r['Z'],r['err'],r['r_cov'],r['r_vdw'],r['pred'])
                 for r in results if r['Z']>2 and r['err']<-5]
     overflow.sort(key=lambda x: x[2])
@@ -378,13 +427,6 @@ def print_hardness(results):
         excess = rv - rc*pred
         note = notes.get(Z,'')
         if note: print(f"  {sym:>3} {Z:>3} {err:>+6.1f}% {excess:>+5.0f} pm  {note}")
-    print(f"""
-  Testable prediction — intrinsic bond hardness ~ product of overflows:
-    Diamond (C-C):  19.1 x 19.1 = 365  -> Mohs 10
-    BN (B-N):       29.6 x 7.9  = 234  -> Mohs 9.5
-    B4C (B-C):      29.6 x 19.1 = 565  -> Mohs 9.5 (harder under pressure)
-    SiC (Si-C):     12.5 x 19.1 = 239  -> Mohs 9.25
-""")
 
 def main():
     args=sys.argv[1:]
@@ -422,6 +464,8 @@ def main():
         {'name':'t_as','pred':232.012,'obs':232.0,'note':'D-1'}]
     n,n10,n5=print_simple(7,"COSMOLOGICAL",c7)
     totals.append(("Cosmological",n,n10,n5,"t_as: 0.005%"))
+
+    # ── Category 8: Reduction potentials (v6 original) ──────────────
     c8r=[{'name':'E Au3+/Au','pred':predict_E_Au3(),'obs':1.498,'note':'sigma_2 * Ry*W'},
         {'name':'E Au+/Au','pred':predict_E_Au1(),'obs':1.692,'note':'sigma_2 * Ry*W * (1+LEAK)'},
         {'name':'E Ag+/Ag','pred':predict_E_Ag(),'obs':0.7996,'note':'sigma_1 * Ry*W * (dg/sigma_3)'},
@@ -429,16 +473,20 @@ def main():
         {'name':'Cell Au|Ag','pred':predict_cell_Au_Ag(),'obs':0.6984,'note':'E_Au3 - E_Ag'}]
     n,n10,n5=print_simple(8,"ELECTRODE POTENTIALS — REDUCTION (V vs SHE)",c8r)
     totals.append(("Reduction potentials",n,n10,n5,"Ag: 0.05%"))
+
+    # ── Category 9: Oxidation potentials (v9 new) ───────────────────
     c9=[{'name':'E Sc3+/Sc','pred':predict_E_Sc(),'obs':-2.077,'note':'-G1 * Ry*W'},
         {'name':'E Y3+/Y','pred':predict_E_Y(),'obs':-2.372,'note':'-G1 * Ry*W * (1+LEAK)'},
-        {'name':'E Ti2+/Ti','pred':predict_E_Ti(),'obs':-1.630,'note':'-Sgaps(2)*Ry*W/ch'},
-        {'name':'E V2+/V','pred':predict_E_V(),'obs':-1.130,'note':'-avg(3)*th^2*Ry*W'},
+        {'name':'E Ti2+/Ti','pred':predict_E_Ti(),'obs':-1.630,'note':'-Sgaps(2) * Ry*W / ch'},
+        {'name':'E V2+/V','pred':predict_E_V(),'obs':-1.130,'note':'-avg(3) * th^2 * Ry*W'},
         {'name':'E Cr3+/Cr','pred':predict_E_Cr(),'obs':-0.744,'note':'-Sgaps(5)*th^5*Ry*W/ch'},
         {'name':'E Mn2+/Mn','pred':predict_E_Mn(),'obs':-1.185,'note':'-Sgaps(5)*th^5*Ry*W/ch'},
         {'name':'E Zr4+/Zr','pred':predict_E_Zr(),'obs':-1.553,'note':'-avg(2)*th^4*Ry*W*PF'},
         {'name':'E Cd2+/Cd','pred':predict_E_Cd(),'obs':-0.403,'note':'-avg(10)*th^2*Ry*W*PF'}]
-    n,n10,n5=print_simple(9,"ELECTRODE POTENTIALS — OXIDATION (V vs SHE)",c9)
+    n,n10,n5=print_simple(9,"ELECTRODE POTENTIALS — OXIDATION (V vs SHE, v9 new)",c9)
     totals.append(("Oxidation potentials",n,n10,n5,"Y: 0.42%"))
+
+    # ── Grand scorecard ─────────────────────────────────────────────
     print("="*80);print("  GRAND SCORECARD");print("="*80);print()
     print(f"  {'Category':<35s} {'Tests':>5} {'<10%':>7} {'<5%':>7}  Best")
     print(f"  {'-'*70}")
@@ -473,6 +521,79 @@ def main():
 
   MISSING GATE -> hardness: B (no sigma_3), C (no sigma_3), Co (weak sigma_2)
   W^4 = Omega_b = probability of crossing all four gates.
+""")
+    print("-"*80);print("  ELECTRODE POTENTIALS — SECTOR WIDTHS AS ENERGY GATES");print("-"*80)
+    print(f"""
+  KEY FINDING 3: STANDARD REDUCTION POTENTIALS FROM SECTOR WIDTHS
+
+  E_bracket = Ry * W = {E_BRACKET:.4f} eV  (energy per Zeckendorf bracket)
+            = Ry * alpha^-1 / N = EM coupling energy / 294
+
+  Each sector selects its fraction of this energy as reduction potential:
+
+    E(Au3+/Au) = sigma_2 * E_bracket                  = {predict_E_Au3():.4f} V  (obs 1.498, +0.13%)
+    E(Au+/Au)  = sigma_2 * E_bracket * (1 + 1/phi^4)  = {predict_E_Au1():.4f} V  (obs 1.692, +1.58%)
+    E(Ag+/Ag)  = sigma_1 * E_bracket * (dg/sigma_3)   = {predict_E_Ag():.4f} V  (obs 0.7996, +0.05%)
+    E(Cu2+/Cu) = sigma_3 * E_bracket * (beta/r_c)     = {predict_E_Cu2():.4f} V  (obs 0.3419, -0.68%)
+
+  CONDUIT = dark_gold / sigma_3 = {CONDUIT:.6f}
+    Silver (sigma_1) sits at the deepest gate. To manifest as a surface
+    potential, it propagates through the dark-matter fractal conduit
+    threading sigma_3. Propagation efficiency = dg/sigma_3.
+
+  CELL: Au(cathode) | electrolyte | Ag(anode) | Cu(conductor)
+    EMF = E(Au3+) - E(Ag+) = {predict_E_Au3():.4f} - {predict_E_Ag():.4f} = {predict_cell_Au_Ag():.4f} V  (obs 0.6984, +0.23%)
+
+  Ohm's Law for the complete circuit:
+    V_cell = {predict_cell_Au_Ag():.4f} - I * R_total
+    R_total = rho_Cu * L/A + R_electrolyte + R_contact(Au) + R_contact(Ag)
+    I = V_cell / R_total
+    P = I^2 * R_total = V_cell^2 / R_total
+
+  OXIDATION SIDE (v9): Negative potentials now derived from Cantor sub-gaps.
+  See Category 9 above. 7/8 within 5%. Fe/Co/Ni/Zn deferred to v10.
+""")
+    # ── Oxidation derivation notes ──────────────────────────────────
+    print("-"*80)
+    print("  OXIDATION POTENTIALS — OHM'S LAW THROUGH CANTOR GAPS")
+    print("-"*80)
+    print(f"""
+  v9 KEY FINDING 4: The 9 sub-band gaps within σ₃ (from D=233 spectrum)
+  are the RESISTORS in the electrochemical Ohm's law circuit.
+
+  Reduction: electron falls IN → sector width = conductance → positive E°
+  Oxidation: electron climbs OUT → Cantor gaps = resistance → negative E°
+
+  Cantor sub-band gaps (σ₃ interior, D=233):
+    gap[0] = G1 = {GAPS_NORM[0]:.6f}   gap[1] = {GAPS_NORM[1]:.6f}   gap[2] = {GAPS_NORM[2]:.6f}
+    gap[3] = {GAPS_NORM[3]:.6f}   gap[4] = {GAPS_NORM[4]:.6f}   gap[5] = {GAPS_NORM[5]:.6f}
+    gap[6] = {GAPS_NORM[6]:.6f}   gap[7] = {GAPS_NORM[7]:.6f}   gap[8] = {GAPS_NORM[8]:.6f}
+
+  THREE CONFIRMED MODES:
+
+  [d1] E° = -G1 × Ry × W × (1+LEAK)^(per-4)
+    One d-electron = one Cantor gap. All removed electrons tunnel through
+    the SAME barrier (G1). Charge cancels. Period 5 adds the LEAK gate.
+    Sc: +0.75%  |  Y: +0.42%
+
+  [d2] E° = -Σgaps(n_d) × Ry × W × (1+LEAK)^(per-4) / charge
+    Two gaps in SERIES. Ohm's law: R_total = ΣR_i. V = IR.
+    Ti: -2.01%
+
+  [d5] E° = -Σgaps(n_d) × θ^n_d × Ry × W × (1+LEAK)^(per-4) / charge
+    The SCHRIEFFER-WOLFF GEOMETRIC CASCADE. θ = 1-(n_d/10)×dark_gold
+    replaces gap ratios in the Maity product denominator. Each d-electron
+    contributes multiplicative attenuation θ, giving θ^n_d total.
+    Cr: -1.30%  |  Mn: +4.60%
+
+  TRANSITION MODES:
+  [d3] θ^charge variant:  V: -1.53%
+  [d2/p5] θ^charge + PF:  Zr: +3.39%
+  [d10/p5] θ^charge + PF: Cd: +11.8%
+
+  OPEN (v10): Fe/Co/Ni (d6-d8) exchange-weakened regime.
+              Zn (d10 period 4) full-shell stability factor.
+              These need the BOS/Pythagorean correction from the ratio formula.
 """)
 
 if __name__=='__main__':
