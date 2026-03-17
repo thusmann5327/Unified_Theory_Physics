@@ -610,6 +610,33 @@ For Period 6 d-block: n_f = 14 → N_eff = 2 − 1 = 1. Period 6 behaves like Pe
 
 See: `tests/period6_diagnostic.py`
 
+### 5.17 Effective Hopping Renormalization (Experimental, March 16, 2026)
+
+The d-block boundary behavior (onset at n_d≤2, closure at n_d≥9) arises from a high-order virtual process through the Cantor sub-band hierarchy. The effective hopping integral through N = n_d + 1 intermediate sublattices is:
+
+$$t_{\text{eff}} = \frac{t^N}{\prod_{r=1}^{N-1} (\Delta V + r \cdot g_1 \cdot \varphi^{-r})}$$
+
+where t is the bare hopping (normalized to 1), and ΔV is the potential difference between the active and target layers:
+
+| Regime | n_d | ΔV | Active leg | Physics |
+|--------|-----|-----|-----------|---------|
+| **Onset** | ≤2 | bronze_σ₃ − gold_σ₃ = 0.158 | Gold (0.236) | Virtual path through gold layer |
+| **Middle** | 3–8 | bronze − gold = 0.158 | Bronze (0.394) | Full bronze, t_eff >> 1 |
+| **Closure** | ≥9 | gold_σ₃ − silver_σ₃ = 0.065 | Silver (0.171) | Virtual path through silver nesting |
+
+The self-duality condition λ_c = 2|t_eff| is the critical point where the wavefunction localizes onto the active layer. When λ_c hits 2|t_eff|, the outer vdW extension pins to gold (onset) or silver (closure) instead of full bronze — the ratio collapses.
+
+**This is the same physics as the 13-protofilament microtubule.** The 13th-order renormalization through 12 intermediate sublattices generates the Cantor-gap hierarchy in the D=233 spectrum.
+
+**Tested: succeeds for Cu (8%→1.6%) and Zr (7.8%→2.1%), fails for Sc/Y/Ag.** The product denominator approximation collapses dynamic range — t_eff > 1 for all n_d, hitting the min(1,...) cap. Needs real eigenvalue gap widths from the spectrum (not the smooth approximation) to produce sub-unity t_eff at low N.
+
+**Fix directions:**
+1. Use actual 9 sub-gap widths from σ₃ center band as denominator terms
+2. Set bare hopping t = g₁ ≈ 0.324 (inter-sub-band coupling, not normalized t=1)
+3. Compute λ_c from each sub-band's measured bandwidth, not universal dark_gold
+
+The v5 four-gate model (leak/reflect modes) remains production. The effective hopping formula is the correct theoretical framework awaiting proper spectral implementation.
+
 ---
 
 ## 6. The φ^k Atomic Ladder

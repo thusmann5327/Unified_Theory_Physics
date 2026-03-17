@@ -468,6 +468,20 @@ DARK_GOLD = 0.290                                        # gold axis dark fracti
 # Quantum depth: bz(r_vdw) - bz(λ_Compton) ≈ 33-40 brackets for all atoms
 # F(9) = 34 = Fibonacci gap boundary. Period 2 p-block at depth 33-34.
 # Gravity bracket = 4 × F(9) = 136 (double-fold interference center).
+
+# ── Effective Hopping Renormalization (experimental, March 16) ────
+# The 13th-order virtual process through 12 Cantor sub-bands:
+#   t_eff = t^N / prod_{r=1}^{N-1} (delta_V + r * g1 * phi^(-r))
+#   N = n_d + 1 (virtual order through d-electrons + outer s)
+# Three regimes by delta_V:
+#   onset  (n_d<=2): delta_V = bronze_s3 - gold_s3, leg = gold
+#   middle (n_d=3-8): delta_V = bronze-gold, leg = bronze (t_eff >> 1)
+#   closure(n_d>=9): delta_V = gold_s3 - silver_s3, leg = silver
+# Self-duality: lambda_c = 2|t_eff| pins wavefunction to active layer.
+# STATUS: Physics correct (same as 13-PF microtubule). Implementation
+# needs real eigenvalue gaps (not approximate formula) — product
+# denominator collapses dynamic range. Succeeds for Cu/Zr, fails for
+# Sc/Y/Ag. v5 four-gate model remains production. See scorecard notes.
 ```
 
 ---

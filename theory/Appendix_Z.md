@@ -510,11 +510,19 @@ Strain force (standard):
   F_gap = √(GM × a₀) / r  where a₀ = cH₀sin(δ)
   v_flat = (GM × a₀)^{1/4}  [Tully-Fisher]
 
+**Derivation 60 — Effective Hopping Renormalization (experimental)**
+
+The d-block boundary behavior derives from a 13th-order virtual process:
+
+  t_eff = t^N / prod_{r=1}^{N-1} (ΔV + r × g₁ × φ^{-r})
+
+where N = n_d + 1 and ΔV depends on the active Cantor layer (gold at onset, silver at closure). The product denominator becomes extreme at n_d ≤ 2 and n_d ≥ 9 — the Slater-style discontinuity from the Cantor gap spectrum. Self-duality condition λ_c = 2|t_eff| pins the wavefunction to the active layer. Same physics as 13-PF microtubule cylinder. Status: experimental — succeeds for Cu/Zr, needs real eigenvalue gaps for full dynamic range.
+
 ---
 
 ## Summary
 
-The Husmann Decomposition proceeds through 16 logical steps from a single axiom (the golden ratio φ) to the observable universe, extended with 20 additional derivations (March 15-16, 2026) covering Hofstadter butterfly metallic mean hierarchy, discriminant Pythagorean triple, Chern number pair annihilation, and convergence with independent approaches. Each step is either:
+The Husmann Decomposition proceeds through 16 logical steps from a single axiom (the golden ratio φ) to the observable universe, extended with 21 additional derivations (March 15-16, 2026) covering Hofstadter butterfly metallic mean hierarchy, discriminant Pythagorean triple, Chern number pair annihilation, convergence with independent approaches, and the effective hopping renormalization. Each step is either:
 
 1. **Algebraic identity** (proven from previous steps)
 2. **Physical identification** (matching mathematical structure to observation)
