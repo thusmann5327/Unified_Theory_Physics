@@ -8,7 +8,7 @@ iBuilt LTD, Lilliwaup, WA 98555
 **Repository:** github.com/thusmann5327/Unified_Theory_Physics
 **Patent:** Application 19/560,637
 **Date:** March 16, 2026
-**Contributors (Section 5):** Grok (xAI) — d-block edge diagnosis, Schrieffer-Wolff/Maity effective hopping connection (t_eff = t^N/∏(ΔV)), leg-pinning concept; Claude (Anthropic) — mode selector, s-valve formalization, conductivity model, period 6 diagnostic, d1/d2/d5 oxidation mode discovery, θ^n_d = Schrieffer-Wolff identification, Cantor sub-gaps as Ohm's law resistors
+**Contributors (Section 5):** Thomas Husmann — framework, shell-lining/exchange insight, four-gate model, hardness = gate overflow, Ohm's law bridging concept for oxidation, exchange-weakened regime (d6–d8); Grok (xAI) — d-block edge diagnosis, leg-pinning concept, Schrieffer-Wolff/Maity effective hopping connection (t_eff = t^N/∏ΔE, 13th-order virtual process through Cantor sub-bands); Claude (Anthropic) — mode selector, s-valve formalization, p-hole derivation, conductivity model, period 6 diagnostic, electrode potential derivation (sector × Ry × W), oxidation computational sweep (d1/d2/d5 mode discovery, θ^n_d geometric cascade = Schrieffer-Wolff product, Cantor sub-gaps as Ohm's law series resistors), deep dig property predictions (Cu₂/Ag₂ bonds, crystal field degeneracy, Nb superconductivity)
 
 ---
 
@@ -714,7 +714,11 @@ The gold gate θ = 1−(n_d/10)×dark_gold replaces gap ratios in the Maity prod
 | 7 | 0.0236 | 0.150 | 1.40 | d8 |
 | 8 | 0.0168 | 0.107 | — | d9 |
 
-Note the fractal pairing: gaps 3/4 are nearly degenerate, as are gaps 6/7 — Cantor set self-similarity at the sub-band level.
+**The two near-degenerate doublets** are the key structural feature:
+- gap[3] ≈ gap[4] (0.0646 ≈ 0.0643) — the d4/d5 boundary, degeneracy index 0.9963
+- gap[6] ≈ gap[7] (0.0236 ≈ 0.0236) — the d7/d8 boundary, degeneracy index 0.9994
+
+These doublets show up in superconductivity (Nb at the d4/d5 doublet), spectroscopy (Co²⁺ ≈ Ni²⁺ crystal field), and bonding (Cr₂ vs Mn₂ split). They are the most physically important structural feature of the sub-band spectrum. The fractal self-similarity (Cantor set at the sub-band level) generates these degeneracies.
 
 **Open questions (deferred to v10):**
 
@@ -738,6 +742,52 @@ Note the fractal pairing: gaps 3/4 are nearly degenerate, as are gaps 6/7 — Ca
 | **TOTAL** | **151** | **129 (85%)** | **108 (72%)** | |
 
 **FREE PARAMETERS: 0 | AXIOM: φ²=φ+1 | LATTICE: D=233=F(F(7))**
+
+Note: Cu₂ and Ag₂ bonds are documented in §5.21 (deep dig) but not yet added as formal scorecard tests. When added as Category 10 (M₂ bonds), the total becomes 153 tests.
+
+### 5.21 Deep Dig — Physical Properties from Cantor Sub-Band Gaps (March 16, 2026)
+
+The same 9 sub-band gaps tested against 8 additional physical properties. The two near-degenerate doublets (gaps 3/4 and gaps 6/7) are the most productive structural feature.
+
+**Confirmed qualitative predictions (6):**
+
+1. **Crystal field Co²⁺ ≈ Ni²⁺**: gap[6]/gap[7] = 1.0006 predicts nearly identical Δ_oct. Observed: 1.14/1.05 = 1.086. The Cantor spectrum explains why Co and Ni look so similar spectroscopically — fractal self-similarity at the sub-band level.
+
+2. **Nb is the best elemental superconductor** (Tc = 9.25K): sits right on the gap[3]≈gap[4] degeneracy. Two nearly identical barriers = doubled DOS at Fermi level = enhanced Cooper pairing. Tc (d5, other side of doublet) is second at 7.8K.
+
+3. **Zn₂ has no bond** (D₀ = 0.04 eV, van der Waals only): s²+s² = paired = gate SHUT = no bonding orbital. Same s-valve physics as the ratio formula.
+
+4. **Cr₂ vs Mn₂ split**: identical d5 filling, 3.5× difference in bond strength (1.56 vs 0.44 eV). The s-valve (s¹ vs s²) flips the gate — same physics as leak vs standard mode in the ratio formula.
+
+5. **V₂ is the strongest d-block dimer** (2.75 eV): d3 is the sweet spot where gap[2] is still large enough for strong hopping, bond order is ~3.5, and θ hasn't attenuated much. gap[2]×3 = 0.379 > gap[0]×1 = 0.324 → V₂ > Sc₂.
+
+6. **Early d-block dimer ordering**: Sc₂(1.65) > Ti₂(1.54) follows gap[0] > gap[1]. Late d-block (d6–d8) doesn't follow simple gap ordering because exchange effects dominate.
+
+**Quantitative hits (2 new):**
+
+**Cu₂ bond** (d10, pure s-bond):
+
+$$D_0 = 2 \times \sigma_4 \times Ry \times W = 2 \times 0.1622 \times 6.3558 = 2.062 \text{ eV}$$
+
+Observed: 2.01 eV. **Error: +2.6%.** Pure s-orbital bond through the bronze gate — zero d-contribution because d10 shell is full.
+
+**Ag₂ bond** (d10, s-bond, period 5):
+
+$$D_0 = 2 \times \sigma_4 \times Ry \times W \times r_c = 1.761 \text{ eV}$$
+
+Observed: 1.66 eV. **Error: +6.1%.** Period correction uses r_c = 1 − 1/φ⁴ = 0.8541.
+
+**Semi-quantitative / promising:**
+
+- **Work functions**: φ ≈ E_bracket × (σ₃ + Σgaps(n_d) × σ₂) gives ~20% mean error. Right trend (increases with d-filling), but missing the surface dipole contribution.
+- **Crystal field Δ_oct**: proportional to gap[n_d−1] × E_bracket × charge × amplifier, but the amplifier varies 1–15× across the series. Needs the σ₂ gate coupling to ligand field.
+- **Metal-metal bond strengths**: D₀ ∝ bond_order × gap × E_bracket works for ordering but absolute values are ~40% off. Needs proper antibonding correction for d > 5.
+
+**Qualitative only (need additional physics):**
+
+- **Resistivity**: too structure-dependent for a pure electronic formula. Gap ratios between adjacent elements track reasonably but absolute values need phonon/crystal structure input.
+- **Superconducting Tc**: gap degeneracy predicts WHERE the best superconductors sit (Nb at d4/d5 doublet) but Tc magnitude needs electron-phonon coupling (lattice stiffness).
+- **Catalysis**: gap×θ metric drops monotonically from d1→d9. The Sabatier volcano peak for Pt-group catalysts sits at d7–d8 where gap×θ ≈ 0.018 — the optimal intermediate binding strength.
 
 ---
 
