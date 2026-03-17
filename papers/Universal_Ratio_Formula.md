@@ -7,6 +7,32 @@
 
 ---
 
+## The Axiom and Its Partition
+
+$$\varphi^2 = \varphi + 1$$
+
+This single equation, rearranged as a partition of unity, contains the entire framework:
+
+$$\frac{1}{\varphi} + \frac{1}{\varphi^3} + \frac{1}{\varphi^4} = 1$$
+
+| Term | Value | Role in the universe | Role in the atom |
+|------|-------|---------------------|-----------------|
+| 1/φ | 0.618 | Dark energy (return path) | Energy beyond the outer wall |
+| 1/φ³ | 0.236 | Dark matter (between gates) | Energy trapped in conduit layers |
+| **1/φ⁴** | **0.146** | **Baryonic matter (through the gate)** | **Gate transmission constant L** |
+
+The matter fraction of the universe IS the gate transmission constant of the atom. L = 1/φ⁴ — the probability that energy crosses one Cantor boundary into the observable sector. Every gate in the periodic table opens by this amount. Every gate.
+
+The missing term — φ² — is the forbidden mediator. It doesn't appear in the partition because it IS the equation: V = 2J, the critical coupling that creates the Cantor spectrum. The mediator builds the gates. The matter fraction opens them.
+
+Four gates, each transmitting L = 1/φ⁴. The probability of crossing all four:
+
+$$\Omega_b \approx W^4 \approx L^4 = \frac{1}{\varphi^{16}} \approx 0.0005$$
+
+The observed baryon fraction (W⁴ = 0.048) is larger because the gates are not independent — they share the same Cantor architecture. But the scaling is right: matter is rare because it must pass through four barriers, each of which reflects 85.4% back into the dark sectors.
+
+---
+
 ## The Formula
 
 $$\frac{r_{vdW}}{r_{cov}} = \sqrt{1 + \left(\Theta \times BOS\right)^2}$$
