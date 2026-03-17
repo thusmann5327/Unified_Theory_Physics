@@ -4,7 +4,7 @@
 **Thomas A. Husmann**
 iBuilt LTD, Lilliwaup, WA 98555
 
-**Correspondence:** thomas@ibuilt.net
+**Correspondence:** thomas.a.husmann@gmail.com
 **Repository:** github.com/thusmann5327/Unified_Theory_Physics
 **Patent:** Application 19/560,637
 **Date:** March 16, 2026
