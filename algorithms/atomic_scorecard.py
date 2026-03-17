@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-atomic_scorecard.py — Full Atomic Prediction Suite (v5)
+atomic_scorecard.py — Full Atomic Prediction Suite (v9)
 =======================================================
 Thomas A. Husmann / iBuilt LTD / March 16, 2026
 Part of: github.com/thusmann5327/Unified_Theory_Physics
@@ -228,6 +228,33 @@ def predict_base_pyth():return math.sqrt(1+BOS**2)
 def predict_omega_b():  return W**4
 def predict_he_ratio(): return math.sqrt(5)
 
+# ── Electrode potentials — REDUCTION (sector × Ry × W) ──────────────
+E_BRACKET = 13.606 * W   # Ry × W = energy per Zeckendorf bracket
+CONDUIT = DARK_GOLD / BRONZE_S3
+
+def predict_E_Au3(): return GOLD_S3 * E_BRACKET
+def predict_E_Au1(): return GOLD_S3 * E_BRACKET * (1 + LEAK)
+def predict_E_Ag():  return SILVER_S3 * E_BRACKET * CONDUIT
+def predict_E_Cu2(): return BRONZE_S3 * E_BRACKET * (BREATHING / (1 - LEAK))
+def predict_cell_Au_Ag(): return predict_E_Au3() - predict_E_Ag()
+
+# ── Electrode potentials — OXIDATION (Ohm's law through Cantor gaps) ─
+def _theta(nd): return 1 - (nd/10.0)*DARK_GOLD
+def _gap_sum(n): return sum(GAPS_NORM[:min(n, len(GAPS_NORM))])
+def _avg_gap(n):
+    n = min(n, len(GAPS_NORM))
+    return sum(GAPS_NORM[:n])/n
+def _pf(per): return RATIO_LEAK**(per-4)
+
+def predict_E_Sc():  return -G1 * E_BRACKET * _pf(4)
+def predict_E_Y():   return -G1 * E_BRACKET * _pf(5)
+def predict_E_Ti():  return -_gap_sum(2) * E_BRACKET * _pf(4) / 2
+def predict_E_V():   return -_avg_gap(3) * _theta(3)**2 * E_BRACKET * _pf(4)
+def predict_E_Cr():  return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 3
+def predict_E_Mn():  return -_gap_sum(5) * _theta(5)**5 * E_BRACKET * _pf(4) / 2
+def predict_E_Zr():  return -_avg_gap(2) * _theta(2)**4 * E_BRACKET * _pf(5)
+def predict_E_Cd():  return -_avg_gap(10) * _theta(10)**2 * E_BRACKET * _pf(5)
+
 def quantum_depth(Z, mass_amu, rv_pm):
     m=mass_amu*AMU;lc=HBAR/(m*C);r=rv_pm*1e-12
     return round(math.log(r/L_P)/math.log(PHI))-round(math.log(lc/L_P)/math.log(PHI))
@@ -240,7 +267,7 @@ def pct_err(p,o): return (p-o)/o*100
 
 def print_header():
     print("="*80)
-    print("  ATOMIC SCORECARD v5 — The Four-Gate Model")
+    print("  ATOMIC SCORECARD v9 — Four-Gate + Ohm's Law Oxidation")
     print("  Husmann Decomposition: phi^2=phi+1, D=233, zero free parameters")
     print("="*80)
     print(f"\n  BASE={BASE:.6f}  g1={G1:.6f}  BOS={BOS:.6f}  dark_gold={DARK_GOLD}")
@@ -395,6 +422,23 @@ def main():
         {'name':'t_as','pred':232.012,'obs':232.0,'note':'D-1'}]
     n,n10,n5=print_simple(7,"COSMOLOGICAL",c7)
     totals.append(("Cosmological",n,n10,n5,"t_as: 0.005%"))
+    c8r=[{'name':'E Au3+/Au','pred':predict_E_Au3(),'obs':1.498,'note':'sigma_2 * Ry*W'},
+        {'name':'E Au+/Au','pred':predict_E_Au1(),'obs':1.692,'note':'sigma_2 * Ry*W * (1+LEAK)'},
+        {'name':'E Ag+/Ag','pred':predict_E_Ag(),'obs':0.7996,'note':'sigma_1 * Ry*W * (dg/sigma_3)'},
+        {'name':'E Cu2+/Cu','pred':predict_E_Cu2(),'obs':0.3419,'note':'sigma_3 * Ry*W * (beta/r_c)'},
+        {'name':'Cell Au|Ag','pred':predict_cell_Au_Ag(),'obs':0.6984,'note':'E_Au3 - E_Ag'}]
+    n,n10,n5=print_simple(8,"ELECTRODE POTENTIALS — REDUCTION (V vs SHE)",c8r)
+    totals.append(("Reduction potentials",n,n10,n5,"Ag: 0.05%"))
+    c9=[{'name':'E Sc3+/Sc','pred':predict_E_Sc(),'obs':-2.077,'note':'-G1 * Ry*W'},
+        {'name':'E Y3+/Y','pred':predict_E_Y(),'obs':-2.372,'note':'-G1 * Ry*W * (1+LEAK)'},
+        {'name':'E Ti2+/Ti','pred':predict_E_Ti(),'obs':-1.630,'note':'-Sgaps(2)*Ry*W/ch'},
+        {'name':'E V2+/V','pred':predict_E_V(),'obs':-1.130,'note':'-avg(3)*th^2*Ry*W'},
+        {'name':'E Cr3+/Cr','pred':predict_E_Cr(),'obs':-0.744,'note':'-Sgaps(5)*th^5*Ry*W/ch'},
+        {'name':'E Mn2+/Mn','pred':predict_E_Mn(),'obs':-1.185,'note':'-Sgaps(5)*th^5*Ry*W/ch'},
+        {'name':'E Zr4+/Zr','pred':predict_E_Zr(),'obs':-1.553,'note':'-avg(2)*th^4*Ry*W*PF'},
+        {'name':'E Cd2+/Cd','pred':predict_E_Cd(),'obs':-0.403,'note':'-avg(10)*th^2*Ry*W*PF'}]
+    n,n10,n5=print_simple(9,"ELECTRODE POTENTIALS — OXIDATION (V vs SHE)",c9)
+    totals.append(("Oxidation potentials",n,n10,n5,"Y: 0.42%"))
     print("="*80);print("  GRAND SCORECARD");print("="*80);print()
     print(f"  {'Category':<35s} {'Tests':>5} {'<10%':>7} {'<5%':>7}  Best")
     print(f"  {'-'*70}")

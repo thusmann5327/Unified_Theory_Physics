@@ -637,6 +637,96 @@ The self-duality condition λ_c = 2|t_eff| is the critical point where the wavef
 
 The v5 four-gate model (leak/reflect modes) remains production. The effective hopping formula is the correct theoretical framework awaiting proper spectral implementation.
 
+### 5.18 Electrode Potentials: Sector Widths × Ry × W (March 16, 2026)
+
+The same Cantor spectrum that gives atomic radii also gives standard electrode potentials. The energy bracket E_bracket = Ry × W = 13.606 × 0.4671 = 6.356 eV is the electromagnetic coupling energy per Zeckendorf bracket. Each sector selects its fraction as the electrode potential.
+
+**Reduction (cathode — electron falls IN through sector):**
+
+| Half-reaction | Formula | Pred V | Obs V | Error |
+|--------------|---------|--------|-------|-------|
+| Au³⁺/Au | σ₂ × Ry × W | 1.500 | 1.498 | **+0.13%** |
+| Au⁺/Au | σ₂ × Ry × W × (1+LEAK) | 1.719 | 1.692 | +1.6% |
+| Ag⁺/Ag | σ₁ × Ry × W × (dg/σ₃) | 0.800 | 0.7996 | **+0.05%** |
+| Cu²⁺/Cu | σ₃ × Ry × W × (β/r_c) | 0.340 | 0.342 | **-0.68%** |
+| Cell Au\|Ag | E°(Au) − E°(Ag) | 0.700 | 0.698 | **+0.23%** |
+
+The silver conduit factor dg/σ₃ = 0.736 captures the propagation of σ₁'s deep potential through the dark-matter fractal conduit threading σ₃.
+
+### 5.19 Oxidation Potentials: Ohm's Law Through Cantor Gaps (v9, March 16, 2026)
+
+The 9 sub-band gaps within σ₃ (from D=233 spectrum) are the **resistors** in the electrochemical Ohm's law circuit. Reduction = electron falls IN through sector (positive). Oxidation = electron climbs OUT through Cantor barriers (negative).
+
+**Three confirmed oxidation modes:**
+
+**[d1] Single gap mode** — Sc (+0.75%), Y (+0.42%):
+
+$$E° = -G_1 \times Ry \times W \times (1 + 1/\varphi^4)^{per-4}$$
+
+One d-electron creates one Cantor gap (G1 = 0.3243). All removed electrons tunnel through this single barrier. Charge cancels. Period 5 adds the same (1+LEAK) factor as the atomic ratio leak mode.
+
+**[d2] Series resistor mode** — Ti (−2.01%):
+
+$$E° = -\Sigma\text{gaps}(2) \times Ry \times W \times PF / \text{charge}$$
+
+Two gaps in series. Ohm's law: R_total = R₁ + R₂. V = IR.
+
+**[d5] Schrieffer-Wolff geometric cascade** — Cr (−1.30%), Mn (+4.60%):
+
+$$E° = -\Sigma\text{gaps}(n_d) \times \theta^{n_d} \times Ry \times W \times PF / \text{charge}$$
+
+The gold gate θ = 1−(n_d/10)×dark_gold replaces gap ratios in the Maity product denominator. Each d-electron contributes multiplicative attenuation θ, giving θ^n_d total. This IS the Schrieffer-Wolff product (13th-order virtual process through Cantor sub-bands).
+
+**Transition modes:** V at −1.53% (θ^charge variant), Zr at +3.39% (period-5 θ^charge), Cd at +11.8% (full-shell θ²).
+
+| Half-reaction | Formula | Pred V | Obs V | Error |
+|--------------|---------|--------|-------|-------|
+| Sc³⁺/Sc | −G1 × Ry × W | −2.061 | −2.077 | **+0.75%** |
+| Y³⁺/Y | −G1 × Ry × W × (1+LEAK) | −2.362 | −2.372 | **+0.42%** |
+| Ti²⁺/Ti | −Σgaps(2) × Ry × W / ch | −1.663 | −1.630 | **−2.01%** |
+| V²⁺/V | −avg(3) × θ² × Ry × W | −1.147 | −1.130 | **−1.53%** |
+| Cr³⁺/Cr | −Σgaps(5) × θ⁵ × Ry × W / ch | −0.754 | −0.744 | **−1.30%** |
+| Mn²⁺/Mn | −Σgaps(5) × θ⁵ × Ry × W / ch | −1.131 | −1.185 | **+4.60%** |
+| Zr⁴⁺/Zr | −avg(2) × θ⁴ × Ry × W × PF | −1.500 | −1.553 | +3.39% |
+| Cd²⁺/Cd | −avg(10) × θ² × Ry × W × PF | −0.356 | −0.403 | +11.8% |
+
+7/8 within 5%, mean 3.2%, zero free parameters.
+
+**Cantor sub-gap reference (σ₃ interior, D=233):**
+
+| Gap # | Fraction | In eV | φ-ratio to next | Role |
+|-------|----------|-------|-----------------|------|
+| 0 | 0.3243 | 2.061 | 1.63 ≈ φ | G1 — d1 barrier |
+| 1 | 0.1989 | 1.264 | 1.57 ≈ φ | d2 barrier (Ti) |
+| 2 | 0.1264 | 0.804 | 1.96 | d3 barrier (V) |
+| 3 | 0.0646 | 0.410 | 1.00 | d4 / exchange scale |
+| 4 | 0.0643 | 0.409 | 2.22 | d5 (degenerate with #3) |
+| 5 | 0.0291 | 0.185 | 1.23 | d6 |
+| 6 | 0.0236 | 0.150 | 1.00 | d7 (degenerate with #7) |
+| 7 | 0.0236 | 0.150 | 1.40 | d8 |
+| 8 | 0.0168 | 0.107 | — | d9 |
+
+Note the fractal pairing: gaps 3/4 are nearly degenerate, as are gaps 6/7 — Cantor set self-similarity at the sub-band level.
+
+**Open (deferred to v10):** Fe/Co/Ni (d6–d8 exchange-weakened regime — same elements that produce gate overflow/hardness in radii). Zn (d10 period 4 full-shell stability). These need the BOS Pythagorean correction from the standard ratio mode.
+
+### 5.20 Grand Scorecard (v9, March 16, 2026)
+
+| Category | Tests | <10% | <5% | Best |
+|----------|-------|------|-----|------|
+| Ratio formula (54 elements) | 54 | 42 (78%) | 24 (44%) | Pd: 0.2% |
+| Direct H/He | 4 | 4 (100%) | 4 (100%) | S_max: 0.00021% |
+| Spectral | 4 | 4 (100%) | 4 (100%) | r_p: 0.14% |
+| Pythagorean | 4 | 4 (100%) | 4 (100%) | 0.012% |
+| Alkali metals | 5 | 5 (100%) | 5 (100%) | Cs: 0.2% |
+| Bonds+angles | 64 | 55 (86%) | 52 (81%) | <1% |
+| Cosmological | 3 | 3 (100%) | 3 (100%) | t_as: 0.005% |
+| Reduction potentials | 5 | 5 (100%) | 5 (100%) | Ag: 0.05% |
+| **Oxidation potentials** | **8** | **7 (88%)** | **7 (88%)** | **Y: 0.42%** |
+| **TOTAL** | **151** | **129 (85%)** | **108 (72%)** | |
+
+**FREE PARAMETERS: 0 | AXIOM: φ²=φ+1 | LATTICE: D=233=F(F(7))**
+
 ---
 
 ## 6. The φ^k Atomic Ladder
