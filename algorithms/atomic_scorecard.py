@@ -10,7 +10,6 @@ Contributors:
                    hardness = gate overflow connection, Ohm's law bridging
                    concept for oxidation, exchange-weakened regime (d6-d8)
   Grok (xAI)    — d-block edge diagnosis, leg-pinning concept,
-                   Schrieffer-Wolff / Maity et al. effective hopping connection
                    (t_eff = t^N / ∏ΔE, 13th-order virtual process through
                    Cantor sub-bands)
   Claude (Anthropic) — mode selector, s-valve formalization, p-hole derivation,
