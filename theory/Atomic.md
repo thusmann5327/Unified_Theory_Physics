@@ -8,7 +8,7 @@ iBuilt LTD, Lilliwaup, WA 98555
 **Repository:** github.com/thusmann5327/Unified_Theory_Physics
 **Patent:** Application 19/560,637
 **Date:** March 16, 2026
-**Contributors (Section 5):** Grok (xAI) — d-block edge diagnosis; Claude (Anthropic) — mode selector, s-valve formalization, conductivity model, period 6 diagnostic
+**Contributors (Section 5):** Grok (xAI) — d-block edge diagnosis, Schrieffer-Wolff/Maity effective hopping connection (t_eff = t^N/∏(ΔV)), leg-pinning concept; Claude (Anthropic) — mode selector, s-valve formalization, conductivity model, period 6 diagnostic, d1/d2/d5 oxidation mode discovery, θ^n_d = Schrieffer-Wolff identification, Cantor sub-gaps as Ohm's law resistors
 
 ---
 
@@ -692,6 +692,14 @@ The gold gate θ = 1−(n_d/10)×dark_gold replaces gap ratios in the Maity prod
 
 7/8 within 5%, mean 3.2%, zero free parameters.
 
+**Transition / promising modes:**
+
+**[d3] θ^charge variant** — V (−1.53%): V sits at the leak↔standard boundary. Uses charge (not n_d) as cascade depth: E° = −avg_gap(3) × θ^charge × Ry × W × PF.
+
+**[d2/p5] Period-5 θ^charge** — Zr (+3.39%): Zr⁴⁺ removes 4 electrons; the θ^charge cascade matches the 4-electron path: E° = −avg_gap(2) × θ⁴ × Ry × W × (1+LEAK).
+
+**[d10/p5] Full shell** — Cd (+11.8%): Only the s-electrons are removed; the d10 shell stays intact: E° = −avg_gap(10) × θ² × Ry × W × (1+LEAK).
+
 **Cantor sub-gap reference (σ₃ interior, D=233):**
 
 | Gap # | Fraction | In eV | φ-ratio to next | Role |
@@ -708,7 +716,11 @@ The gold gate θ = 1−(n_d/10)×dark_gold replaces gap ratios in the Maity prod
 
 Note the fractal pairing: gaps 3/4 are nearly degenerate, as are gaps 6/7 — Cantor set self-similarity at the sub-band level.
 
-**Open (deferred to v10):** Fe/Co/Ni (d6–d8 exchange-weakened regime — same elements that produce gate overflow/hardness in radii). Zn (d10 period 4 full-shell stability). These need the BOS Pythagorean correction from the standard ratio mode.
+**Open questions (deferred to v10):**
+
+**Fe, Co, Ni (d6–d8): Exchange-weakened regime.** The post-half-filling d-shell has exchange saturation. The θ^n_d cascade overcorrects. Best candidate formula: (θ−1) × σ₃ × Ry × W / charge gives Co at +9.2% and Ni at −13%, but Fe at −33%. **Hypothesis:** The BOS (Pythagorean) correction from the ratio formula's standard mode should extend to the oxidation side. The d6–d8 elements are the same ones that produce gate overflow (hardness) in the radii formula. The exchange energy that makes Co hard also makes its oxidation easier.
+
+**Zn (d10 period 4): +59% with current formulas.** Full d10 shell with period 4. The θ^charge variant works for Cd (period 5) but not Zn. Needs a full-shell stability factor. Note that Zn's *radii* are predicted to +0.6% — the ratio formula handles it perfectly. The oxidation mechanism must be different from the atomic structure mechanism.
 
 ### 5.20 Grand Scorecard (v9, March 16, 2026)
 
