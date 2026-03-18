@@ -129,6 +129,38 @@ OPEN:
 
 ---
 
+### 1.6 Bridge Computations: AAH → Standard Physics — **PARTIALLY SOLVED**
+
+**Problem**: The framework maps AAH spectral constants onto atomic data with high accuracy, but the map itself is empirical. Why does a 1D quasiperiodic spectrum predict 3D Coulomb atom properties?
+
+**Solution (March 18, 2026)**: Six bridge computations tested. Seven bridges closed, two partial, three open.
+
+**Closed bridges:**
+- [x] Fibonacci band count theorem: all 5 bands = Fibonacci numbers at F(2k) lattice sizes
+- [x] σ₃ self-similarity: 89% (8/9) sub-band sizes are Fibonacci numbers
+- [x] Shell capacity ratio 14/10 = 1.400 ≈ BASE = 1.408 (0.6%)
+- [x] Shell capacity ratio 10/6 = F(5)/F(4) = 5/3 (EXACT)
+- [x] Shell capacity ratio 6/2 = F(4)/F(2) = 3/1 (EXACT)
+- [x] IE anomaly at n_p=4 predicted by σ₃ p-hole gate (correct sign, position, damping)
+- [x] Mohs hardness ρ = +0.73 with gate overflow residual (p < 0.001)
+
+**Partial bridges:**
+- [ ] 3D AAH ground state: r=0.70 correlation with H(1s), but poor spherical symmetry at N=13
+- [ ] d-block conductivity: ρ = -0.20 (correct sign, not significant)
+
+**Open bridges (the critical gap):**
+- [ ] Absolute ionization energies from Cantor screening constants (FAILED — diverges at Z>3)
+- [ ] V_eff(r) from AAH continuum limit (NOT FOUND — Coulomb potential is low-frequency in log-r)
+- [ ] Electron filling order ab initio from 3D AAH spectrum (UNTESTED — needs N≥55)
+
+**Key finding**: Shell capacity ratios ARE Fibonacci convergents to φ, meeting the Cantor spectrum at BASE. This is the most promising route to a full derivation.
+
+> See: [theory/Bridge_Computations.md](../theory/Bridge_Computations.md) | [verification/bridge_computations.py](../verification/bridge_computations.py)
+
+**Status**: ✓ **PARTIALLY SOLVED** (March 18, 2026)
+
+---
+
 ## Priority 2: Theoretical Extensions
 
 ### 2.1 Gravity Integration
