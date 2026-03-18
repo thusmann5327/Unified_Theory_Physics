@@ -696,6 +696,22 @@ print(f"l₀ = {math.sqrt(4*0.690760):.3f} l_P")
 [22] Bondi, A. J. Phys. Chem. 68, 441 (1964).
 [23] Milgrom, M. Astrophys. J. 270, 365 (1983).
 
+[16] Hamber, H.W. & Kagel, G. Class. Quantum Grav. 21, 5915 (2004). [Exact Bianchi identity in Regge gravity]
+
+[17] Cheeger, J., Müller, W. & Schrader, R. Commun. Math. Phys. 92, 405 (1984). [Regge continuum limit]
+
+[18] Barrett, J.W. & Williams, R.M. Class. Quantum Grav. 5, 1543 (1988). [Regge convergence]
+
+[19] Casdagli, M. Commun. Math. Phys. 107, 295 (1986). [RG trace map]
+
+[20] Ostlund, S. & Pandit, R. Phys. Rev. B 29, 1394 (1984). [AAH renormalization]
+
+[21] Cordero, B. et al. Dalton Trans. 2832 (2008). [Covalent radii]
+
+[22] Bondi, A. J. Phys. Chem. 68, 441 (1964). [Van der Waals radii]
+
+[23] Milgrom, M. Astrophys. J. 270, 365 (1983). [MOND]
+
 ---
 
 *Three constants. Four hierarchies. One lattice. Gravity is the equation of state of a critical Cantor spectrum — derived, not assumed.*
