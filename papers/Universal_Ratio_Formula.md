@@ -41,6 +41,16 @@ $$\Theta(Z) = 1 \;-\; \frac{n_d}{10} \times d_g \;-\; \frac{n_f}{14} \times L \;
 
 Four inputs from the electron configuration: n_d (d-electrons), n_f (f-electrons), n_p (p-electrons in the valence shell), and per (period). Five constants from the AAH spectrum. Zero free parameters.
 
+### Scope and exclusions
+
+The ratio formula applies to elements Z = 3 (Li) through Z = 56 (Ba) — 54 elements spanning the s-, p-, d-blocks and noble gases. **Hydrogen and helium are excluded** because they have no inner shells: the Cantor gate structure requires nested boundaries (σ_shell inside σ₄), which don't exist for a single-electron atom. Hydrogen is the boundary condition of the framework, not a gate.
+
+However, hydrogen's absolute radii ARE predicted by the framework:
+- H bond length = BASE × a₀ = 74.5 pm (observed 74.1 pm, **0.5%**)
+- H vdW radius = BASE × φ × a₀ = 120.6 pm (observed 120 pm, **0.5%**)
+
+The ratio formula begins where the gate structure begins — at lithium, the first atom with an inner shell.
+
 ---
 
 ## Derivation from First Principles
@@ -56,6 +66,18 @@ Place a particle on a one-dimensional lattice with D = 233 = F(13) sites and a q
 $$H_{ij} = 2\cos\!\left(\frac{2\pi i}{\varphi}\right)\delta_{ij} + J(\delta_{i,j+1} + \delta_{i,j-1})$$
 
 Set V = 2J (the self-dual critical point). This is the Aubry-André-Harper Hamiltonian — experimentally realized in ultracold atoms (Roati 2008), superconducting qubits (Xiang 2023), and graphene moiré superlattices (Nature 2025).
+
+**Why D = 233?** The AAH model at golden-ratio frequency requires Fibonacci-length lattices for exact quasiperiodic commensuration. D = 233 = F(13) is not a free choice — the constants converge at any Fibonacci size ≥ 89:
+
+| D | Fibonacci | BASE | BOS |
+|---|---|---|---|
+| 55 | F(10) | 1.408733 | 0.991712 |
+| 89 | F(11) | 1.408601 | 0.991957 |
+| 144 | F(12) | 1.408460 | 0.992114 |
+| **233** | **F(13)** | **1.408382** | **0.992022** |
+| 377 | F(14) | 1.408377 | 0.992034 |
+
+BASE at D = 233 and D = 377 differ by 0.0004%. The constants are a convergent limit, not a parameter choice.
 
 ### Step 3: Diagonalize
 
@@ -383,7 +405,7 @@ Four binary gates (each L = 1/φ⁴):             (discrete corrections)
   σ₃: p-hole / default
   σ₄: s-leak / s-reflect
     ↓
-s/p/d-block: 54 elements, 42 within 10%        (zero free parameters)
+s/p/d-block: 54 elements, 44 within 10%        (zero free parameters)
 f-block: 15 lanthanides, validated by           (conductivity arch +
   Gd(f⁷) = worst conductor, Yb(f¹⁴) = best     covalent contraction)
 ```
@@ -590,7 +612,7 @@ The unity partition identity:
 1/φ + 1/φ³ + 1/φ⁴ = 0.618 + 0.236 + 0.146 = 1
 ```
 
-matches the observed dark energy (0.683), dark matter (0.268), and baryonic (0.049) fractions to within the precision of current cosmological measurements.
+is suggestive of the observed dark energy (0.683), dark matter (0.268), and baryonic (0.049) fractions, but the mapping is not derived — the partition sums to 1 by algebra, and the cosmological fractions are measured independently. **The quantitative claims are W⁴ → Ω_b (3.4%) and N × W → α⁻¹ (0.2%), both computed from the Hamiltonian. The unity partition is a conceptual parallel, not a prediction.**
 
 See the companion paper: "Lineweaver–Patel Gate Diagram: A Cantor-Spectral Address System for 58 Objects Spanning 61 Orders of Magnitude in Mass" (Research Square, 2026).
 
@@ -598,15 +620,47 @@ See the companion paper: "Lineweaver–Patel Gate Diagram: A Cantor-Spectral Add
 
 ## Figures
 
-**Figure 1:** [Atomic Gate Diagram](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Atomic_Gate_Diagram.png) — 54 elements mapped by r(cov) vs r(vdW). Three gate boundaries: silver floor (1+L/δ_S = 1.060), gold floor (1+L = 1.146), bronze baseline (BASE = 1.408). Color = residual (red = hard, blue = conductor).
+### Figure 1: The Atomic Gate Diagram
 
-**Figure 2:** [Atomic Gate Diagram — Detail](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Atomic_Gate_Diagram_Detail.png) — Zoomed view of the d-block and mid-period p-block cluster (r_cov 105–178 pm). All elements individually labeled.
+54 elements mapped by r(cov) vs r(vdW). Three gate boundaries from the Cantor spectrum bound every atom. Silver gate = absolute compression floor. Gold gate = leak mode floor. Bronze surface = s-block baseline. Color encodes the residual: red = hardness (gate overflow), blue = conductivity (gate compression), gray = formula is exact.
 
-**Figure 3:** [Fibonacci Bands](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Fibonacci_Bands.png) — Cloud excess (vertical leg / a₀) quantized at F(1), F(2), F(3) Bohr radii. Four bands: Silver (best conductors), Gold (structural metals), Bronze (main periodic table), Extended (noble gases, alkali metals).
+![Atomic Gate Diagram](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Atomic_Gate_Diagram.png)
 
-**Figure 4:** [Angle–Band Map](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Angle_Band_Map.png) — All 54 elements plotted by gate angle (x) vs cloud excess (y). Six φ-derived angle clusters. Three Fibonacci band boundaries.
+### Figure 2: Atomic Gate Diagram — Detail View
 
-**Figures 5–8:** Band correlation diagrams — [Band 1 Silver](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band1_Silver.png) | [Band 2 Gold](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band2_Gold.png) | [Band 3 Bronze](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band3_Bronze.png) | [Band 4 Extended](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band4_Extended.png)
+Zoomed view of the crowded d-block and mid-period p-block cluster (r_cov 105–178 pm, r_vdW 125–225 pm). Every element individually labeled. Cu and Zr visible on the silver floor in the purple conduit zone. The gold and silver boundary lines clearly separate the three populations.
+
+![Atomic Gate Diagram Detail](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Atomic_Gate_Diagram_Detail.png)
+
+### Figure 3: Fibonacci Bands
+
+The cloud excess (vertical leg of the right triangle, measured in Bohr radii) quantizes into four bands at Fibonacci boundaries F(1) = 1, F(2) = 2, F(3) = 3 a₀. Each band corresponds to a gate floor and a characteristic material property.
+
+![Fibonacci Bands](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Fibonacci_Bands.png)
+
+### Figure 4: Angle–Band Map
+
+All 54 elements plotted by gate angle (x-axis) vs cloud excess in Bohr radii (y-axis). Six vertical lines mark the φ-derived angle clusters. Three horizontal lines mark the Fibonacci band boundaries. Elements don't scatter randomly — they cluster at the intersections of these lines.
+
+![Angle Band Map](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Angle_Band_Map.png)
+
+### Figures 5–8: Band Correlation Diagrams
+
+**Band 1 (Silver floor):** Smallest cloud excess = best conductors. Cu at 0.88 a₀ with 58 MS/m.
+
+![Band 1 Silver](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Band1_Silver.png)
+
+**Band 2 (Gold floor):** Structural metals. Melting point increases with cloud excess within the band.
+
+![Band 2 Gold](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Band2_Gold.png)
+
+**Band 3 (Bronze surface):** The main periodic table (35 elements). Triangle area anti-correlates with hardness (ρ = −0.36, p = 0.022).
+
+![Band 3 Bronze](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Band3_Bronze.png)
+
+**Band 4 (Extended cloud):** Noble gases, alkali metals, semiconductors. Gate space expands with cloud excess.
+
+![Band 4 Extended](https://raw.githubusercontent.com/thusmann5327/Unified_Theory_Physics/main/papers/images/Band4_Extended.png)
 
 ---
 
