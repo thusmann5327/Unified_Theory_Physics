@@ -251,7 +251,7 @@ The correct statement: **σ₄ is the Cantor boundary closest to the entropy cei
 
 ---
 
-## 9. Falsifiability (renumbered)
+## 9. Falsifiability
 
 ### What would disprove this
 
@@ -271,7 +271,7 @@ The correct statement: **σ₄ is the Cantor boundary closest to the entropy cei
 
 ---
 
-## 9. Emergence of Gravity from Cantor Entanglement Thermodynamics
+## 10. Emergence of Gravity from Cantor Entanglement Thermodynamics
 
 ### The Problem
 
@@ -301,9 +301,9 @@ The von Neumann entanglement entropy of the hydrogen 1s wavefunction, partitione
 
 $$S(r) = -p(r) \ln p(r) - (1-p(r)) \ln(1-p(r))$$
 
-has its global maximum at r = 1.408377 a₀, coinciding with the Cantor σ₄ position (1.408380 a₀) to within **0.00021%**. The entropy at this point: S(σ₄) = 0.690760 nats = 99.66% of ln(2).
+has its global maximum at r = 1.337 a₀ (where p = 0.5 exactly, S = ln(2)). The Cantor σ₄ position (r = 1.408 a₀) is NOT at this maximum — it is the independently-derived Cantor boundary where S reaches **99.66% of the one-bit ceiling** (S = 0.6908 nats vs ln(2) = 0.6931 nats). The σ₄ position itself matches the AAH ratio R_OUTER/R_SHELL = 1.408380 to 0.00021%.
 
-Each σ₄ boundary is a **one-bit quantum channel** to within 0.34%.
+Each σ₄ boundary is a **near-maximal one-bit quantum channel** — 0.34% below the ceiling. The deficit potentially encodes the visible/twin sector asymmetry.
 
 At bracket level bz, the lattice has cell size l(bz) = l₀ × φ^bz. A 2D surface at this scale has A/l(bz)² cells, each containing one σ₄ boundary. The total entanglement entropy:
 
@@ -390,7 +390,7 @@ Dark matter is the gravitational effect of the entangled twin sector (W² = 0.21
 
 ---
 
-## 10. Relationship to Existing Approaches
+## 11. Relationship to Existing Approaches
 
 ### What this adds to existing work
 
@@ -422,7 +422,7 @@ Dark matter is the gravitational effect of the entangled twin sector (W² = 0.21
 
 ---
 
-## 10. Conclusion
+## 12. Conclusion
 
 The hierarchy problem — why gravity is 10³⁶ times weaker than electromagnetism, and why the cosmological constant is 10¹²² times smaller than the Planck density — has resisted solution for a century. We propose that both hierarchies arise from the same quasiperiodic Cantor lattice that produces the fine structure constant and the baryon fraction.
 
