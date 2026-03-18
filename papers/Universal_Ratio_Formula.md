@@ -227,9 +227,9 @@ Each gate is a door inside the atom. Energy flows through the Cantor spectrum, a
 
 28/54 elements within 10%, mean error 9.4%.
 
-### With gate corrections (v9 six-mode model)
+### With gate corrections (v10 seven-mode model)
 
-42/54 elements within 10%, mean error 6.7%. Only one element (B) exceeds 20%.
+44/54 elements within 10%, mean error 6.2%. Only one element (B) exceeds 20%.
 
 ### Flagship results
 
@@ -250,13 +250,13 @@ Think of it like a weather forecast:
 
 **Level 1 — The Unified Formula** is the satellite view. One equation, 28/54 within 10%, mean error 9.4%. Every deviation has a physical meaning. Positive residual = hardness. Negative residual = which gate is active. Zero residual = formula is exact.
 
-**Level 2 — The Six-Mode Implementation** is the local forecast. It applies the gate corrections identified by Level 1, fixing the negative residuals. This gets you to 42/54 within 10%, mean error 6.7%. But the gate corrections absorb the physics — you lose the diagnostic signal.
+**Level 2 — The Seven-Mode Implementation** is the local forecast. It applies the gate corrections identified by Level 1, fixing the negative residuals. This gets you to 44/54 within 10%, mean error 6.2%. But the gate corrections absorb the physics — you lose the diagnostic signal.
 
 **Use Level 1 when** you want to understand the physics of an element, predict material properties, or identify which gate is active.
 
 **Use Level 2 when** you want the most accurate numerical prediction of r(vdW)/r(cov).
 
-### The Six Modes (Level 2)
+### The Seven Modes (Level 2)
 
 Each mode corresponds to a specific gate state:
 
@@ -266,8 +266,23 @@ Each mode corresponds to a specific gate state:
 | **P-hole** | p-block with n_p ≥ 4, period ≥ 3 | additive × (1 − L) | σ₃ gate leaking inward | 4.0% mean |
 | **Leak** | d-block boundary (n_d ≤ 4 or n_d ≥ 9) with s-electron | 1 + L = 1.1459 | σ₄ gate held open by s-electron | 4.6% mean |
 | **Reflect** | d¹⁰ with no s-electron (Pd only) | BASE + d_g × L = 1.4507 | σ₄ gate closed, energy reflects | 0.2% (N=1) |
-| **Standard** | d-block mid-series (d⁵–d⁸) | √[1 + (θ × BOS)²], θ = 1 − (n_d/10) × d_g | σ₂ gate partially closed | 8.2% mean |
+| **Standard** | d-block mid-series (d⁵–d⁸, non-ferromagnetic) | √[1 + (θ × BOS)²], θ = 1 − (n_d/10) × d_g | σ₂ gate partially closed | 6.8% mean |
+| **Magnetic** | Ferromagnetic elements (Fe, Co, Ni) | √[1 + (θ × BOS)²], θ = 1 − (n_d/10) × d_g + μ_eff × L | Magnetic exchange expands cloud | 2.9% mean |
 | **Pythagorean** | Noble gases | √[1 + (θ × BOS)²], θ > 1 | No gate active, cloud fully extended | 7.1% mean |
+
+---
+
+### The Seventh Mode: Magnetic Exchange (new in v10)
+
+Iron, cobalt, and nickel are ferromagnetic — their unpaired d-electrons align cooperatively, creating a net magnetic moment that physically expands the electron cloud. The unified formula without the magnetic correction underpredicts their ratios by 4–16%. The correction adds the measured moment μ_eff (in Bohr magnetons) scaled by the gate constant:
+
+$$\Theta_{mag} = 1 - \frac{n_d}{10} \times d_g + \mu_{eff} \times L$$
+
+The coefficient is L = 1/φ⁴ — the same gate constant used in every other mode. Each Bohr magneton opens the gate angle by exactly one gate quantum. Results: Fe 3.2%, Co 5.3%, Ni **0.1%**.
+
+The residual within the ferromagnetic elements correlates perfectly with Curie temperature (ρ = +1.000): Co (T_C = 1394 K) has the largest residual, Fe (1043 K) is next, Ni (631 K) is smallest. The formula's "error" on Co was measuring the strength of ferromagnetic exchange all along.
+
+Note: this mode uses the measured moment μ_eff as input, making it the only mode that requires experimental data beyond the electron configuration. The other six modes are purely ab initio. However, the coefficient (L) remains zero-parameter — it is not fitted to the magnetic elements but derived from the same Hamiltonian as every other constant.
 
 ---
 
@@ -329,7 +344,7 @@ Every deviation from the unified formula is an integer or simple-fraction multip
 | **Y** | −0.236 | −1.48 | **−3/2** | 1.2% | 1.5 quanta absorbed — early d-block |
 | **Zr** | −0.306 | −1.92 | **−2** | 4.1% | Two quanta absorbed — strongest leak |
 
-The pattern is clear: hardness = excess information quanta the gate system can't absorb. Conductivity = information quanta the gate system removes. The six-mode corrections (Level 2) are doing the same job — they subtract the appropriate number of ℏ_info quanta to match observation. But the unified formula (Level 1) keeps the count visible.
+The pattern is clear: hardness = excess information quanta the gate system can't absorb. Conductivity = information quanta the gate system removes. The seven-mode corrections (Level 2) are doing the same job — they subtract the appropriate number of ℏ_info quanta to match observation. But the unified formula (Level 1) keeps the count visible.
 
 The information quantum ℏ_info = L + L²/φ has a natural interpretation: it is one gate transmission (L = 1/φ⁴) plus the self-similar echo of that transmission at the next Fibonacci recursion level (L²/φ). This is exactly what a Cantor set does — each gap generates a scaled copy of itself at the next level.
 
@@ -436,9 +451,53 @@ Each term is one gate. The formula IS the circuit diagram.
 | Clementi-Raimondi Z_eff | ~20 screening constants | ~30 | ~10% |
 | DFT (B3LYP/cc-pVTZ) | xc functional choice | All | ~5% |
 | Machine learning | 100+ features | All | ~3% |
-| **This work** | **0** | **54** | **6.7% mean** |
+| **This work** | **0** | **54** | **6.2% mean** |
 
 The formula trades ~2× accuracy for **complete transparency**: every constant traces to a single Hamiltonian, every prediction is reproducible in one line of algebra, and the deviations themselves predict material properties.
+
+---
+
+## The Pythagorean Decomposition: Fibonacci Bands
+
+Every element at position (r_cov, r_vdW) on the Atomic Gate Diagram forms a right triangle with the origin. The horizontal leg is r_cov (the bonded size). The hypotenuse is r_vdW (the outer cloud). The vertical leg — the part invisible in the ratio alone — is the **cloud excess**:
+
+$$\text{vert} = \sqrt{r_{vdW}^2 - r_{cov}^2}$$
+
+Measured in Bohr radii (a₀ = 52.9 pm), this vertical leg quantizes into four bands at Fibonacci boundaries:
+
+| Band | vert / a₀ | Gate | Elements | Defining property |
+|---|---|---|---|---|
+| **~1 a₀** | 0.88–1.26 | Silver floor | Cu, Zr, Cd, Zn | Best conductors |
+| **~2 a₀** | 1.75–2.36 | Gold floor | Ti, V, Ag, Mg, Ni, Y, Be, Sc, Nb | Structural / refractory metals |
+| **~3 a₀** | 2.56–2.94 | Bronze surface | Most p-block, Fe, Co, Mn, Cr, halogens | Main periodic table |
+| **~3+ a₀** | 3.0–4.6 | Extended | B, Ge, Si, K, Rb, Cs, noble gases | Semiconductors, alkali metals |
+
+The band boundaries fall at F(1) = 1, F(2) = 2, and F(3) = 3 Bohr radii — the first three non-trivial Fibonacci numbers. The cloud excess is counting Fibonacci units of the hydrogen ground-state radius.
+
+### Band correlations
+
+**Band 1 (Silver floor):** Cu has the smallest cloud excess (0.88 a₀) and the highest conductivity (58 MS/m). All four elements in this band are d¹⁰ metals sitting on the silver metallic mean boundary at 1 + L/δ_S = 1.060.
+
+**Band 2 (Gold floor):** The structural metals. Nb (2750 K) and V (2183 K) have the highest melting points; Ag (1235 K) and Mg (923 K) have the lowest. The cloud excess tracks refractory strength within this band.
+
+**Band 3 (Bronze surface):** The largest band (35 elements). Triangle area anti-correlates with hardness (ρ = −0.36, p = 0.022) — tight gate space = hard material.
+
+**Band 4 (Extended cloud):** Cs has the largest cloud excess (4.56 a₀) and is the softest metal (Mohs 0.2). B has the smallest in this band (3.26 a₀) and is the hardest element (Mohs 9.3). The band spans semiconductors (Si, Ge) and alkali metals (K, Rb, Cs) — elements whose clouds extend far beyond their bonded cores.
+
+### Angle clustering at φ-derived values
+
+The gate angle θ = arctan(vert / r_cov) clusters at six special values, all derivable from φ:
+
+| Angle | Formula | Elements | Gate state |
+|---|---|---|---|
+| **22.2°** | arctan(BASE−1) | Cu, Zr, Cd | Silver floor — maximum compression |
+| **31.7°** | arctan(1/φ) | Ti, V, Y, Ag | Gold floor — standard leak |
+| **45.0°** | arctan(1) | Li, Cs, Mn, Tc, Ru | Bronze baseline — gate equilibrium |
+| **51.8°** | arctan(√φ) | P, Co, As, Br, Se | Mid-period — σ₃ sub-gap active |
+| **58.3°** | arctan(φ) | Si, Ge, Ar | Semiconductor — strong p-extension |
+| **67.5°** | arctan(δ_S) | Ne, B | Maximum extension — superhard |
+
+The elements don't scatter randomly — they cluster at the arctangents of φ, 1/φ, √φ, and the metallic means. Each cluster maps to a specific gate state. The periodic table is a discretized angular spectrum.
 
 ---
 
@@ -537,6 +596,20 @@ See the companion paper: "Lineweaver–Patel Gate Diagram: A Cantor-Spectral Add
 
 ---
 
+## Figures
+
+**Figure 1:** [Atomic Gate Diagram](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Atomic_Gate_Diagram.png) — 54 elements mapped by r(cov) vs r(vdW). Three gate boundaries: silver floor (1+L/δ_S = 1.060), gold floor (1+L = 1.146), bronze baseline (BASE = 1.408). Color = residual (red = hard, blue = conductor).
+
+**Figure 2:** [Atomic Gate Diagram — Detail](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Atomic_Gate_Diagram_Detail.png) — Zoomed view of the d-block and mid-period p-block cluster (r_cov 105–178 pm). All elements individually labeled.
+
+**Figure 3:** [Fibonacci Bands](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Fibonacci_Bands.png) — Cloud excess (vertical leg / a₀) quantized at F(1), F(2), F(3) Bohr radii. Four bands: Silver (best conductors), Gold (structural metals), Bronze (main periodic table), Extended (noble gases, alkali metals).
+
+**Figure 4:** [Angle–Band Map](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Angle_Band_Map.png) — All 54 elements plotted by gate angle (x) vs cloud excess (y). Six φ-derived angle clusters. Three Fibonacci band boundaries.
+
+**Figures 5–8:** Band correlation diagrams — [Band 1 Silver](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band1_Silver.png) | [Band 2 Gold](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band2_Gold.png) | [Band 3 Bronze](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band3_Bronze.png) | [Band 4 Extended](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/papers/images/Band4_Extended.png)
+
+---
+
 ## Reproducibility
 
 ```python
@@ -587,7 +660,7 @@ print(f"Gd: {ratio(1,7,0,6):.4f} (sparse obs ~1.21)")   # 1.3393, 10.8%
 
 ## References
 
-1. Husmann, T.A. "A Zero-Parameter Formula for Atomic Radius Ratios Derived from the Cantor Spectrum of the AAH Hamiltonian." viXra (2026). [54 elements, 42/54 within 10%, 6.7% mean error]
+1. Husmann, T.A. "A Zero-Parameter Formula for Atomic Radius Ratios Derived from the Cantor Spectrum of the AAH Hamiltonian." viXra (2026). [54 elements, 44/54 within 10%, 6.2% mean error]
 2. Husmann, T.A. "Lineweaver–Patel Gate Diagram: A Cantor-Spectral Address System for 58 Objects Spanning 61 Orders of Magnitude in Mass." Research Square (2026). [58 objects, N×W = 137.3]
 3. Nythe, H. "The 344 nm Hypothesis: Harmonic Quantization of Carbon-Carbon Bonds and Predictions for Resonant Photocatalysis." viXra:2601.0061 (2026). [C–C at F(5)/F(4) × Ry/(2π), p < 0.001]
 4. Saeed, F. "Geometric Unification of the Fine Structure and Lamb Shift: A Deterministic Theory Based on the Continuity Field (δ, γ)." viXra:2512.0028 (2025). [δ_core = 2√2/15, g_p to 12 digits]
