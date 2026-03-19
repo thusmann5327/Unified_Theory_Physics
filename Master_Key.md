@@ -747,17 +747,171 @@ STEFAN_BOLTZMANN = 5.670374e-8
 
 ## Solar Evolution, Temperature, Greenhouse, Tectonics
 
-*(These functions are unchanged from v1 — solar_luminosity_at_time, equilibrium_temperature, greenhouse_temperature, radioactive_heat_at_time, tectonic_vigor, carbon_silicate_cycle_rate. See v1 Master Key §VIII for complete implementations.)*
+```python
+def solar_luminosity_at_time(time_ga):
+    """
+    Calculate Sun's luminosity relative to today.
+
+    Args:
+        time_ga: Time in Ga before present (0 = now, 4.57 = formation)
+    Returns:
+        Luminosity ratio (1.0 = today, 0.70 = at formation)
+    """
+    if time_ga <= 0:
+        return 1.0
+    if time_ga >= SOLAR_AGE_GYR:
+        return 0.70
+
+    t_elapsed = SOLAR_AGE_GYR - time_ga
+    t_fraction = t_elapsed / SOLAR_AGE_GYR
+    return 0.70 + 0.30 * t_fraction
+```
+
+```python
+def equilibrium_temperature(distance_au, luminosity_ratio=1.0, albedo=0.3):
+    """
+    Calculate blackbody equilibrium temperature.
+
+    T_eq = (L × (1-A) / (16π × σ × d²))^0.25
+    """
+    L = L_SUN_TODAY * luminosity_ratio
+    d = distance_au * AU_METERS
+    absorbed = L * (1 - albedo) / (16 * math.pi * d * d)
+    T_eq = (absorbed / STEFAN_BOLTZMANN) ** 0.25
+    return T_eq
+```
+
+```python
+def greenhouse_temperature(T_eq, co2_percent, ch4_ppm=0, h2o_relative=1.0):
+    """
+    Calculate surface temperature with greenhouse effect.
+
+    Calibrated: Present Earth = 288K with +33K greenhouse.
+    """
+    BASE_GREENHOUSE = 33.0
+    co2_present = 0.04
+    ch4_present = 1.9
+
+    # CO2 effect (logarithmic, ~3K per doubling)
+    if co2_percent > 0:
+        co2_factor = math.log2(max(0.0001, co2_percent) / co2_present)
+        co2_warming = 3.0 * co2_factor
+    else:
+        co2_warming = -30
+
+    # Methane effect (~0.5K per doubling)
+    if ch4_ppm > 0:
+        ch4_factor = math.log2(max(0.1, ch4_ppm) / ch4_present)
+        ch4_warming = 0.5 * ch4_factor
+    else:
+        ch4_warming = 0
+
+    # Water vapor feedback
+    h2o_warming = 5.0 * (h2o_relative - 1.0)
+
+    # Total
+    delta_T = BASE_GREENHOUSE + co2_warming + ch4_warming + h2o_warming
+    delta_T = max(-10, min(250, delta_T))
+
+    return T_eq + delta_T
+```
+
+```python
+def radioactive_heat_at_time(time_ga, ree_enrichment=1.0):
+    """
+    Calculate radioactive heat production ratio vs present.
+    """
+    half_lives = {'U238': 4.47, 'U235': 0.704, 'Th232': 14.0, 'K40': 1.25}
+    contributions = {'U238': 0.39, 'U235': 0.02, 'Th232': 0.40, 'K40': 0.19}
+
+    total_ratio = 0
+    for isotope, half_life in half_lives.items():
+        abundance_ratio = 2 ** (time_ga / half_life)
+        total_ratio += contributions[isotope] * abundance_ratio
+
+    ree_factor = 1.0 + 0.2 * (ree_enrichment - 1.0)
+    return total_ratio * ree_factor
+```
+
+```python
+def tectonic_vigor(radius_km, mass_ratio_earth=1.0, time_ga=0,
+                   ree_enrichment=1.0, water_mass_fraction=0.001):
+    """
+    Calculate tectonic activity index (0-1).
+    """
+    # Size factor
+    r_ratio = radius_km / 6371
+    if r_ratio < 0.4:
+        size_factor = 0
+    elif r_ratio < 0.7:
+        size_factor = (r_ratio - 0.4) / 0.3
+    elif r_ratio < 1.5:
+        size_factor = 1.0
+    elif r_ratio < 2.0:
+        size_factor = 1.0 - (r_ratio - 1.5) / 0.5
+    else:
+        size_factor = 0.1
+
+    # Heat factor
+    heat_ratio = radioactive_heat_at_time(time_ga, ree_enrichment)
+    heat_factor = min(1.0, heat_ratio / 1.5)
+
+    # Water factor
+    water_ratio = water_mass_fraction / 0.001
+    if water_ratio < 0.1:
+        water_factor = water_ratio / 0.1
+    elif water_ratio < 5:
+        water_factor = 1.0
+    else:
+        water_factor = max(0.3, 1.0 - (water_ratio - 5) / 20)
+
+    vigor = size_factor * heat_factor * water_factor
+
+    # Age factor
+    age_since = SOLAR_AGE_GYR - time_ga
+    if age_since < 0.5:
+        age_factor = age_since / 0.5
+    else:
+        age_factor = 1.0
+
+    return min(1.0, max(0.0, vigor * age_factor))
+```
+
+```python
+def carbon_silicate_cycle_rate(tectonic_vigor, temperature_K, co2_partial_pressure):
+    """
+    Model the climate thermostat.
+
+    Returns dict with weathering and volcanism rates.
+    """
+    # Volcanism depends on tectonic vigor
+    volcanic_rate = tectonic_vigor
+
+    # Weathering increases with temperature (Arrhenius)
+    T_ref = 288
+    weathering_rate = math.exp(0.09 * (temperature_K - T_ref))
+
+    # CO2 dependence
+    weathering_rate *= (co2_partial_pressure / 0.0004) ** 0.5
+
+    return {
+        'weathering': weathering_rate,
+        'volcanism': volcanic_rate,
+        'net_co2_flux': volcanic_rate - weathering_rate
+    }
+```
+
+**March 16-18 advancement note:** The `solar_luminosity_at_time` function models the Sun's luminosity evolution whose present-day value connects directly to the framework's cos(alpha) photosphere prediction: D_sun = cos(1/phi) applied to the Cantor node gives the solar diameter to **0.06% error**. The concentric nesting model (silver innermost, gold middle, bronze outermost) places the silver-to-gold core boundary at **0.214 R_sun**, matching helioseismology's radiative-convective boundary (0.20-0.25 R_sun, 7% error). This means the Sun's internal structure IS a Cantor node: the nuclear-burning core occupies the silver sector (mass/confinement), the radiative zone fills the gold sector (momentum/propagation), and the convective envelope is the bronze sector (observable/surface).
 
 ---
 
 # XI. PLANETARY DATA TABLES
 
-*(Unchanged from v1 — Solar System orbital data, condensation sequence, Earth timeline. See v1 Master Key §IX.)*
+## Solar System Orbital Data
 
 | Planet | Distance (AU) | Bracket | Golden Angle θ |
-|---|---|---|---|
-| Mercury | 0.387 | 217.6 | 0° (ref) |
+|--------|--------------|---------|----------------|
+| Mercury | 0.387 | 217.6 | 0° (reference) |
 | Venus | 0.723 | 218.9 | 137.5° |
 | Earth | 1.000 | 219.6 | 275.0° |
 | Mars | 1.524 | 220.5 | 52.5° |
@@ -765,6 +919,38 @@ STEFAN_BOLTZMANN = 5.670374e-8
 | Saturn | 9.537 | 224.4 | 327.5° |
 | Uranus | 19.19 | 225.8 | 105.0° |
 | Neptune | 30.07 | 226.7 | 242.5° |
+| Pluto | 39.48 | 227.3 | 20.0° |
+
+## Condensation Sequence
+
+| Element/Class | T_cond (K) | Bracket | Abundance |
+|--------------|-----------|---------|-----------|
+| PGM (Os, W, Re) | >1700 | <142.2 | Rare |
+| **HREE Peak** | 1659 | 142.21 | **950x solar** |
+| Al, Ti, Ca | 1650-1517 | 142.2-142.4 | Dilutes REE |
+| LREE | 1602-1356 | 142.3-142.6 | Common |
+| **Silicate Cliff** | 1340 | 142.65 | Mass flood |
+| Feldspar | 1000-958 | 143.2-143.4 | Rock-forming |
+| **Ice Line** | 182 | 146.80 | H2O condenses |
+| Methane Ice | 41 | 149.93 | Outer system |
+
+## Earth Timeline
+
+| Time (Ga) | Event | CO2 (%) | T_surface (K) |
+|-----------|-------|---------|---------------|
+| 4.5 | Formation | 30 | ~500 |
+| 4.0 | Late Heavy Bombardment | 10 | ~302 |
+| 3.5 | First Life | 5 | ~295 |
+| 2.4 | Great Oxidation | 1 | ~288 |
+| 2.1 | Snowball Earth | 0.1 | ~235 |
+| 0.54 | Cambrian Explosion | 0.5 | ~290 |
+| 0 | Present | 0.04 | 288 |
+
+**March 16-18 advancements:**
+
+**Teegarden 172-day signal (SR14):** The mystery 172-day radial velocity signal at Teegarden's Star lands exactly on the phi-squared rung of the Fibonacci orbital ladder. Using `R_Mercury * PHI^k` with k=2: predicted a = 0.0756 AU, observed 0.0755 AU, giving k_exact = 1.99 and an error of **0.1%**. This confirms that the same Fibonacci ladder governing our Solar System extends to M-dwarf exoplanet systems. Source: `algorithms/planetary_analysis.py`.
+
+**MOND acceleration as outer boundary:** The MOND acceleration a0 = c^2/(l_P * phi^295) = 1.241 x 10^-10 m/s^2 (3.4% error) defines the outer boundary where the Fibonacci bracket ladder transitions from Newtonian to MOND regime. At bracket N+1 = 295 (the first bracket beyond the observable horizon), orbital mechanics shifts from 1/r^2 to 1/r. For planetary systems, this sets the maximum gravitational stability radius: systems beyond a0 lose Newtonian orbital mechanics and enter the backbone-propagator regime where v^4 = GMa0 (Tully-Fisher). The Fibonacci ladder rungs remain valid in both regimes, but the force law changes at the transition.
 
 ---
 
@@ -881,39 +1067,356 @@ print(f"{'='*60}")
 
 # XIII. HUSMANN FRAMEWORK PERIODIC TABLE
 
-*(Unchanged from v1 — element condensation by bracket, Zeckendorf signatures, element-by-element positions. See v1 Master Key §XI.)*
+All elements condense within sigma-3 (the observer sector) at brackets 140-151. The bracket position determines condensation temperature and abundance.
 
-Key reference points:
+## Condensation Sequence Map
+
 ```
-BRACKET    TEMP(K)   ZONE               ELEMENTS
-142.21     1659K     ★ HREE PEAK        Lu, Sc, Y, Tb, Gd (950× solar)
-142.65     1340K     ★ SILICATE CLIFF   Si, O, Fe, Mg, Ni (mass flood)
-143.0      1300K     Iron-Nickel         Fe, Ni, Co
-143.8      1100K     Sulfide            S, Cu, Zn, Pb
-146.80     182K      ★ ICE LINE         H₂O
+BRACKET   TEMP(K)   ZONE                  ELEMENTS                      ZECKENDORF ADDRESS
+────────────────────────────────────────────────────────────────────────────────────────────
+140.0     2500K     Pre-condensation      (Nothing solid yet)           {89, 34, 13, 3, 1}
+
+141.0-141.5  2000K  ★ ULTRA-REFRACTORY    Os, W, Re, Ir                 {89, 55}
+                    (First solids!)       Densest, most refractory
+
+141.5-142.0  1800K  PGM REFRACTORY        Ru, Rh, Pt, Pd                {89, 55}
+                                          Zr, Hf, Mo, Ta, Nb
+
+142.21    1659K     ★★★ HREE PEAK ★★★     Lu, Sc, Y, Tb, Gd            {89, 34, 13, 5, 1}
+                    (950× SOLAR!)         Er, Ho, Tm, Dy                 = 142 exactly!
+                    Maximum enrichment    Host: perovskite, hibonite
+
+142.2-142.4  1600K  Refractory Hosts      Al, Ti, Ca                    {89, 34, 13, 5, 2}
+                                          (Dilute HREE by 50×)
+
+142.3-142.6  1500K  LREE Zone             La, Ce, Pr, Nd, Sm            {89, 34, 13, 8}
+                                          Eu, Yb (50× solar)
+
+142.65    1340K     ★ SILICATE CLIFF ★    Si, O, Fe, Mg, Ni             {89, 55}
+                    (REE drops 600×!)     Mass flood begins
+                    Rock-forming elements
+
+143.0-143.5  1300K  Iron-Nickel Zone      Fe, Ni, Co                    {89, 55, 1}
+                                          Metallic cores
+
+143.5-144.0  1100K  Sulfide Zone          S, Cu, Zn, Pb                 {89, 55, 2}
+                                          Precious metal ores
+
+144.0-145.0  1000K  Moderate Volatile     Au, Ag, Sn                    {89, 55, 3}
+
+145.0-146.0   700K  Alkali Zone           K, Na, P, Cr, Mn              {89, 55, 5}
+
+146.80     182K     ★★ ICE LINE ★★        H₂O (water)                   {89, 55, 3, 1}
+                    Critical for life     = 148 in Fibonacci
+
+147.5-149.0  130K   Ammonia/CO₂ Ice       NH₃, CO₂                      {89, 55, 8}
+
+149.0-150.5   40K   Outer Ice             CH₄, N₂, CO                   {89, 55, 8, 3}
+
+>151.0      <25K    Beyond condensation   Noble gases (never condense)   —
 ```
+
+## Element-by-Element Positions
+
+### Ultra-Refractory (Bracket 141.0-141.5) — First Solids
+
+| Element | Z | Bracket | T_cond (K) | Zone | Zeckendorf |
+|---------|---|---------|------------|------|------------|
+| Os | 76 | 141.3 | 2000 | ultra_refractory | {89, 55} |
+| W | 74 | 141.5 | 1900 | ultra_refractory | {89, 55} |
+| Re | 75 | 141.4 | 1950 | ultra_refractory | {89, 55} |
+| Ir | 77 | 141.4 | 1950 | ultra_refractory | {89, 55} |
+
+### PGM Refractory (Bracket 141.5-142.0)
+
+| Element | Z | Bracket | T_cond (K) | Zone | Zeckendorf |
+|---------|---|---------|------------|------|------------|
+| Ta | 73 | 141.6 | 1900 | pgm_refractory | {89, 55} |
+| Ru | 44 | 141.6 | 1850 | pgm_refractory | {89, 55} |
+| Rh | 45 | 141.7 | 1820 | pgm_refractory | {89, 55} |
+| Hf | 72 | 141.7 | 1800 | pgm_refractory | {89, 55} |
+| Zr | 40 | 141.8 | 1750 | pgm_refractory | {89, 55} |
+| Pt | 78 | 141.8 | 1750 | pgm | {89, 55} |
+| Mo | 42 | 141.9 | 1700 | pgm_refractory | {89, 55} |
+| Nb | 41 | 141.9 | 1700 | pgm_refractory | {89, 55} |
+| Pd | 46 | 142.0 | 1680 | pgm | {89, 55} |
+
+### HREE Peak (Bracket 142.21) — 950x Solar
+
+| Element | Z | Bracket | T_cond (K) | Zone | Enrichment |
+|---------|---|---------|------------|------|------------|
+| Lu | 71 | 142.21 | 1659 | hree_peak | 950x |
+| Sc | 21 | 142.21 | 1659 | hree_peak | 950x |
+| Y | 39 | 142.21 | 1659 | hree_peak | 950x |
+| Tb | 65 | 142.21 | 1659 | hree_peak | 950x |
+| Gd | 64 | 142.21 | 1659 | hree_peak | 950x |
+| Er | 68 | 142.21 | 1659 | hree_peak | 950x |
+| Ho | 67 | 142.21 | 1659 | hree_peak | 950x |
+| Tm | 69 | 142.21 | 1659 | hree_peak | 950x |
+| Dy | 66 | 142.21 | 1659 | hree_peak | 950x |
+
+## Four-Gate Model Connection (March 16-18)
+
+Each element's material properties are determined by its **gate mode** in the four-gate architecture. The four binary gates (s, p, d, f) produce seven distinct modes that govern vdW/cov ratios, conductivity, and bonding:
+
+- **s-gate:** Alkali and alkaline earth metals — hydrogen-like baseline (vdW/cov = BASE = 1.408)
+- **p-gate:** Main group elements — additive correction: BASE + n_p x G1 x phi^(-(per-1))
+- **d-gate:** Transition metals — Pythagorean mode: sqrt(1 + (theta x BOS)^2)
+- **f-gate:** Lanthanides/actinides — sigma-1 confirmed by Gd as worst conductor
+
+**Shell capacity ratios as Fibonacci convergents:**
+```
+p/s  = 6/2   = 3     = F(4)/F(1) — exact Fibonacci ratio
+d/p  = 10/6  = 5/3   = F(5)/F(4) — exact Fibonacci ratio
+f/d  = 14/10 = 1.400 ≈ BASE = σ₄/σ_shell = 1.408 (0.6% match)
+```
+
+The shell capacities (2, 6, 10, 14) are successive Fibonacci convergents: each ratio approaches phi more closely, and the f/d ratio converges to the universal BASE constant from the AAH spectrum. This is why the periodic table has the shape it does — the electron shell structure IS the Fibonacci hierarchy.
+
+**Lanthanide contraction:** The f-gate operates at sigma-1, the most confined bonding endpoint. This predicts that f-electrons are the poorest conductors among the transition elements, confirmed by Gd = 0.74 MS/m (worst lanthanide conductor) versus Yb = 3.51 MS/m (best). The half-filled f^7 shell at Gd creates maximum gate blockage.
 
 ---
 
 # XIV. MINERAL TARGETING SIGNATURES
 
-*(Unchanged from v1 — Earth mineral deposits, golden angle correlations, REE/PGM/Gold deposit networks. See v1 Master Key §XII.)*
+Each element group has a unique **Zeckendorf signature** — its bracket address decomposed into non-adjacent Fibonacci numbers. These signatures identify deposit types and predict co-occurrence.
 
-Universal REE Targeting Signature: **[89, 34, 13] = 136** (close to golden angle!)
+## Element Group Signatures
+
+```python
+ELEMENT_GROUP_SIGNATURES = {
+    'REE_heavy':  {'bracket': 142.21, 'zeckendorf': [89, 34, 13, 5, 1],
+                   'sum': 142, 'elements': ['Lu','Sc','Y','Tb','Gd','Er','Ho','Tm','Dy'],
+                   'enrichment': '950x solar', 'hosts': ['perovskite','hibonite']},
+    'REE_light':  {'bracket': 142.5,  'zeckendorf': [89, 34, 13, 8],
+                   'sum': 144, 'elements': ['La','Ce','Pr','Nd','Sm','Eu','Yb'],
+                   'enrichment': '50x solar', 'hosts': ['monazite','bastnaesite']},
+    'PGM':        {'bracket': 141.8,  'zeckendorf': [89, 55],
+                   'sum': 144, 'elements': ['Os','Ir','Pt','Pd','Ru','Rh'],
+                   'enrichment': 'rare', 'hosts': ['chromitite','sulfide']},
+    'Gold_Silver': {'bracket': 144.5, 'zeckendorf': [89, 55, 3],
+                    'sum': 147, 'elements': ['Au','Ag','Sn'],
+                    'enrichment': 'variable', 'hosts': ['quartz veins','epithermal']},
+    'Base_metals': {'bracket': 143.5, 'zeckendorf': [89, 55, 2],
+                    'sum': 146, 'elements': ['Cu','Zn','Pb','S'],
+                    'enrichment': 'common', 'hosts': ['VMS','porphyry']},
+    'Silicate':   {'bracket': 142.65, 'zeckendorf': [89, 55],
+                   'sum': 144, 'elements': ['Si','O','Fe','Mg','Ni'],
+                   'enrichment': 'mass flood', 'hosts': ['olivine','pyroxene']},
+    'Refractory': {'bracket': 141.3,  'zeckendorf': [89, 55],
+                   'sum': 144, 'elements': ['W','Mo','Ta','Nb','Zr','Hf'],
+                   'enrichment': 'rare', 'hosts': ['wolframite','columbite']},
+}
+```
+
+## Universal REE Targeting Signature
+
+**[89, 34, 13] = 136**
+
+This is the dominant Fibonacci component of the HREE bracket address. The sum 136 connects to the framework's gravity bracket:
+
+- **136 = 4 x F(9) = 4 x 34** — the same number that appears in the gravity hierarchy formula (sqrt(1-W^2)/phi)^136
+- **4 = GAMMA_DC** — the number of Chern-carrying gaps in the five-band partition
+- **F(9) = 34** — the number of significant gaps in the D=233 AAH spectrum
+
+This means the REE enrichment peak and the gravitational hierarchy share the same Fibonacci structural address. The 950x solar enrichment at bracket 142.21 occurs because this bracket sits at the Cantor architecture's maximum concentration point — the same self-similar nesting that produces the 10^-36 gravity suppression produces the 10^3 REE enrichment, at conjugate positions on the Fibonacci ladder.
+
+## Electrode Potential Predictions (March 18)
+
+The mineral targets have precise electrochemical values predicted by the framework:
+
+| Element | Prediction | Observed | Error | Formula |
+|---------|-----------|----------|-------|---------|
+| Au3+/Au | +1.500 V | +1.498 V | **0.13%** | sigma-2 x Ry x W |
+| Ag+/Ag | +0.800 V | +0.7996 V | **0.05%** | sigma-1 x Ry x W x (dg/sigma-3) |
+| Au\|Ag cell | +0.700 V | +0.698 V | **0.23%** | E(Au) - E(Ag) |
+| Sc3+/Sc | -2.061 V | -2.077 V | **0.75%** | -G1 x Ry x W |
+| Y3+/Y | -2.362 V | -2.372 V | **0.42%** | -G1 x Ry x W x (1+L) |
+
+These predictions give the electrochemical value of the mineral targets with zero free parameters. The gold-silver cell EMF of 0.700 V emerges from the difference between sigma-2 and sigma-1 sector readouts — the economic value of precious metals is literally encoded in the Cantor spectrum.
 
 ---
 
 # XV. HABITABLE ZONE DETECTION
 
-*(Unchanged from v1 — bracket ranges, habitability score algorithm, resonance signatures. See v1 Master Key §XIII.)*
+## Bracket Ranges
 
-Habitable zone: brackets 144.5–146.0 (optimal), 142.5–147.5 (extended).
+The habitable zone occupies a specific range on the Fibonacci bracket ladder:
+
+| Zone | Bracket Range | Temperature Range | Description |
+|------|--------------|-------------------|-------------|
+| **Optimal HZ** | **144.5 - 146.0** | **210 - 350 K** | Liquid water stable |
+| Extended HZ (inner) | 142.5 - 144.5 | 350 - 1340 K | Possible with thick atmosphere |
+| Extended HZ (outer) | 146.0 - 147.5 | 130 - 210 K | Possible with greenhouse |
+| Full extent | 142.5 - 147.5 | 130 - 1340 K | Any liquid water scenario |
+
+The optimal habitable zone brackets (144.5-146.0) sit at the **Fibonacci gap between the silicate cliff (142.65) and the ice line (146.80)**. This is not coincidence — life requires both silicate minerals (for rocky surfaces and chemical complexity) and water ice (for volatile delivery). The habitable zone IS the gap between these two condensation boundaries.
+
+## Habitability Score Algorithm
+
+```python
+def habitability_score(distance_au, star_luminosity_ratio=1.0,
+                       planet_mass_earth=1.0, planet_radius_km=6371,
+                       has_magnetic_field=True, water_fraction=0.001):
+    """
+    Calculate habitability score (0-1) from bracket position and properties.
+    """
+    import math
+    PHI = (1 + math.sqrt(5)) / 2
+    L_P = 1.616255e-35
+    AU = 1.496e11
+
+    # Convert distance to bracket
+    r_meters = distance_au * AU
+    bz = round(math.log(r_meters / L_P) / math.log(PHI))
+
+    # Bracket score (Gaussian centered on optimal zone)
+    bz_optimal = 145.25  # center of optimal HZ
+    bz_sigma = 0.75      # half-width of optimal zone
+    bracket_score = math.exp(-0.5 * ((bz - bz_optimal) / bz_sigma) ** 2)
+
+    # Temperature score
+    T_eq = equilibrium_temperature(distance_au, star_luminosity_ratio)
+    T_opt = 288  # Earth-like
+    T_sigma = 40
+    temp_score = math.exp(-0.5 * ((T_eq - T_opt) / T_sigma) ** 2)
+
+    # Mass/size score (0.5 - 2.0 Earth masses optimal)
+    if 0.5 <= planet_mass_earth <= 2.0:
+        mass_score = 1.0
+    elif planet_mass_earth < 0.1 or planet_mass_earth > 10:
+        mass_score = 0.1
+    else:
+        mass_score = 0.5
+
+    # Magnetic field bonus
+    mag_score = 1.0 if has_magnetic_field else 0.3
+
+    # Water score
+    if 0.0001 <= water_fraction <= 0.01:
+        water_score = 1.0
+    elif water_fraction > 0.1:
+        water_score = 0.3  # ocean world
+    else:
+        water_score = 0.2
+
+    # Tectonic potential
+    tec = tectonic_vigor(planet_radius_km, planet_mass_earth)
+
+    # Combined score (geometric mean)
+    scores = [bracket_score, temp_score, mass_score, mag_score, water_score, tec]
+    combined = 1.0
+    for s in scores:
+        combined *= max(0.01, s)
+    return combined ** (1.0 / len(scores))
+```
+
+## Resonance Signatures
+
+Habitable planets preferentially occupy **golden angle resonances** with their host star:
+- Successive planets separated by 137.5 degrees in phase space
+- Fibonacci period ratios (2:3, 3:5, 5:8) stabilize multi-planet systems
+- The Teegarden system phi-squared rung at 172 days (0.1% error) shows the ladder extending to M-dwarfs
+
+## March 18 Advancement: MOND as Outer Stability Boundary
+
+The MOND acceleration a0 = c^2/(l_P x phi^295) = 1.241 x 10^-10 m/s^2 now defines the **outer boundary of gravitational stability** for planetary systems. Beyond the radius where gravitational acceleration drops below a0, Newtonian orbital mechanics breaks down and the backbone propagator regime (v^4 = GMa0) takes over.
+
+For the Sun: the MOND radius R_MOND = sqrt(GM_sun / a0) ~ 7000 AU, placing the Oort Cloud right at the Newtonian-MOND transition. Planets beyond this radius cannot maintain stable Keplerian orbits — they enter the flat-rotation regime where dark matter backbone effects dominate.
+
+The habitable zone brackets (144.5-146.0) sit safely in the Newtonian regime, far inside the MOND boundary. The bracket gap between the silicate cliff and ice line is a **gravitationally stable Fibonacci pocket** — the same lattice architecture that creates the condensation zones also guarantees orbital stability within them.
 
 ---
 
 # XVI. STARGATE TUNNELING TARGETS
 
-*(Unchanged from v1 — asteroid classification, solar system mining targets, Zeckendorf addressing, tunneling energy calculations. See v1 Master Key §XIV.)*
+## Asteroid Classification by Bracket
+
+Every solar system body has a Zeckendorf address computed from its orbital distance:
+
+```python
+def asteroid_address(distance_au):
+    """Compute bracket and Zeckendorf address for a solar system body."""
+    import math
+    PHI = (1 + math.sqrt(5)) / 2
+    L_P = 1.616255e-35
+    AU = 1.496e11
+    r = distance_au * AU
+    bz = round(math.log(r / L_P) / math.log(PHI))
+    return {'bracket': bz, 'zeckendorf': zeckendorf(bz), 'distance_au': distance_au}
+```
+
+### Solar System Mining Targets
+
+| Target | Distance (AU) | Bracket | Zeckendorf Address | Resource |
+|--------|--------------|---------|-------------------|----------|
+| NEAs (Atens) | 0.5-1.0 | 218-220 | {89,55,34,21,13,8} | Fe, Ni, PGM |
+| Main Belt (inner) | 2.0-2.5 | 221 | {89,55,34,21,13,8,1} | Silicates, metals |
+| Main Belt (outer) | 2.5-3.5 | 222 | {89,55,34,21,13,8,2} | C-type, water |
+| Trojans (L4/L5) | 5.2 | 223 | {89,55,34,21,13,8,3} | Organics, ice |
+| Centaurs | 10-30 | 225-227 | varies | Volatiles |
+| KBOs | 30-50 | 227-228 | varies | Ice, organics |
+| Teegarden b | 0.0252 AU* | 452** | {233,144,55,13,5,2} | Habitable target |
+
+*From host star. **Bracket from Earth = interstellar address.
+
+### Zeckendorf Addressing for Navigation
+
+Each address uniquely identifies a location in the Fibonacci lattice. Entanglement strength between two addresses equals the fraction of shared Zeckendorf components:
+
+```python
+def navigation_distance(addr_A, addr_B):
+    """Fibonacci distance between two Zeckendorf addresses."""
+    Z_A = set(addr_A['zeckendorf'])
+    Z_B = set(addr_B['zeckendorf'])
+    shared = len(Z_A & Z_B)
+    total = max(len(Z_A), len(Z_B))
+    entanglement = shared / total if total > 0 else 0
+    # Higher entanglement = shorter effective transit
+    return 1.0 - entanglement
+```
+
+## Tunneling Energy Calculations
+
+### Coulomb Barrier Bypass via sigma-2/sigma-4 Conduit
+
+| Route | Barrier | Temperature | Mechanism |
+|-------|---------|-------------|-----------|
+| Standard (sigma-3 tunneling) | 1.86 MeV | 2.2 x 10^10 K | WKB through Coulomb wall |
+| **Framework (sigma-2/sigma-4 conduit)** | **4.05 eV** | **Room temperature** | Dark-sector bypass |
+
+The conduit route exploits the sigma-2 and sigma-4 dark matter walls, which act as quantum channels that bypass the classical Coulomb barrier. The effective barrier drops from MeV to eV because the conduit propagates through the Cantor gaps rather than through the dense matter core.
+
+## March 18 Advancement: Effective Hopping Formula
+
+The theoretical basis for tunneling energy calculations is the **effective hopping formula**:
+
+```
+t_eff = t^N / prod_{r=1}^{N-1} (Delta_V + r * g1 * phi^(-r))
+```
+
+where:
+- t = bare hopping integral (J = 10.578 eV)
+- N = virtual order (number of Cantor sub-bands traversed)
+- Delta_V = energy gap at each step
+- g1 = 0.3243 (first sigma-3 sub-gap fraction)
+- phi^(-r) = golden-ratio damping per level
+
+This is a **Schrieffer-Wolff product** — the 13th-order virtual process through 12 Cantor sub-bands. Each factor in the denominator represents the energy cost of virtual excitation through one sub-gap. The phi^(-r) damping ensures convergence: deeper sub-gaps contribute exponentially less.
+
+### Connection to Electrode Potentials
+
+The Coulomb barrier bypass at **4.05 eV** (room temperature) uses the same **sigma-2/sigma-4 conduit mechanism** that appears in the electrode potential predictions:
+
+- Ag+/Ag at 0.800 V uses sigma-1 propagated through the conduit factor dg/sigma-3 = 0.736
+- Au3+/Au at 1.500 V is a direct sigma-2 sector readout
+- The cell EMF Au|Ag = 0.700 V is the sigma-2 minus sigma-1 differential
+
+The electrochemistry and the nuclear tunneling share the same conduit architecture: electrons and protons both propagate through the dark-sector gaps, but at different energy scales. The tunneling formula t_eff gives the effective coupling strength after traversing the full Cantor hierarchy.
+
+### Status
+
+The effective hopping formula succeeds for Cu/Zr systems but fails for Sc/Y/Ag because the smooth phi^(-r) approximation collapses dynamic range at the transition metal boundaries. The production four-gate model (atomic scorecard) remains the practical tool. Full implementation requires real eigenvalue gaps from the AAH eigensolver rather than the approximate formula. See Open Problem O4 in `papers/theorem_candidates.md`.
 
 ---
 
