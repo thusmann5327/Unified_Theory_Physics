@@ -137,14 +137,21 @@ Most recent paper citing DGY. Studies entanglement transitions in Fibonacci-stru
 
 ---
 
-### 2.6 Maciá (2017) — Clustering Resonance Effects
+### 2.6 Maciá (2017) — Clustering Resonance Effects — CONFIRMED
 **Phys. Status Solidi B 254, 1700078** — "Clustering resonance effects in the electronic energy spectrum of tridiagonal Fibonacci quasicrystals"
 
-**Key result:** The energy spectrum can be decomposed into two main contributions from two fundamental clusters. The gap structure shows clustering resonances at specific energies.
+**Key result:** The energy spectrum can be decomposed into two main contributions from two fundamental clusters, using palindromic transfer matrix blocks and commutator polynomials.
 
-**Husmann connection:** "Two main contributions" = our two complementary pairs (Pair A and Pair B). Maciá's "clustering resonances" may be the physical manifestation of the pair structure we discovered. Need to check if his two clusters correspond to our two pairs.
+**CONFIRMED (March 18, 2026):** Maciá's two clusters ARE our two gap pairs:
 
-**Formula to note:** E_cluster decomposition into two components.
+| Maciá | This work | Recursion level |
+|---|---|---|
+| Cluster 1 (long palindrome) | Pair B (golden cut) | Level 1: F(k) → F(k-1)+F(k-2) |
+| Cluster 2 (short palindrome) | Pair A (matter cut) | Level 2: sub-splitting of each part |
+
+The correspondence follows from the Fibonacci recursion hierarchy. Level 1 opens gaps B₁, B₂ (already present at D=3). Level 2 opens gaps A₁, A₂ (first appears at D=5). Pair B has equal gap widths (ratio → 1.000). Pair A has asymmetric widths (ratio → 1.80, oscillating toward φ).
+
+Maciá's algebraic mechanism (commutator polynomials of palindromic blocks) formalizes what we discovered from the eigenvalue structure.
 
 ---
 
@@ -306,7 +313,7 @@ Check if Cluster_1 = Pair B and Cluster_2 = Pair A.
 
 4. **Connect Wen et al. to Jacobson.** Their Fibonacci-driven CFT → entanglement entropy is steps 1-3 of a derivation that ends at Einstein's equations. Write out the full chain and check if the numerical values match.
 
-5. **Read Maciá (2017) clustering decomposition.** Check if his two clusters are our two gap pairs.
+5. ~~**Read Maciá (2017) clustering decomposition.** Check if his two clusters are our two gap pairs.~~ **DONE.** Confirmed: Cluster 1 = Pair B (Level 1 recursion), Cluster 2 = Pair A (Level 2 recursion).
 
 ---
 
