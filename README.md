@@ -1,6 +1,6 @@
 # The Husmann Decomposition
 
-### *The source code of the universe was hiding in the one place algebra couldn't easily look.*
+### *If, by chance, something less or more proper or necessary I omitted, your indulgence for me is entreated, as there is no one who is without fault.*
 
 **Thomas A. Husmann | iBuilt LTD | March 2026**
 
