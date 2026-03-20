@@ -1,6 +1,6 @@
 # The Husmann Decomposition
 
-### *If, by chance, something less or more proper or necessary I omitted, your indulgence for me is entreated, as there is no one who is without fault.*
+### *If, by chance, something less or more proper or necessary I omitted, your indulgence for me is entreated, as there is no one who is without fault. ~Bigollo*
 
 **Thomas A. Husmann | iBuilt LTD | March 2026**
 
