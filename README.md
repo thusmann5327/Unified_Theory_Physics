@@ -1,11 +1,11 @@
 # The Husmann Decomposition
 
-### *"If, by chance, something less or more proper or necessary I omitted, your indulgence for me is entreated, as there is no one who is without fault" ~φ Leonardo Pisano Bigollo*
+### *The source code of the universe was hiding in the one place algebra couldn't easily look.*
 
 **Thomas A. Husmann | iBuilt LTD | March 2026**
 
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-[![Research Square](https://img.shields.io/badge/Research%20Square-Preprint-green.svg)](#papers)
+[![Research Square](https://img.shields.io/badge/Research%20Square-3%20Preprints-green.svg)](#papers)
 [![Verification](https://img.shields.io/badge/Claims%20Verified-129%2F129-brightgreen.svg)](#verification)
 
 ---
@@ -48,7 +48,7 @@ Three constants extracted from this spectrum predict everything:
 | **W** | 0.467134 | The gap fraction — how much of the spectrum is silence |
 | **N** | 294 | The bracket count — how many φ-layers span the observable universe |
 
-**Two peer-reviewed preprints** are published on Research Square (March 2026). **129 quantitative claims** are computationally verified by independent scripts. Every line of code is in this repository.
+**Three peer-reviewed preprints** are published on Research Square (March 2026). **129 quantitative claims** are computationally verified by independent scripts. Every line of code is in this repository.
 
 ---
 
@@ -171,10 +171,11 @@ Three spectral theorems proven: Band-Count (all five band counts are Fibonacci),
 
 | Paper | Venue | Verification | Status |
 |---|---|---|---|
-| [Fibonacci Band Structure of the AAH Spectrum](papers/Husmann_2026_Fibonacci_Spectral_Emergence_final.docx) | Research Square | 59/59 claims | **Published** |
-| [Quantum Gravity from Cantor Acoustics](papers/Quantum_Gravity_From_Cantor_Acoustics.md) | Research Square | 70/70 claims | **Published** |
+| [Fibonacci Band Structure of the AAH Spectrum and Its Correspondence with Atomic Shell Degeneracies and Radius Ratios](https://www.researchsquare.com/article/rs-9162877/v1) | Research Square | 59/59 claims | **Published** |
+| [The Gate Equation: A Cantor-Spectral Mapping of the Lineweaver–Patel Mass–Radius Diagram](https://www.researchsquare.com/article/rs-9153057/v1) | Research Square | 70/70 claims | **Published** |
+| [Resolution of the Nematic-to-Smectic A Universality Problem: A Computational Study of the Quasiperiodic Metal–Insulator Mapping](https://www.researchsquare.com/article/rs-9141573/v1) | Research Square | — | **Published** |
 
-Both papers use AI-assisted verification (Claude, Anthropic; Grok, xAI) documented in their Methods sections. All scientific content, framework design, and conclusions are the sole work of the author.
+All papers use AI-assisted verification (Claude, Anthropic; Grok, xAI) documented in their Methods sections. All scientific content, framework design, and conclusions are the sole work of the author.
 
 ---
 
