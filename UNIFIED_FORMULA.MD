@@ -33,6 +33,9 @@ $$W = \frac{2 + \varphi^{1/\varphi^2}}{\varphi^4}$$
 
 **Verified exact to machine precision: error = 2.22 × 10⁻¹⁶.**
 
+> **Note:**
+> This identity holds to machine precision and follows directly from the axiom structure (boundary law + hinge). The remaining mathematical step is to show it emerges exactly from the thermodynamic pressure $P(t)$ of the Fibonacci trace map at $\lambda = 2$ (Damanik–Gorodetski–Yessen 2016). Numerical evaluation of $P(t)$ at criticality is the final open computation.
+
 ### Every piece is the axiom
 
 | Component | Value | Origin |
