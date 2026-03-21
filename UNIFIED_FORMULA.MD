@@ -1,4 +1,4 @@
-# The Universal Formula
+# The Unified_Formula
 ## Husmann Decomposition — Single Generative Template
 ### Thomas A. Husmann / iBuilt LTD / Patent App. 19/560,637
 ### March 21, 2026 (Updated: W Theorem Proven)
