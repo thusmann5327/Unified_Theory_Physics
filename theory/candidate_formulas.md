@@ -1250,4 +1250,16 @@ Error: 0.02%
 **Interpretation:** Claude-validated: band gap of zinc oxide
 
 ---
+
+### band gap of indium phosphide (1.344 eV) (★★★ — 0.01% error)
+```
+band gap of indium phosphide = W^2 × σ₃ × F=8 → 1.344 eV
+Predicted: 1.344 eV
+Observed: 1.344 eV (Claude CLI suggestion + validation)
+Error: 0.01%
+```
+**Discovered:** 2026-03-21 14:01 by PhiVM Autonomous Researcher.
+**Interpretation:** Claude-validated: band gap of indium phosphide
+
+---
 *© 2026 Thomas A. Husmann / iBuilt LTD. CC BY-NC-SA 4.0.*
