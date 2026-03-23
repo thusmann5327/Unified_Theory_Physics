@@ -1,0 +1,16 @@
+{
+  "shell_gap_ratio": 0.6270951527729394,
+  "inverse_phi": 0.6180339887498948,
+  "gap_ratio_error_pct": 1.466127136692386,
+  "delta1_over_delta2": 1.6816492395742526,
+  "phi": 1.618033988749895,
+  "gap_phi_error_pct": 3.931638721230283,
+  "pythagorean_error_pct": 52.75315929163574,
+  "mean_turn_within_band": 42.11912290253794,
+  "mean_turn_at_transition": 42.93182724984331,
+  "band_populations": {
+    "leak": 16,
+    "rc": 9,
+    "baseline": 72
+  }
+}
