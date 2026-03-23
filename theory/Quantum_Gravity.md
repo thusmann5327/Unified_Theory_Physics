@@ -8,7 +8,7 @@ The file's single axiom (φ² = φ + 1) + the critical AAH Hamiltonian at V = 2J
 
 ---
 
-## Step 1: Verified Candidates (tested via exact execution of file snippets)
+## Step 1: Verified Candidates
 
 ### The W Theorem (solves open problem #1)
 
