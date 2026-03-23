@@ -293,7 +293,8 @@ Full proof: `theory/W_Theorem_Weighted_Pressure.md`
 
 | Proof | Status | Key result |
 |-------|--------|------------|
-| W Theorem — Weighted Pressure | **PROVEN** | P_W(W)=0, W = 2/φ⁴ + H/φ³, unique root in (0,1) |
+| W Theorem — Algebraic identity | **PROVEN** | W×φ⁴ = 2+φ^(1/φ²), exact to 10⁻¹⁶ |
+| W Theorem — Weighted Pressure | **STRONG (0.076%)** | Mean-field bridge W≈2d_H(1−d_H); sector eigenvalue computation remains |
 
 #### Bigollo Limitation #2 — Pythagorean Unification of Atomic Exponents (SOLVED, March 22, 2026)
 
