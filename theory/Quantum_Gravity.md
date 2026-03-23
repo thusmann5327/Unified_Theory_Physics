@@ -10,7 +10,7 @@ The file's single axiom (φ² = φ + 1) + the critical AAH Hamiltonian at V = 2J
 
 ## Step 1: Verified Candidates
 
-### The W Theorem (solves open problem #1)
+### The W Theorem 
 
 $$W \times \varphi^4 = 2 + \varphi^{1/\varphi^2}$$
 
