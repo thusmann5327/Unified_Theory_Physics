@@ -286,8 +286,9 @@ endpoint sectors (gap edges in Q(√5)) and conduit sectors (renormalization fix
 expansion of P_W around the unweighted Bowen root. The 0.076% residual is the signature
 of five-sector structure vs binary splitting.
 
-**Cascading consequences:** With W as theorem, Ω_DE = W²+W, α⁻¹ = N×W,
-(√(1−W²)/φ)^136 and all 70+ predictions upgrade from numerical identities to theorems.
+**Cascading consequences:** With the algebraic W identity as theorem, Ω_DE = W²+W, α⁻¹ = N×W,
+and all polynomial W-dependent results upgrade from numerical identities to theorems.
+The gravity hierarchy and d_H-dependent results await the sector eigenvalue computation.
 
 Full proof: `theory/W_Theorem_Weighted_Pressure.md`
 
