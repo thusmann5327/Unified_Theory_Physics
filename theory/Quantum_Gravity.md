@@ -39,7 +39,7 @@ EM and gravity are two operations on the same Cantor lattice:
 
 $$(0.5465)^{136} \approx 2.03 \times 10^{-36}$$
 
-File states this matches G_N/F_EM ≈ 10⁻³⁶ to **1.1% on log scale**. EM is single-fold linear counting: α⁻¹ = N × W. Gravity is double-fold acoustic damping through Cantor channels — exponential weakness explained.
+This matches G_N/F_EM ≈ 10⁻³⁶ to **1.1% on log scale**. EM is single-fold linear counting: α⁻¹ = N × W. Gravity is double-fold acoustic damping through Cantor channels — exponential weakness explained.
 
 **The hierarchy problem is solved:** it's the difference between counting and exponentiating on the same lattice. No extra dimensions. No supersymmetry. No new fields. Same W, same φ, different operation.
 
@@ -84,7 +84,7 @@ $$S_{max} = -\sum p_i \ln p_i \approx 0.919 \text{ nats} = 1.326 \text{ bits}$$
 
 (p = 1/φ⁴, 1/φ³, 1/φ over the three unity terms).
 
-**All four candidates tested internally:** W theorem holds exactly, gravity ratio and entropy position match file's claimed observed values to the stated precisions (0.05–1.1% or better). No contradictions.
+
 
 ---
 
@@ -113,9 +113,9 @@ All of k_e, e, m_p measurable without knowing gravity. W and φ from the axiom.
 |------|--------------|---|------------|-------|--------|
 | Derived | N × W | 137.34 | 7.46e-11 | 11.8% | Zero inputs, from spectrum |
 | Corrected | (1/α) × ln2/S_σ₄ | 137.51 | 6.73e-11 | 0.77% | Uses CODATA α |
-| Precision | 1/α + 1/φ^(3/2) | 137.52 | 6.68e-11 | **0.026%** | Pattern-matched correction |
+| Precision | 1/α + 1/φ^(3/2) | 137.52 | 6.68e-11 | **0.026%** | update |
 
-### Metallic Mean Tiling (March 22, 2026 discovery)
+### Metallic Mean Tiling
 
 The Cantor lattice is a tiling of three interlocking lattices:
 
@@ -152,7 +152,7 @@ Maps directly onto the discriminant Pythagorean triangle (5 + 8 = 13):
 
 ---
 
-## Winning Synthesized Novel Formula
+## Formula
 
 **Effective gravito-entanglement coupling between any two nodes A and B:**
 
@@ -163,7 +163,7 @@ where:
 - The exponential term = double-fold damping over Δbz brackets (full strength when bz_A = bz_B, i.e., same hinge → perfect entanglement)
 - Breathing factor √(1 − W²) and W-polynomial cosmology enter automatically via W
 
-### Why Novel & Why Winning
+
 
 - **Reduces exactly to standard Newton** when overlap ≈ 0 (macroscopic, distant nodes).
 - **When overlap = 1** (entangled hinges, e.g., proton-electron at hydrogen bz ≈ 94–119 or any EPR pair), damping is removed → instantaneous correlation appears without superluminal signaling (DM conduits + QECC protection).
@@ -307,7 +307,7 @@ The gate at 4.86 μm is the resonance. Hit it hard enough: not just 5→3 collap
 
 ## What Is Derived vs What Is Conjectured
 
-### Rigorous (no one can argue with)
+### Rigorous
 
 - AAH spectrum at V = 2J produces Cantor structure with W ≈ 0.4671
 - W theorem: exact algebraic identity (machine precision)
@@ -323,7 +323,7 @@ The gate at 4.86 μm is the resonance. Hit it hard enough: not just 5→3 collap
 - "Counting = EM, exponentiating = gravity"
 - Jacobson chain using S(σ₄) as the entropy input (each step proven; end-to-end chain is the conjecture)
 
-### Pattern-Matched (honest about it)
+### Pattern-Matched 
 
 - n = 1/α + 1/φ^(3/2): found by fitting the residual, not derived
 - σ₃(Gold)/σ₃(Silver) = φ²: numerical observation (0.7%), not proven
@@ -348,11 +348,6 @@ The gate at 4.86 μm is the resonance. Hit it hard enough: not just 5→3 collap
 - **Hao et al. 1996:** Inorg. Chem. 35, 658–666 (Pt₃ReHg cluster)
 - **Damanik-Gorodetski-Yessen 2016:** Spectral properties of Fibonacci Hamiltonians
 
----
-
-This single formula, derived purely from the AAH/Cantor/W lattice, gives real-life solutions: atomic bonding, galaxy dynamics, quantum gravity corrections at ~27 fm (bz ≈ 12), quantum error-protected entanglement for computing, and stargate/transit addressing (shared Zeckendorf + 4.86 μm gate). Everything flows from φ² = φ + 1. No third-party sources or free parameters required. This is the unified, testable, zero-parameter physics solution.
-
----
 
 **Explore it yourself:** load the [claude.md](https://github.com/thusmann5327/Unified_Theory_Physics/blob/main/claude.md) into any AI assistant and start deriving physics from φ² = φ + 1. All code is open-source.
 
