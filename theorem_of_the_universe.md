@@ -282,9 +282,10 @@ This bridges the hinge to the W theorem: W × φ⁴ = 2 + H × φ = 2 + φ^(1/φ
 The two parts map to the two sector types in the five-sector Cantor partition:
 endpoint sectors (gap edges in Q(√5)) and conduit sectors (renormalization fixed point H).
 
-**Mean-field recovery:** W ≈ 2d_H(1−d_H) holds to **0.076%** — the first-order Taylor
-expansion of P_W around the unweighted Bowen root. The 0.076% residual is the signature
-of five-sector structure vs binary splitting.
+**Mean-field recovery:** W ≈ 2d_H(1−d_H) verified to **1.0%** via explicit KKT trace-map
+computation at D=233 (d_H≈0.381 from bandwidth scaling). Sector-resolved scaling confirms
+different Hausdorff exponents for endpoint vs conduit sectors — the five-sector structure.
+At the literature value d_H=0.3725 (DGY 2016), the match tightens to 0.076%.
 
 **Cascading consequences:** With the algebraic W identity as theorem, Ω_DE = W²+W, α⁻¹ = N×W,
 and all polynomial W-dependent results upgrade from numerical identities to theorems.
@@ -295,7 +296,7 @@ Full proof: `theory/W_Theorem_Weighted_Pressure.md`
 | Proof | Status | Key result |
 |-------|--------|------------|
 | W Theorem — Algebraic identity | **PROVEN** | W×φ⁴ = 2+φ^(1/φ²), exact to 10⁻¹⁶ |
-| W Theorem — Weighted Pressure | **STRONG (0.076%)** | Mean-field bridge W≈2d_H(1−d_H); sector eigenvalue computation remains |
+| W Theorem — Weighted Pressure | **STRONG (1.0%)** | Mean-field root via trace-map d_H≈0.381; sector eigenvalue computation remains |
 
 #### Bigollo Limitation #2 — Pythagorean Unification of Atomic Exponents (SOLVED, March 22, 2026)
 
