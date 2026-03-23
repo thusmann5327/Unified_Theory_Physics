@@ -1,0 +1,153 @@
+{
+  "three_modes": {
+    "R_leak": 1.1458738247049716,
+    "R_rc": 1.310608110849311,
+    "R_base": 1.4085680672228802,
+    "rho6": 1.083505882173848,
+    "theta_leak": 0.564,
+    "theta_rc": 0.854,
+    "theta_base": 1.0
+  },
+  "atomic": {
+    "n_elements": 97,
+    "n_leak": 16,
+    "n_rc": 9,
+    "n_base": 72
+  },
+  "planetary_matches": [
+    {
+      "system": "Solar",
+      "label": "Earth/Venus",
+      "ratio": 1.3831258644536653,
+      "mode": "R_base",
+      "error_pct": 1.8062458862479078
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-d/T1-c",
+      "ratio": 1.409493670886076,
+      "mode": "R_base",
+      "error_pct": 0.0657123844231844
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-e/T1-d",
+      "ratio": 1.3134261338123034,
+      "mode": "R_rc",
+      "error_pct": 0.21501644463089922
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-f/T1-e",
+      "ratio": 1.315897435897436,
+      "mode": "R_rc",
+      "error_pct": 0.40357792724915514
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-h/T1-g",
+      "ratio": 1.3215887251761693,
+      "mode": "R_rc",
+      "error_pct": 0.8378259096643705
+    },
+    {
+      "system": "Molecular",
+      "label": "Cl\u2082/F\u2082",
+      "ratio": 1.4079320113314449,
+      "mode": "R_base",
+      "error_pct": 0.045156205527886246
+    },
+    {
+      "system": "Molecular",
+      "label": "Br\u2082/Cl\u2082",
+      "ratio": 1.14738430583501,
+      "mode": "R_leak",
+      "error_pct": 0.1318191494973088
+    },
+    {
+      "system": "Molecular",
+      "label": "I\u2082/Br\u2082",
+      "ratio": 1.1687856203419553,
+      "mode": "R_leak",
+      "error_pct": 1.9995042336256228
+    },
+    {
+      "system": "Crystal",
+      "label": "Sn/Ge",
+      "ratio": 1.1468716861081654,
+      "mode": "R_leak",
+      "error_pct": 0.08708300876413859
+    },
+    {
+      "system": "Cosmological",
+      "label": "H\u2080(SH0ES)/H\u2080(Planck)",
+      "ratio": 1.083086053412463,
+      "mode": "rho6",
+      "error_pct": 0.038747252626143126
+    }
+  ],
+  "planetary_misses": [
+    {
+      "system": "Solar",
+      "label": "Venus/Mercury",
+      "ratio": 1.8682170542635659,
+      "nearest_error_pct": 32.63235889955431
+    },
+    {
+      "system": "Solar",
+      "label": "Mars/Earth",
+      "ratio": 1.524,
+      "nearest_error_pct": 8.194984357745975
+    },
+    {
+      "system": "Solar",
+      "label": "Jupiter/Mars",
+      "ratio": 3.414041994750656,
+      "nearest_error_pct": 142.37678492042986
+    },
+    {
+      "system": "Solar",
+      "label": "Saturn/Jupiter",
+      "ratio": 1.8329809725158563,
+      "nearest_error_pct": 30.130805544225115
+    },
+    {
+      "system": "Solar",
+      "label": "Uranus/Saturn",
+      "ratio": 2.012268008807801,
+      "nearest_error_pct": 42.859124499050296
+    },
+    {
+      "system": "Solar",
+      "label": "Neptune/Uranus",
+      "ratio": 1.566828200719087,
+      "nearest_error_pct": 11.235533246769611
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-c/T1-b",
+      "ratio": 1.369150779896014,
+      "nearest_error_pct": 2.7983942163747098
+    },
+    {
+      "system": "TRAPPIST-1",
+      "label": "T1-g/T1-f",
+      "ratio": 1.2166796570537801,
+      "nearest_error_pct": 6.17919973580328
+    },
+    {
+      "system": "Crystal",
+      "label": "Si/C",
+      "ratio": 1.5225679843005326,
+      "nearest_error_pct": 8.09331971456755
+    },
+    {
+      "system": "Crystal",
+      "label": "Ge/Si",
+      "ratio": 1.0417970907751797,
+      "nearest_error_pct": 9.082739450531436
+    }
+  ],
+  "n_matches": 10,
+  "n_total_ratios": 20
+}
