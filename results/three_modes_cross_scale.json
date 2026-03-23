@@ -1,0 +1,1401 @@
+{
+  "backend": "JAX-Metal",
+  "constants": {
+    "phi": 1.6180339887,
+    "sqrt_phi": 1.272,
+    "H": 0.7427,
+    "W": 0.4671,
+    "BOS": 0.992,
+    "r_c": 0.8541
+  },
+  "theta_values": {
+    "leak": 0.564,
+    "rc": 0.854,
+    "baseline": 1.0
+  },
+  "quantized_ratios": {
+    "leak": 1.1459,
+    "rc": 1.3106,
+    "baseline": 1.4086
+  },
+  "test1_stellar": {
+    "Sun tachocline": [
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+        "predicted": 0.71157,
+        "observed": 0.713,
+        "error_pct": 0.201,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7\u03c6",
+        "predicted": 0.77298,
+        "observed": 0.713,
+        "error_pct": 8.412,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7\u03c6",
+        "predicted": 0.64268,
+        "observed": 0.713,
+        "error_pct": 9.862,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "M-dwarf conv base (low)": [
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+        "predicted": 0.29892,
+        "observed": 0.3,
+        "error_pct": 0.358,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7H",
+        "predicted": 0.29502,
+        "observed": 0.3,
+        "error_pct": 1.661,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_rc\u00d71",
+        "predicted": 0.31359,
+        "observed": 0.3,
+        "error_pct": 4.53,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+        "predicted": 0.28496,
+        "observed": 0.3,
+        "error_pct": 5.014,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d71",
+        "predicted": 0.3155,
+        "observed": 0.3,
+        "error_pct": 5.167,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u03c6",
+        "predicted": 0.32472,
+        "observed": 0.3,
+        "error_pct": 8.241,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d7H",
+        "predicted": 0.27274,
+        "observed": 0.3,
+        "error_pct": 9.088,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "M-dwarf conv base (high)": [
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7H",
+        "predicted": 0.35483,
+        "observed": 0.35,
+        "error_pct": 1.38,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_rc\u00d71",
+        "predicted": 0.33921,
+        "observed": 0.35,
+        "error_pct": 3.083,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u03c6",
+        "predicted": 0.36247,
+        "observed": 0.35,
+        "error_pct": 3.564,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d7\u03c6",
+        "predicted": 0.3351,
+        "observed": 0.35,
+        "error_pct": 4.258,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d71",
+        "predicted": 0.3672,
+        "observed": 0.35,
+        "error_pct": 4.914,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u03c6",
+        "predicted": 0.32472,
+        "observed": 0.35,
+        "error_pct": 7.222,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u03c6",
+        "predicted": 0.38024,
+        "observed": 0.35,
+        "error_pct": 8.639,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d71",
+        "predicted": 0.3155,
+        "observed": 0.35,
+        "error_pct": 9.857,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "Red giant conv base (low)": [
+      {
+        "combo": "\u03c3\u2083\u00d7\u03b8_rc\u00d7\u03c6",
+        "predicted": 0.1006,
+        "observed": 0.1,
+        "error_pct": 0.595,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7H",
+        "predicted": 0.09844,
+        "observed": 0.1,
+        "error_pct": 1.557,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2083\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+        "predicted": 0.0926,
+        "observed": 0.1,
+        "error_pct": 7.397,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "Red giant conv base (high)": [
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d71",
+        "predicted": 0.20069,
+        "observed": 0.2,
+        "error_pct": 0.345,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d71",
+        "predicted": 0.2071,
+        "observed": 0.2,
+        "error_pct": 3.55,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7\u03c6",
+        "predicted": 0.21445,
+        "observed": 0.2,
+        "error_pct": 7.227,
+        "flag": "NOTABLE(<10%)"
+      }
+    ]
+  },
+  "test2_planetary": {
+    "Planets (AU)": [
+      {
+        "pair": "Venus/Mercury",
+        "observed_ratio": 1.86822,
+        "best_fit": 1.86895,
+        "exponents_abcd": [
+          0,
+          -2,
+          2,
+          1
+        ],
+        "error_pct": 0.039,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Earth/Venus",
+        "observed_ratio": 1.38313,
+        "best_fit": 1.3939,
+        "exponents_abcd": [
+          2,
+          2,
+          0,
+          -1
+        ],
+        "error_pct": 0.779,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Mars/Earth",
+        "observed_ratio": 1.524,
+        "best_fit": 1.52416,
+        "exponents_abcd": [
+          0,
+          -2,
+          0,
+          2
+        ],
+        "error_pct": 0.01,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Jupiter/Mars",
+        "observed_ratio": 3.41404,
+        "best_fit": 3.4143,
+        "exponents_abcd": [
+          2,
+          1,
+          2,
+          0
+        ],
+        "error_pct": 0.008,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Saturn/Jupiter",
+        "observed_ratio": 1.83298,
+        "best_fit": 1.83813,
+        "exponents_abcd": [
+          -1,
+          2,
+          2,
+          -1
+        ],
+        "error_pct": 0.281,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Uranus/Saturn",
+        "observed_ratio": 2.01216,
+        "best_fit": 2.00621,
+        "exponents_abcd": [
+          1,
+          -2,
+          -1,
+          3
+        ],
+        "error_pct": 0.296,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Neptune/Uranus",
+        "observed_ratio": 1.56696,
+        "best_fit": 1.60118,
+        "exponents_abcd": [
+          2,
+          2,
+          -1,
+          0
+        ],
+        "error_pct": 2.184,
+        "flag": "STRONG (<5%)"
+      }
+    ],
+    "Jovian moons (Mkm)": [
+      {
+        "pair": "Europa/Io",
+        "observed_ratio": 1.59132,
+        "best_fit": 1.60118,
+        "exponents_abcd": [
+          2,
+          2,
+          -1,
+          0
+        ],
+        "error_pct": 0.62,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Ganymede/Europa",
+        "observed_ratio": 1.59547,
+        "best_fit": 1.60118,
+        "exponents_abcd": [
+          2,
+          2,
+          -1,
+          0
+        ],
+        "error_pct": 0.358,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Callisto/Ganymede",
+        "observed_ratio": 1.75888,
+        "best_fit": 1.75081,
+        "exponents_abcd": [
+          0,
+          -2,
+          -1,
+          3
+        ],
+        "error_pct": 0.458,
+        "flag": "EXACT  (<1%)"
+      }
+    ],
+    "Saturnian moons (Mkm)": [
+      {
+        "pair": "Enceladus/Mimas",
+        "observed_ratio": 1.28302,
+        "best_fit": 1.30175,
+        "exponents_abcd": [
+          0,
+          2,
+          2,
+          -2
+        ],
+        "error_pct": 1.46,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "pair": "Tethys/Enceladus",
+        "observed_ratio": 1.23824,
+        "best_fit": 1.23762,
+        "exponents_abcd": [
+          -1,
+          -1,
+          -1,
+          2
+        ],
+        "error_pct": 0.05,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Dione/Tethys",
+        "observed_ratio": 1.28062,
+        "best_fit": 1.30175,
+        "exponents_abcd": [
+          0,
+          2,
+          2,
+          -2
+        ],
+        "error_pct": 1.649,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "pair": "Rhea/Dione",
+        "observed_ratio": 1.39666,
+        "best_fit": 1.39735,
+        "exponents_abcd": [
+          1,
+          2,
+          -1,
+          0
+        ],
+        "error_pct": 0.049,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "pair": "Titan/Rhea",
+        "observed_ratio": 2.31797,
+        "best_fit": 2.30309,
+        "exponents_abcd": [
+          -2,
+          -2,
+          2,
+          2
+        ],
+        "error_pct": 0.642,
+        "flag": "EXACT  (<1%)"
+      }
+    ]
+  },
+  "test3_galaxy": {
+    "Milky Way bulge/disk": [
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u03c6",
+        "predicted": 0.38024,
+        "observed": 0.38462,
+        "error_pct": 1.138,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_baseline",
+        "predicted": 0.3972,
+        "observed": 0.38462,
+        "error_pct": 3.272,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_rc\u00d7\u221a\u03c6",
+        "predicted": 0.39889,
+        "observed": 0.38462,
+        "error_pct": 3.712,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+        "predicted": 0.40132,
+        "observed": 0.38462,
+        "error_pct": 4.344,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline",
+        "predicted": 0.3672,
+        "observed": 0.38462,
+        "error_pct": 4.528,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u03c6",
+        "predicted": 0.36247,
+        "observed": 0.38462,
+        "error_pct": 5.757,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7H",
+        "predicted": 0.35483,
+        "observed": 0.38462,
+        "error_pct": 7.745,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2084\u00d7\u03b8_baseline\u00d7H",
+        "predicted": 0.41549,
+        "observed": 0.38462,
+        "error_pct": 8.028,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "Milky Way disk/halo": [],
+    "Milky Way bulge/halo": [
+      {
+        "combo": "\u03c3\u2083\u00d7\u03c3\u2083",
+        "predicted": 0.0053,
+        "observed": 0.005,
+        "error_pct": 5.997,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "M31 bulge/disk": [
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+        "predicted": 0.28496,
+        "observed": 0.28302,
+        "error_pct": 0.685,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d7H",
+        "predicted": 0.27274,
+        "observed": 0.28302,
+        "error_pct": 3.634,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7H",
+        "predicted": 0.29502,
+        "observed": 0.28302,
+        "error_pct": 4.24,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+        "predicted": 0.29892,
+        "observed": 0.28302,
+        "error_pct": 5.62,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+        "predicted": 0.26344,
+        "observed": 0.28302,
+        "error_pct": 6.919,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u221a\u03c6",
+        "predicted": 0.25528,
+        "observed": 0.28302,
+        "error_pct": 9.8,
+        "flag": "NOTABLE(<10%)"
+      }
+    ],
+    "M31 disk/halo": [],
+    "M31 bulge/halo": [],
+    "NFW r_s/r_vir": [
+      {
+        "combo": "\u03c3\u2083\u00d7\u03b8_rc\u00d7\u03c6",
+        "predicted": 0.1006,
+        "observed": 0.1,
+        "error_pct": 0.595,
+        "flag": "EXACT  (<1%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7H",
+        "predicted": 0.09844,
+        "observed": 0.1,
+        "error_pct": 1.557,
+        "flag": "STRONG (<5%)"
+      },
+      {
+        "combo": "\u03c3\u2082\u00d7\u03c3_wall",
+        "predicted": 0.09334,
+        "observed": 0.1,
+        "error_pct": 6.658,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3_wall\u00d7\u03c3\u2082",
+        "predicted": 0.09334,
+        "observed": 0.1,
+        "error_pct": 6.658,
+        "flag": "NOTABLE(<10%)"
+      },
+      {
+        "combo": "\u03c3\u2083\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+        "predicted": 0.0926,
+        "observed": 0.1,
+        "error_pct": 7.397,
+        "flag": "NOTABLE(<10%)"
+      }
+    ]
+  },
+  "test4_forces": {
+    "theta_vs_phi": {
+      "\u03b8_base/\u03b8_leak": {
+        "ratio": "\u03b8_base/\u03b8_leak",
+        "value": 1.77305,
+        "closest_phi_power": "\u03c6^(+1)",
+        "phi_value": 1.61803,
+        "error_pct": 8.743,
+        "flag": "NOTABLE(<10%)"
+      },
+      "\u03b8_rc/\u03b8_leak": {
+        "ratio": "\u03b8_rc/\u03b8_leak",
+        "value": 1.51418,
+        "closest_phi_power": "\u03c6^(+1)",
+        "phi_value": 1.61803,
+        "error_pct": 6.858,
+        "flag": "NOTABLE(<10%)"
+      },
+      "\u03b8_base/\u03b8_rc": {
+        "ratio": "\u03b8_base/\u03b8_rc",
+        "value": 1.17096,
+        "closest_phi_power": "\u03c6^(+0.5)",
+        "phi_value": 1.27202,
+        "error_pct": 8.63,
+        "flag": "NOTABLE(<10%)"
+      }
+    },
+    "NxW": 137.3274,
+    "coupling": {
+      "\u03b1_W/\u03b1_EM (\u2248137/30)": {
+        "target": "\u03b1_W/\u03b1_EM (\u2248137/30)",
+        "value": 4.5679,
+        "closest_theta_prod": "(\u03b8_baseline/\u03b8_leak)\u00d7\u03c6",
+        "theta_value": 2.86885,
+        "error_pct": 37.195,
+        "flag": ""
+      },
+      "\u03b1_S/\u03b1_W (\u224830)": {
+        "target": "\u03b1_S/\u03b1_W (\u224830)",
+        "value": 30.0,
+        "closest_theta_prod": "(\u03b8_baseline/\u03b8_leak)\u00d7\u03c6",
+        "theta_value": 2.86885,
+        "error_pct": 90.437,
+        "flag": ""
+      },
+      "\u03b1_S/\u03b1_EM (\u2248137)": {
+        "target": "\u03b1_S/\u03b1_EM (\u2248137)",
+        "value": 137.036,
+        "closest_theta_prod": "(\u03b8_baseline/\u03b8_leak)\u00d7\u03c6",
+        "theta_value": 2.86885,
+        "error_pct": 97.906,
+        "flag": ""
+      }
+    }
+  },
+  "test5_optimization": {
+    "initial": [
+      0.564,
+      0.854,
+      1.0
+    ],
+    "final": [
+      0.68886,
+      0.78773,
+      0.81043
+    ],
+    "shifts": [
+      0.12486,
+      0.06627,
+      0.18957
+    ],
+    "stayed": false,
+    "converged_to": [
+      "\u03b8_leak\u2192H (err 7.25%)",
+      "\u03b8_rc\u2192H (err 6.06%)",
+      "\u03b8_baseline\u2192r_c (err 5.11%)"
+    ],
+    "history": [
+      {
+        "epoch": 0,
+        "params": [
+          0.565,
+          0.853,
+          0.999
+        ],
+        "loss": 0.353301
+      },
+      {
+        "epoch": 200,
+        "params": [
+          0.682829,
+          0.784102,
+          0.870354
+        ],
+        "loss": 0.010578
+      },
+      {
+        "epoch": 400,
+        "params": [
+          0.704511,
+          0.787731,
+          0.837159
+        ],
+        "loss": 0.000986
+      },
+      {
+        "epoch": 600,
+        "params": [
+          0.704402,
+          0.787734,
+          0.830544
+        ],
+        "loss": 0.000824
+      },
+      {
+        "epoch": 800,
+        "params": [
+          0.701972,
+          0.787734,
+          0.826738
+        ],
+        "loss": 0.000766
+      },
+      {
+        "epoch": 1000,
+        "params": [
+          0.69937,
+          0.787734,
+          0.823062
+        ],
+        "loss": 0.000717
+      },
+      {
+        "epoch": 1200,
+        "params": [
+          0.696864,
+          0.787734,
+          0.819954
+        ],
+        "loss": 0.000683
+      },
+      {
+        "epoch": 1400,
+        "params": [
+          0.69473,
+          0.787734,
+          0.817311
+        ],
+        "loss": 0.000663
+      },
+      {
+        "epoch": 1600,
+        "params": [
+          0.692697,
+          0.787734,
+          0.815119
+        ],
+        "loss": 0.000647
+      },
+      {
+        "epoch": 1800,
+        "params": [
+          0.69041,
+          0.787734,
+          0.812364
+        ],
+        "loss": 0.000629
+      },
+      {
+        "epoch": 2000,
+        "params": [
+          0.68886,
+          0.787734,
+          0.810426
+        ],
+        "loss": 0.000621
+      }
+    ]
+  },
+  "scorecard": {
+    "exact_count": 19,
+    "strong_count": 20,
+    "notable_count": 24,
+    "total_sub5pct": 39,
+    "total_sub10pct": 63
+  },
+  "all_matches": [
+    {
+      "test": "T1-stellar",
+      "target": "Sun tachocline",
+      "combo": "\u03c3\u2084\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+      "predicted": 0.71157,
+      "observed": 0.713,
+      "error_pct": 0.201,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Sun tachocline",
+      "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7\u03c6",
+      "predicted": 0.77298,
+      "observed": 0.713,
+      "error_pct": 8.412,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Sun tachocline",
+      "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7\u03c6",
+      "predicted": 0.64268,
+      "observed": 0.713,
+      "error_pct": 9.862,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+      "predicted": 0.29892,
+      "observed": 0.3,
+      "error_pct": 0.358,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7H",
+      "predicted": 0.29502,
+      "observed": 0.3,
+      "error_pct": 1.661,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_rc\u00d71",
+      "predicted": 0.31359,
+      "observed": 0.3,
+      "error_pct": 4.53,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+      "predicted": 0.28496,
+      "observed": 0.3,
+      "error_pct": 5.014,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d71",
+      "predicted": 0.3155,
+      "observed": 0.3,
+      "error_pct": 5.167,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u03c6",
+      "predicted": 0.32472,
+      "observed": 0.3,
+      "error_pct": 8.241,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (low)",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d7H",
+      "predicted": 0.27274,
+      "observed": 0.3,
+      "error_pct": 9.088,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7H",
+      "predicted": 0.35483,
+      "observed": 0.35,
+      "error_pct": 1.38,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3_wall\u00d7\u03b8_rc\u00d71",
+      "predicted": 0.33921,
+      "observed": 0.35,
+      "error_pct": 3.083,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u03c6",
+      "predicted": 0.36247,
+      "observed": 0.35,
+      "error_pct": 3.564,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d7\u03c6",
+      "predicted": 0.3351,
+      "observed": 0.35,
+      "error_pct": 4.258,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d71",
+      "predicted": 0.3672,
+      "observed": 0.35,
+      "error_pct": 4.914,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u03c6",
+      "predicted": 0.32472,
+      "observed": 0.35,
+      "error_pct": 7.222,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u03c6",
+      "predicted": 0.38024,
+      "observed": 0.35,
+      "error_pct": 8.639,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "M-dwarf conv base (high)",
+      "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d71",
+      "predicted": 0.3155,
+      "observed": 0.35,
+      "error_pct": 9.857,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (low)",
+      "combo": "\u03c3\u2083\u00d7\u03b8_rc\u00d7\u03c6",
+      "predicted": 0.1006,
+      "observed": 0.1,
+      "error_pct": 0.595,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (low)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7H",
+      "predicted": 0.09844,
+      "observed": 0.1,
+      "error_pct": 1.557,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (low)",
+      "combo": "\u03c3\u2083\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+      "predicted": 0.0926,
+      "observed": 0.1,
+      "error_pct": 7.397,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (high)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d71",
+      "predicted": 0.20069,
+      "observed": 0.2,
+      "error_pct": 0.345,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (high)",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d71",
+      "predicted": 0.2071,
+      "observed": 0.2,
+      "error_pct": 3.55,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T1-stellar",
+      "target": "Red giant conv base (high)",
+      "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7\u03c6",
+      "predicted": 0.21445,
+      "observed": 0.2,
+      "error_pct": 7.227,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Venus/Mercury",
+      "observed_ratio": 1.86822,
+      "best_fit": 1.86895,
+      "exponents_abcd": [
+        0,
+        -2,
+        2,
+        1
+      ],
+      "error_pct": 0.039,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Earth/Venus",
+      "observed_ratio": 1.38313,
+      "best_fit": 1.3939,
+      "exponents_abcd": [
+        2,
+        2,
+        0,
+        -1
+      ],
+      "error_pct": 0.779,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Mars/Earth",
+      "observed_ratio": 1.524,
+      "best_fit": 1.52416,
+      "exponents_abcd": [
+        0,
+        -2,
+        0,
+        2
+      ],
+      "error_pct": 0.01,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Jupiter/Mars",
+      "observed_ratio": 3.41404,
+      "best_fit": 3.4143,
+      "exponents_abcd": [
+        2,
+        1,
+        2,
+        0
+      ],
+      "error_pct": 0.008,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Saturn/Jupiter",
+      "observed_ratio": 1.83298,
+      "best_fit": 1.83813,
+      "exponents_abcd": [
+        -1,
+        2,
+        2,
+        -1
+      ],
+      "error_pct": 0.281,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Uranus/Saturn",
+      "observed_ratio": 2.01216,
+      "best_fit": 2.00621,
+      "exponents_abcd": [
+        1,
+        -2,
+        -1,
+        3
+      ],
+      "error_pct": 0.296,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Planets (AU)",
+      "pair": "Neptune/Uranus",
+      "observed_ratio": 1.56696,
+      "best_fit": 1.60118,
+      "exponents_abcd": [
+        2,
+        2,
+        -1,
+        0
+      ],
+      "error_pct": 2.184,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Jovian moons (Mkm)",
+      "pair": "Europa/Io",
+      "observed_ratio": 1.59132,
+      "best_fit": 1.60118,
+      "exponents_abcd": [
+        2,
+        2,
+        -1,
+        0
+      ],
+      "error_pct": 0.62,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Jovian moons (Mkm)",
+      "pair": "Ganymede/Europa",
+      "observed_ratio": 1.59547,
+      "best_fit": 1.60118,
+      "exponents_abcd": [
+        2,
+        2,
+        -1,
+        0
+      ],
+      "error_pct": 0.358,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Jovian moons (Mkm)",
+      "pair": "Callisto/Ganymede",
+      "observed_ratio": 1.75888,
+      "best_fit": 1.75081,
+      "exponents_abcd": [
+        0,
+        -2,
+        -1,
+        3
+      ],
+      "error_pct": 0.458,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Saturnian moons (Mkm)",
+      "pair": "Enceladus/Mimas",
+      "observed_ratio": 1.28302,
+      "best_fit": 1.30175,
+      "exponents_abcd": [
+        0,
+        2,
+        2,
+        -2
+      ],
+      "error_pct": 1.46,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Saturnian moons (Mkm)",
+      "pair": "Tethys/Enceladus",
+      "observed_ratio": 1.23824,
+      "best_fit": 1.23762,
+      "exponents_abcd": [
+        -1,
+        -1,
+        -1,
+        2
+      ],
+      "error_pct": 0.05,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Saturnian moons (Mkm)",
+      "pair": "Dione/Tethys",
+      "observed_ratio": 1.28062,
+      "best_fit": 1.30175,
+      "exponents_abcd": [
+        0,
+        2,
+        2,
+        -2
+      ],
+      "error_pct": 1.649,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Saturnian moons (Mkm)",
+      "pair": "Rhea/Dione",
+      "observed_ratio": 1.39666,
+      "best_fit": 1.39735,
+      "exponents_abcd": [
+        1,
+        2,
+        -1,
+        0
+      ],
+      "error_pct": 0.049,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T2-planetary",
+      "system": "Saturnian moons (Mkm)",
+      "pair": "Titan/Rhea",
+      "observed_ratio": 2.31797,
+      "best_fit": 2.30309,
+      "exponents_abcd": [
+        -2,
+        -2,
+        2,
+        2
+      ],
+      "error_pct": 0.642,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u03c6",
+      "predicted": 0.38024,
+      "observed": 0.38462,
+      "error_pct": 1.138,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3_wall\u00d7\u03b8_baseline",
+      "predicted": 0.3972,
+      "observed": 0.38462,
+      "error_pct": 3.272,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_rc\u00d7\u221a\u03c6",
+      "predicted": 0.39889,
+      "observed": 0.38462,
+      "error_pct": 3.712,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3\u2084\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+      "predicted": 0.40132,
+      "observed": 0.38462,
+      "error_pct": 4.344,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline",
+      "predicted": 0.3672,
+      "observed": 0.38462,
+      "error_pct": 4.528,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u03c6",
+      "predicted": 0.36247,
+      "observed": 0.38462,
+      "error_pct": 5.757,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3\u2084\u00d7\u03b8_rc\u00d7H",
+      "predicted": 0.35483,
+      "observed": 0.38462,
+      "error_pct": 7.745,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/disk",
+      "combo": "\u03c3\u2084\u00d7\u03b8_baseline\u00d7H",
+      "predicted": 0.41549,
+      "observed": 0.38462,
+      "error_pct": 8.028,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "Milky Way bulge/halo",
+      "combo": "\u03c3\u2083\u00d7\u03c3\u2083",
+      "predicted": 0.0053,
+      "observed": 0.005,
+      "error_pct": 5.997,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "\u03c3_wall\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+      "predicted": 0.28496,
+      "observed": 0.28302,
+      "error_pct": 0.685,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_baseline\u00d7H",
+      "predicted": 0.27274,
+      "observed": 0.28302,
+      "error_pct": 3.634,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "\u03c3_wall\u00d7\u03b8_baseline\u00d7H",
+      "predicted": 0.29502,
+      "observed": 0.28302,
+      "error_pct": 4.24,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "\u03c3\u2082\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+      "predicted": 0.29892,
+      "observed": 0.28302,
+      "error_pct": 5.62,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "cos(1/\u03c6)\u00d7\u03b8_leak\u00d7\u221a\u03c6",
+      "predicted": 0.26344,
+      "observed": 0.28302,
+      "error_pct": 6.919,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "M31 bulge/disk",
+      "combo": "\u03c3\u2082\u00d7\u03b8_rc\u00d7\u221a\u03c6",
+      "predicted": 0.25528,
+      "observed": 0.28302,
+      "error_pct": 9.8,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "NFW r_s/r_vir",
+      "combo": "\u03c3\u2083\u00d7\u03b8_rc\u00d7\u03c6",
+      "predicted": 0.1006,
+      "observed": 0.1,
+      "error_pct": 0.595,
+      "flag": "EXACT  (<1%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "NFW r_s/r_vir",
+      "combo": "\u03c3\u2082\u00d7\u03b8_leak\u00d7H",
+      "predicted": 0.09844,
+      "observed": 0.1,
+      "error_pct": 1.557,
+      "flag": "STRONG (<5%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "NFW r_s/r_vir",
+      "combo": "\u03c3\u2082\u00d7\u03c3_wall",
+      "predicted": 0.09334,
+      "observed": 0.1,
+      "error_pct": 6.658,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "NFW r_s/r_vir",
+      "combo": "\u03c3_wall\u00d7\u03c3\u2082",
+      "predicted": 0.09334,
+      "observed": 0.1,
+      "error_pct": 6.658,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T3-galaxy",
+      "target": "NFW r_s/r_vir",
+      "combo": "\u03c3\u2083\u00d7\u03b8_baseline\u00d7\u221a\u03c6",
+      "predicted": 0.0926,
+      "observed": 0.1,
+      "error_pct": 7.397,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T4-forces",
+      "ratio": "\u03b8_base/\u03b8_leak",
+      "value": 1.77305,
+      "closest_phi_power": "\u03c6^(+1)",
+      "phi_value": 1.61803,
+      "error_pct": 8.743,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T4-forces",
+      "ratio": "\u03b8_rc/\u03b8_leak",
+      "value": 1.51418,
+      "closest_phi_power": "\u03c6^(+1)",
+      "phi_value": 1.61803,
+      "error_pct": 6.858,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T4-forces",
+      "ratio": "\u03b8_base/\u03b8_rc",
+      "value": 1.17096,
+      "closest_phi_power": "\u03c6^(+0.5)",
+      "phi_value": 1.27202,
+      "error_pct": 8.63,
+      "flag": "NOTABLE(<10%)"
+    },
+    {
+      "test": "T4-forces",
+      "target": "N\u00d7W\u2248137",
+      "predicted": 137.3274,
+      "observed": 137.036,
+      "error_pct": 0.213,
+      "flag": "EXACT  (<1%)"
+    }
+  ]
+}

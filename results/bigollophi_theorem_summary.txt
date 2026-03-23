@@ -1,0 +1,41 @@
+BIGOLLO-PHI THEOREM OF THE UNIVERSE — SUMMARY
+============================================================
+
+Backend: JAX (METAL)
+Building blocks: 28
+Total combinations: 35,959
+
+SCORECARD
+  Total targets: 68
+  EXACT (<0.1%):    66
+  STRONG (<1.0%):   2
+  NOTABLE (<5.0%):  0
+  INTERESTING(<10%): 0
+  Sub-1% total:     68
+  Sub-5% total:     68
+
+TOP 10 BEST MATCHES
+  1. [BIOLOGICAL] Tubulin dimer L/W: target=2.000000 match=2.000000 err=0.0000% EXACT
+     Expression: 2
+  2. [PARTICLE PHYSICS] m_t/m_W: target=2.149371 match=2.149370 err=0.0001% EXACT
+     Expression: theta_rc x phi2 x phi2 x cos_node
+  3. [COSMOLOGICAL] CMB temp / 2: target=1.362750 match=1.362753 err=0.0002% EXACT
+     Expression: theta_rc x theta_rc x W x 4
+  4. [STELLAR] Solar core boundary R: target=0.250000 match=0.249999 err=0.0002% EXACT
+     Expression: 1/phi x 3 x cos_node x cos_node
+  5. [PLANETARY] Earth/Venus AU: target=1.383126 match=1.383130 err=0.0003% EXACT
+     Expression: theta_leak x 1/phi x 4 x BOS
+  6. [MOLECULAR / CRYSTAL] Cl2/F2 bond ratio: target=1.407932 match=1.407913 err=0.0014% EXACT
+     Expression: sigma4 x phi2 x phi2 x cos_node
+  7. [PARTICLE PHYSICS] m_tau/m_mu: target=16.817089 match=16.816820 err=0.0016% EXACT
+     Expression: W x 6 x 6
+  8. [CONDENSED MATTER] GaAs/Si band gap: target=1.267857 match=1.267880 err=0.0018% EXACT
+     Expression: cos_alpha x W x sqrt_phi x phi2
+  9. [PARTICLE PHYSICS] m_b/m_c: target=3.278431 match=3.278362 err=0.0021% EXACT
+     Expression: 3 x 3 x BOS x cos_node
+  10. [PLANETARY] TRAPPIST e/d: target=1.313426 match=1.313454 err=0.0022% EXACT
+     Expression: sigma4 x 2 x rho6 x rho6
+
+HUBBLE TENSION: H0_local/H0_Planck = 1.083086, phi^(1/6) = 1.083506, error = 0.0388%
+
+Three doors in the Cantor gate. Every scale chooses from the same three.

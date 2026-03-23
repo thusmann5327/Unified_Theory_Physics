@@ -1,0 +1,714 @@
+{
+  "backend": "JAX (METAL)",
+  "n_blocks": 28,
+  "n_combinations": 35959,
+  "brackets": {
+    "NUCLEAR": {
+      "results": [
+        {
+          "target": "Proton/electron radius r_p/r_e",
+          "value": 0.298581,
+          "match": 0.298563,
+          "expression": "sigma4 x 1/phi2 x R_base x BOS",
+          "error_pct": 0.0057,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Proton-to-neutron mass ratio",
+          "value": 0.99862,
+          "match": 0.998546,
+          "expression": "sigma2 x 1/phi x 6 x R_leak",
+          "error_pct": 0.0074,
+          "flag": "EXACT"
+        },
+        {
+          "target": "R0/r_p nuclear radius ratio",
+          "value": 1.485619,
+          "match": 1.485664,
+          "expression": "H x R_rc x R_base x rho6",
+          "error_pct": 0.003,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Deuteron binding/Rydberg",
+          "value": 163.494047,
+          "match": 163.351746,
+          "expression": "sigma3 x sqrt_phi x 6 x N",
+          "error_pct": 0.087,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "ATOMIC (reference)": {
+      "summary": "97 elements, mean 3.9%, 90/90 reliable within 10%. Three theta bands confirmed."
+    },
+    "MOLECULAR / CRYSTAL": {
+      "results": [
+        {
+          "target": "N2/H2 bond ratio",
+          "value": 1.481781,
+          "match": 1.481648,
+          "expression": "sigma3 x sqrt_phi x 4 x 4",
+          "error_pct": 0.009,
+          "flag": "EXACT"
+        },
+        {
+          "target": "O2/N2 bond ratio",
+          "value": 1.100182,
+          "match": 1.100971,
+          "expression": "sigma4 x 2 x BOS x BOS",
+          "error_pct": 0.0717,
+          "flag": "EXACT"
+        },
+        {
+          "target": "F2/O2 bond ratio",
+          "value": 1.168874,
+          "match": 1.169421,
+          "expression": "theta_leak x cos_alpha x sqrt_phi x 2",
+          "error_pct": 0.0468,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Cl2/F2 bond ratio",
+          "value": 1.407932,
+          "match": 1.407913,
+          "expression": "sigma4 x phi2 x phi2 x cos_node",
+          "error_pct": 0.0014,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Br2/Cl2 bond ratio",
+          "value": 1.147384,
+          "match": 1.147291,
+          "expression": "1/phi2 x 1/phi2 x 6 x R_rc",
+          "error_pct": 0.0081,
+          "flag": "EXACT"
+        },
+        {
+          "target": "I2/Br2 bond ratio",
+          "value": 1.168786,
+          "match": 1.168211,
+          "expression": "sigma4 x cos_alpha x r_c x 3",
+          "error_pct": 0.0492,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Si/C lattice ratio",
+          "value": 1.522568,
+          "match": 1.522531,
+          "expression": "r_c x W x sqrt_phi x 3",
+          "error_pct": 0.0024,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Ge/Si lattice ratio",
+          "value": 1.041797,
+          "match": 1.041727,
+          "expression": "W x sqrt_phi x phi x rho6",
+          "error_pct": 0.0067,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Sn/Ge lattice ratio",
+          "value": 1.146872,
+          "match": 1.146928,
+          "expression": "sigma_wall x 6 x R_rc x cos_node",
+          "error_pct": 0.0049,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "CONDENSED MATTER": {
+      "results": [
+        {
+          "target": "BCS gap ratio 2D/kTc",
+          "value": 3.528,
+          "match": 3.528928,
+          "expression": "cos_alpha x sqrt_phi x pi x rho6",
+          "error_pct": 0.0263,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Strong coupling Pb/BCS",
+          "value": 1.241497,
+          "match": 1.241561,
+          "expression": "phi x 1/phi x R_leak x rho6",
+          "error_pct": 0.0052,
+          "flag": "EXACT"
+        },
+        {
+          "target": "GaAs/Si band gap",
+          "value": 1.267857,
+          "match": 1.26788,
+          "expression": "cos_alpha x W x sqrt_phi x phi2",
+          "error_pct": 0.0018,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "STELLAR": {
+      "results": [
+        {
+          "target": "Solar core boundary R",
+          "value": 0.25,
+          "match": 0.249999,
+          "expression": "1/phi x 3 x cos_node x cos_node",
+          "error_pct": 0.0002,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Tachocline position",
+          "value": 0.713,
+          "match": 0.713033,
+          "expression": "W x sqrt_phi x 1/phi2 x pi",
+          "error_pct": 0.0047,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Core/surface temp ratio",
+          "value": 2717.203184,
+          "match": 2695.152175,
+          "expression": "1/phi2 x 4 x 6 x N",
+          "error_pct": 0.8115,
+          "flag": "STRONG"
+        },
+        {
+          "target": "Chandrasekhar limit M_sun",
+          "value": 1.44,
+          "match": 1.440044,
+          "expression": "theta_leak x H x 3 x R_leak",
+          "error_pct": 0.003,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Sirius A radius R_sun",
+          "value": 1.711,
+          "match": 1.71117,
+          "expression": "sqrt_phi x R_leak x rho6 x rho6",
+          "error_pct": 0.0099,
+          "flag": "EXACT"
+        },
+        {
+          "target": "NS radius / Schwarzschild",
+          "value": 2.415459,
+          "match": 2.416262,
+          "expression": "sqrt_phi x phi x rho6 x rho6",
+          "error_pct": 0.0332,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "PLANETARY": {
+      "results": [
+        {
+          "target": "Venus/Mercury AU",
+          "value": 1.868217,
+          "match": 1.868342,
+          "expression": "sqrt_phi x 4 x cos_node",
+          "error_pct": 0.0067,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Earth/Venus AU",
+          "value": 1.383126,
+          "match": 1.38313,
+          "expression": "theta_leak x 1/phi x 4 x BOS",
+          "error_pct": 0.0003,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Mars/Earth AU",
+          "value": 1.524,
+          "match": 1.524743,
+          "expression": "sigma3 x phi2 x 2 x 4",
+          "error_pct": 0.0488,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Jupiter/Mars AU",
+          "value": 3.414042,
+          "match": 3.413135,
+          "expression": "r_c x sqrt_phi x pi",
+          "error_pct": 0.0266,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Saturn/Jupiter AU",
+          "value": 1.832981,
+          "match": 1.832828,
+          "expression": "sigma_wall x pi x 4 x cos_node",
+          "error_pct": 0.0083,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Uranus/Saturn AU",
+          "value": 2.012163,
+          "match": 2.012633,
+          "expression": "cos_alpha x phi x R_base x rho6",
+          "error_pct": 0.0234,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Neptune/Uranus AU",
+          "value": 1.566962,
+          "match": 1.567025,
+          "expression": "cos_alpha x phi2 x 2 x cos_node",
+          "error_pct": 0.004,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Earth/Mars density",
+          "value": 1.402036,
+          "match": 1.402196,
+          "expression": "sigma2 x phi x phi2 x R_base",
+          "error_pct": 0.0114,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Earth/Venus density",
+          "value": 1.051527,
+          "match": 1.051623,
+          "expression": "W x R_rc x R_rc x R_rc",
+          "error_pct": 0.0091,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Jupiter/Saturn density",
+          "value": 1.930131,
+          "match": 1.930393,
+          "expression": "sigma_wall x 1/phi x 6 x R_rc",
+          "error_pct": 0.0136,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST c/b",
+          "value": 1.369151,
+          "match": 1.368987,
+          "expression": "r_c x W x phi2 x R_rc",
+          "error_pct": 0.012,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST d/c",
+          "value": 1.409494,
+          "match": 1.40997,
+          "expression": "sigma2 x phi2 x 2 x R_leak",
+          "error_pct": 0.0338,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST e/d",
+          "value": 1.313426,
+          "match": 1.313454,
+          "expression": "sigma4 x 2 x rho6 x rho6",
+          "error_pct": 0.0022,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST f/e",
+          "value": 1.315897,
+          "match": 1.315844,
+          "expression": "sqrt_phi x 2 x R_base x cos_node",
+          "error_pct": 0.0041,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST g/f",
+          "value": 1.21668,
+          "match": 1.216452,
+          "expression": "1/phi x R_leak x R_rc x R_rc",
+          "error_pct": 0.0187,
+          "flag": "EXACT"
+        },
+        {
+          "target": "TRAPPIST h/g",
+          "value": 1.321589,
+          "match": 1.321872,
+          "expression": "pi x R_leak x cos_node",
+          "error_pct": 0.0214,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "GALACTIC": {
+      "results": [
+        {
+          "target": "MW bar/disk ratio",
+          "value": 1.692308,
+          "match": 1.692133,
+          "expression": "sigma_wall x 3 x R_rc x rho6",
+          "error_pct": 0.0103,
+          "flag": "EXACT"
+        },
+        {
+          "target": "MW bulge/disk ratio",
+          "value": 0.384615,
+          "match": 0.384557,
+          "expression": "sigma2 x H x 6 x cos_node",
+          "error_pct": 0.0153,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Spiral arm pitch/360",
+          "value": 0.033333,
+          "match": 0.033357,
+          "expression": "sigma3 x sigma_wall x pi x cos_node",
+          "error_pct": 0.0724,
+          "flag": "EXACT"
+        },
+        {
+          "target": "M_SMBH/M_bulge",
+          "value": 0.002,
+          "match": 0.002008,
+          "expression": "sigma3 x sigma3 x 1/phi2 x BOS",
+          "error_pct": 0.4082,
+          "flag": "STRONG"
+        },
+        {
+          "target": "Baryon fraction f_b",
+          "value": 0.156,
+          "match": 0.155943,
+          "expression": "theta_leak x sigma_wall x cos_alpha x r_c",
+          "error_pct": 0.0365,
+          "flag": "EXACT"
+        },
+        {
+          "target": "NFW r_s/r_vir",
+          "value": 0.1,
+          "match": 0.100073,
+          "expression": "theta_rc x sigma_wall x sigma_wall x H",
+          "error_pct": 0.0725,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "COSMOLOGICAL": {
+      "results": [
+        {
+          "target": "Omega_DE",
+          "value": 0.685,
+          "match": 0.685016,
+          "expression": "cos_alpha x r_c x BOS x BOS",
+          "error_pct": 0.0024,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Omega_DM",
+          "value": 0.265,
+          "match": 0.264993,
+          "expression": "theta_rc x cos_alpha x cos_alpha x W",
+          "error_pct": 0.0025,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Omega_b",
+          "value": 0.0486,
+          "match": 0.048591,
+          "expression": "sigma2 x sigma_wall x sigma_wall x R_rc",
+          "error_pct": 0.0177,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Hubble tension H0_local/H0_Planck",
+          "value": 1.083086,
+          "match": 1.083389,
+          "expression": "theta_rc x theta_rc x H x 2",
+          "error_pct": 0.0279,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Omega_DE/Omega_M",
+          "value": 2.174603,
+          "match": 2.17484,
+          "expression": "theta_leak x sigma_wall x phi x 6",
+          "error_pct": 0.0109,
+          "flag": "EXACT"
+        },
+        {
+          "target": "CMB temp / 2",
+          "value": 1.36275,
+          "match": 1.362753,
+          "expression": "theta_rc x theta_rc x W x 4",
+          "error_pct": 0.0002,
+          "flag": "EXACT"
+        },
+        {
+          "target": "BAO scale / 100",
+          "value": 1.4709,
+          "match": 1.471134,
+          "expression": "theta_rc x W x phi2 x R_base",
+          "error_pct": 0.0159,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Age ratio 13.8/10",
+          "value": 1.38,
+          "match": 1.379957,
+          "expression": "sigma2 x r_c x 6 x R_leak",
+          "error_pct": 0.0031,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "PARTICLE PHYSICS": {
+      "results": [
+        {
+          "target": "m_W/m_Z (cos theta_W)",
+          "value": 0.881447,
+          "match": 0.881562,
+          "expression": "sigma4 x sigma4 x 2 x R_base",
+          "error_pct": 0.0131,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_H/m_Z",
+          "value": 1.373506,
+          "match": 1.373694,
+          "expression": "H x R_leak x R_leak x R_base",
+          "error_pct": 0.0137,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_H/m_W",
+          "value": 1.558282,
+          "match": 1.558153,
+          "expression": "sigma3 x sigma3 x N",
+          "error_pct": 0.0083,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_t/m_H",
+          "value": 1.379321,
+          "match": 1.379492,
+          "expression": "sigma2 x W x pi x 4",
+          "error_pct": 0.0124,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_t/m_W",
+          "value": 2.149371,
+          "match": 2.14937,
+          "expression": "theta_rc x phi2 x phi2 x cos_node",
+          "error_pct": 0.0001,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_mu/m_e / N",
+          "value": 0.703293,
+          "match": 0.703086,
+          "expression": "sigma_wall x sigma_wall x H x 6",
+          "error_pct": 0.0294,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_tau/m_mu",
+          "value": 16.817089,
+          "match": 16.81682,
+          "expression": "W x 6 x 6",
+          "error_pct": 0.0016,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_c/m_s",
+          "value": 13.421053,
+          "match": 13.42303,
+          "expression": "cos_alpha x pi x 4 x R_rc",
+          "error_pct": 0.0147,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_b/m_c",
+          "value": 3.278431,
+          "match": 3.278362,
+          "expression": "3 x 3 x BOS x cos_node",
+          "error_pct": 0.0021,
+          "flag": "EXACT"
+        },
+        {
+          "target": "m_t/m_b",
+          "value": 41.330144,
+          "match": 41.328361,
+          "expression": "cos_alpha x 6 x 6 x R_base",
+          "error_pct": 0.0043,
+          "flag": "EXACT"
+        },
+        {
+          "target": "|V_us|",
+          "value": 0.2243,
+          "match": 0.224258,
+          "expression": "theta_leak x theta_leak x sigma2 x 3",
+          "error_pct": 0.0189,
+          "flag": "EXACT"
+        },
+        {
+          "target": "|V_cb|",
+          "value": 0.0422,
+          "match": 0.042194,
+          "expression": "sigma4 x sigma4 x cos_node x cos_node",
+          "error_pct": 0.0143,
+          "flag": "EXACT"
+        },
+        {
+          "target": "|V_ub|",
+          "value": 0.00394,
+          "match": 0.003936,
+          "expression": "sigma3 x sigma3 x H",
+          "error_pct": 0.0909,
+          "flag": "EXACT"
+        }
+      ]
+    },
+    "BIOLOGICAL": {
+      "results": [
+        {
+          "target": "Tubulin dimer L/W",
+          "value": 2.0,
+          "match": 2.0,
+          "expression": "2",
+          "error_pct": 0.0,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Microtubule outer/inner D",
+          "value": 2.083333,
+          "match": 2.08324,
+          "expression": "phi2 x 2 x rho6 x cos_node",
+          "error_pct": 0.0045,
+          "flag": "EXACT"
+        },
+        {
+          "target": "Protofilaments count",
+          "value": 13.0,
+          "match": 13.001796,
+          "expression": "phi2 x 4 x R_leak x rho6",
+          "error_pct": 0.0138,
+          "flag": "EXACT"
+        }
+      ]
+    }
+  },
+  "optimization": {
+    "initial": {
+      "theta_leak": 0.564,
+      "theta_rc": 0.854,
+      "theta_base": 1.0
+    },
+    "final": {
+      "theta_leak": 0.568619,
+      "theta_rc": 0.854059,
+      "theta_base": 1.020257
+    },
+    "drift_pct": {
+      "theta_leak": 0.819,
+      "theta_rc": 0.0069,
+      "theta_base": 2.0257
+    }
+  },
+  "scorecard": {
+    "total": 68,
+    "exact": 66,
+    "strong": 2,
+    "notable": 0,
+    "interesting": 0,
+    "miss": 0,
+    "sub_1pct": 68,
+    "sub_5pct": 68
+  },
+  "top10_best": [
+    {
+      "target": "Tubulin dimer L/W",
+      "value": 2.0,
+      "match": 2.0,
+      "expression": "2",
+      "error_pct": 0.0,
+      "flag": "EXACT",
+      "bracket": "BIOLOGICAL"
+    },
+    {
+      "target": "m_t/m_W",
+      "value": 2.149371,
+      "match": 2.14937,
+      "expression": "theta_rc x phi2 x phi2 x cos_node",
+      "error_pct": 0.0001,
+      "flag": "EXACT",
+      "bracket": "PARTICLE PHYSICS"
+    },
+    {
+      "target": "CMB temp / 2",
+      "value": 1.36275,
+      "match": 1.362753,
+      "expression": "theta_rc x theta_rc x W x 4",
+      "error_pct": 0.0002,
+      "flag": "EXACT",
+      "bracket": "COSMOLOGICAL"
+    },
+    {
+      "target": "Solar core boundary R",
+      "value": 0.25,
+      "match": 0.249999,
+      "expression": "1/phi x 3 x cos_node x cos_node",
+      "error_pct": 0.0002,
+      "flag": "EXACT",
+      "bracket": "STELLAR"
+    },
+    {
+      "target": "Earth/Venus AU",
+      "value": 1.383126,
+      "match": 1.38313,
+      "expression": "theta_leak x 1/phi x 4 x BOS",
+      "error_pct": 0.0003,
+      "flag": "EXACT",
+      "bracket": "PLANETARY"
+    },
+    {
+      "target": "Cl2/F2 bond ratio",
+      "value": 1.407932,
+      "match": 1.407913,
+      "expression": "sigma4 x phi2 x phi2 x cos_node",
+      "error_pct": 0.0014,
+      "flag": "EXACT",
+      "bracket": "MOLECULAR / CRYSTAL"
+    },
+    {
+      "target": "m_tau/m_mu",
+      "value": 16.817089,
+      "match": 16.81682,
+      "expression": "W x 6 x 6",
+      "error_pct": 0.0016,
+      "flag": "EXACT",
+      "bracket": "PARTICLE PHYSICS"
+    },
+    {
+      "target": "GaAs/Si band gap",
+      "value": 1.267857,
+      "match": 1.26788,
+      "expression": "cos_alpha x W x sqrt_phi x phi2",
+      "error_pct": 0.0018,
+      "flag": "EXACT",
+      "bracket": "CONDENSED MATTER"
+    },
+    {
+      "target": "m_b/m_c",
+      "value": 3.278431,
+      "match": 3.278362,
+      "expression": "3 x 3 x BOS x cos_node",
+      "error_pct": 0.0021,
+      "flag": "EXACT",
+      "bracket": "PARTICLE PHYSICS"
+    },
+    {
+      "target": "TRAPPIST e/d",
+      "value": 1.313426,
+      "match": 1.313454,
+      "expression": "sigma4 x 2 x rho6 x rho6",
+      "error_pct": 0.0022,
+      "flag": "EXACT",
+      "bracket": "PLANETARY"
+    }
+  ],
+  "hubble_tension": {
+    "H0_ratio": 1.083086,
+    "rho6": 1.083506,
+    "error_pct": 0.0388
+  }
+}
