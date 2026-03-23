@@ -1,0 +1,182 @@
+{
+  "fibonacci_shells": {
+    "3": {
+      "n_elements": 2,
+      "z_range": [
+        3,
+        4
+      ],
+      "periods": [
+        2
+      ],
+      "bands": {
+        "leak": 0,
+        "rc": 0,
+        "baseline": 2
+      }
+    },
+    "5": {
+      "n_elements": 3,
+      "z_range": [
+        5,
+        7
+      ],
+      "periods": [
+        2
+      ],
+      "bands": {
+        "leak": 0,
+        "rc": 0,
+        "baseline": 3
+      }
+    },
+    "8": {
+      "n_elements": 5,
+      "z_range": [
+        8,
+        12
+      ],
+      "periods": [
+        2,
+        3
+      ],
+      "bands": {
+        "leak": 0,
+        "rc": 1,
+        "baseline": 4
+      }
+    },
+    "13": {
+      "n_elements": 8,
+      "z_range": [
+        13,
+        20
+      ],
+      "periods": [
+        3,
+        4
+      ],
+      "bands": {
+        "leak": 0,
+        "rc": 1,
+        "baseline": 7
+      }
+    },
+    "21": {
+      "n_elements": 13,
+      "z_range": [
+        21,
+        33
+      ],
+      "periods": [
+        4
+      ],
+      "bands": {
+        "leak": 5,
+        "rc": 0,
+        "baseline": 8
+      }
+    },
+    "34": {
+      "n_elements": 21,
+      "z_range": [
+        34,
+        54
+      ],
+      "periods": [
+        4,
+        5
+      ],
+      "bands": {
+        "leak": 5,
+        "rc": 2,
+        "baseline": 14
+      }
+    },
+    "55": {
+      "n_elements": 34,
+      "z_range": [
+        55,
+        88
+      ],
+      "periods": [
+        6,
+        7
+      ],
+      "bands": {
+        "leak": 6,
+        "rc": 5,
+        "baseline": 23
+      }
+    },
+    "89": {
+      "n_elements": 11,
+      "z_range": [
+        89,
+        99
+      ],
+      "periods": [
+        7
+      ],
+      "bands": {
+        "leak": 0,
+        "rc": 0,
+        "baseline": 11
+      }
+    }
+  },
+  "sector_distribution": {
+    "\u03c3\u2081": {
+      "leak": 3,
+      "rc": 1,
+      "baseline": 10
+    },
+    "\u03c3\u2082": {
+      "leak": 3,
+      "rc": 2,
+      "baseline": 18
+    },
+    "\u03c3\u2083": {
+      "leak": 4,
+      "rc": 5,
+      "baseline": 14
+    },
+    "\u03c3\u2084": {
+      "leak": 4,
+      "rc": 0,
+      "baseline": 19
+    },
+    "\u03c3\u2085": {
+      "leak": 2,
+      "rc": 1,
+      "baseline": 11
+    }
+  },
+  "predictor_accuracy": 64.94845360824742,
+  "period_vs_fibonacci": {
+    "2": {
+      "z_start": 3,
+      "nearest_fib": 3
+    },
+    "3": {
+      "z_start": 11,
+      "nearest_fib": 13
+    },
+    "4": {
+      "z_start": 19,
+      "nearest_fib": 21
+    },
+    "5": {
+      "z_start": 37,
+      "nearest_fib": 34
+    },
+    "6": {
+      "z_start": 55,
+      "nearest_fib": 55
+    },
+    "7": {
+      "z_start": 87,
+      "nearest_fib": 89
+    }
+  }
+}
