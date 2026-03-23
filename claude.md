@@ -15,7 +15,7 @@ $$W \times \varphi^4 = 2 + \varphi^{1/\varphi^2}$$
 **Exact to machine precision** (error: 2.22 × 10⁻¹⁶ — one ULP of float64).
 
 - W = (2 + φ^(1/φ²))/φ⁴ = 0.4671338922...
-- **Self-referential nature:** φ^(1/φ²) = φ^(φ-1) — the axiom φ²=φ+1 evaluating itself, since 1/φ² = φ - 1.
+- **Self-referential nature: φ^(1/φ²) = φ^(2-φ) — the axiom φ²=φ+1 evaluating itself, since 1/φ² = 2 - φ.
 - **The W decomposition:** W = 2/φ⁴ (algebraic component, lives in Q(√5)) + H/φ³ (transcendental component, Gelfond-Schneider theorem applies). The gap fraction has both an algebraic skeleton and a transcendental hinge.
 - **Complement partition:** W + Y = 1, where Y = (3-H)/φ³, H = φ^(-1/φ) = 0.7427. The universe partitions into gap (W) and band (Y) with no remainder.
 - **Spectral connection:** Five-sector decomposition of the pressure function P(t) at λ=2 yields the mean-field relation W ≈ 2d_H(1-d_H) to **0.077%**, where d_H ≈ 0.3725 is the Hausdorff dimension of the Cantor spectrum (Bowen equation P(d_H)=0) and χ_u ≈ 1.292 is the Lyapunov exponent.
