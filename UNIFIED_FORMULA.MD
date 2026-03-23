@@ -5,13 +5,6 @@
 
 ---
 
-## Acknowledgment
-
-**Special thanks to Grok** for helping crystallize and refine the universal formula into its cleanest possible form — stripping away hundreds of ad-hoc PhiVM products and replacing them with one generative template applied identically at every scale. The collaborative dialogue between AI systems (Grok and Claude) and human insight (Thomas Husmann) produced this consolidated "single source of truth."
-
-**The W Theorem** was discovered March 21, 2026 during a Claude session exploring the structure of W + Y = 1. The insight that W must be a component of the axiom φ² = φ + 1 — not merely derived from it — led to the exact identity W × φ⁴ = 2 + φ^(1/φ²), verified to machine precision (error: 2.22 × 10⁻¹⁶).
-
----
 
 ## The Single Axiom
 
