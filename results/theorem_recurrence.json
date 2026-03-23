@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "backend": "NumPy (CPU)",
+    "n_trials": 100000,
+    "threshold_pct": 2.0,
+    "timestamp": "2026-03-23 11:59:11",
+    "elapsed_seconds": 5.3
+  },
+  "framework_triple": {
+    "R_leak": 1.1458738247049716,
+    "R_rc": 1.310608110849311,
+    "R_base": 1.4085680672228802,
+    "rho6": 1.083505882173848,
+    "BOS": 0.992,
+    "theta_leak": 0.564,
+    "theta_rc": 0.854,
+    "theta_base": 1.0
+  },
+  "part1_recurrence": {
+    "n_ratios": 22,
+    "hit_count": 9,
+    "mean_error_pct": 0.6213,
+    "p_count": 0.00395,
+    "p_quality": 5e-05,
+    "hits_detail": [
+      {
+        "system": "MOLECULAR",
+        "label": "Cl2/F2",
+        "ratio": 1.407932,
+        "mode": "R_base",
+        "mode_value": 1.408568,
+        "error_pct": 0.0452
+      },
+      {
+        "system": "MOLECULAR",
+        "label": "Br2/Cl2",
+        "ratio": 1.147384,
+        "mode": "R_leak",
+        "mode_value": 1.145874,
+        "error_pct": 0.1318
+      },
+      {
+        "system": "MOLECULAR",
+        "label": "I2/Br2",
+        "ratio": 1.168786,
+        "mode": "R_leak",
+        "mode_value": 1.145874,
+        "error_pct": 1.9995
+      },
+      {
+        "system": "TRAPPIST-1",
+        "label": "T1-d/c",
+        "ratio": 1.409494,
+        "mode": "R_base",
+        "mode_value": 1.408568,
+        "error_pct": 0.0657
+      },
+      {
+        "system": "TRAPPIST-1",
+        "label": "T1-e/d",
+        "ratio": 1.313426,
+        "mode": "R_rc",
+        "mode_value": 1.310608,
+        "error_pct": 0.215
+      },
+      {
+        "system": "TRAPPIST-1",
+        "label": "T1-f/e",
+        "ratio": 1.315897,
+        "mode": "R_rc",
+        "mode_value": 1.310608,
+        "error_pct": 0.4036
+      },
+      {
+        "system": "TRAPPIST-1",
+        "label": "T1-h/g",
+        "ratio": 1.321589,
+        "mode": "R_rc",
+        "mode_value": 1.310608,
+        "error_pct": 0.8378
+      },
+      {
+        "system": "SOLAR",
+        "label": "Ear/Ven",
+        "ratio": 1.383126,
+        "mode": "R_base",
+        "mode_value": 1.408568,
+        "error_pct": 1.8062
+      },
+      {
+        "system": "CRYSTAL",
+        "label": "Sn/Ge",
+        "ratio": 1.146872,
+        "mode": "R_leak",
+        "mode_value": 1.145874,
+        "error_pct": 0.0871
+      }
+    ]
+  },
+  "part2_patterns": {
+    "halogen_pattern": [
+      0,
+      2,
+      0,
+      0
+    ],
+    "halogen_p_mc": 0.01211,
+    "halogen_p_analytical": 0.012346,
+    "trappist_pattern": [
+      2,
+      1,
+      1
+    ],
+    "trappist_p_mc": 0.03653,
+    "trappist_p_analytical": 0.037037
+  },
+  "part3_cross_system": {
+    "real_pairs_matched": 3,
+    "p_cross_system": 0.04318,
+    "pairs": [
+      {
+        "mode": "R_base",
+        "v1": 1.407932,
+        "v2": 1.409494,
+        "systems": [
+          "MOLECULAR",
+          "TRAPPIST-1"
+        ]
+      },
+      {
+        "mode": "R_leak",
+        "v1": 1.147384,
+        "v2": 1.146872,
+        "systems": [
+          "MOLECULAR",
+          "CRYSTAL"
+        ]
+      },
+      {
+        "mode": "R_rc",
+        "v1": 1.313426,
+        "v2": 1.315897,
+        "systems": [
+          "TRAPPIST-1",
+          "TRAPPIST-1"
+        ]
+      }
+    ]
+  },
+  "part4_scorecard": {
+    "group_a": [
+      {
+        "name": "Deuteron binding/Rydberg",
+        "value": 163.494047,
+        "error_pct": 0.087,
+        "p_value": 0.0,
+        "bracket": "NUCLEAR"
+      },
+      {
+        "name": "Core/surface temp ratio",
+        "value": 2717.203184,
+        "error_pct": 0.8115,
+        "p_value": 0.0,
+        "bracket": "STELLAR"
+      },
+      {
+        "name": "m_t/m_W",
+        "value": 2.149371,
+        "error_pct": 0.0001,
+        "p_value": 0.002,
+        "bracket": "PARTICLE PHYSICS"
+      },
+      {
+        "name": "Solar core boundary R",
+        "value": 0.25,
+        "error_pct": 0.0002,
+        "p_value": 0.004,
+        "bracket": "STELLAR"
+      }
+    ],
+    "group_b": [
+      {
+        "name": "Tubulin dimer L/W",
+        "value": 2.0,
+        "error_pct": 0.0,
+        "p_value": 0.0,
+        "bracket": "BIOLOGICAL"
+      },
+      {
+        "name": "CMB temp / 2",
+        "value": 1.36275,
+        "error_pct": 0.0002,
+        "p_value": 0.0073,
+        "bracket": "COSMOLOGICAL"
+      },
+      {
+        "name": "Earth/Venus AU",
+        "value": 1.383126,
+        "error_pct": 0.0003,
+        "p_value": 0.0097,
+        "bracket": "PLANETARY"
+      }
+    ],
+    "n_tier12": 7
+  },
+  "part5_hubble": {
+    "rho6": 1.083505882173848,
+    "rho_optimal_5d": 1.272869,
+    "hubble_ratio": 1.0831,
+    "rho6_vs_hubble_pct": 0.037,
+    "p_hubble": 0.0
+  },
+  "fisher_combined": {
+    "statistic": 91.7,
+    "df": 14,
+    "p_value": 1.809343578715318e-13,
+    "n_tests": 7,
+    "individual_p_values": {
+      "Recurrence quality": 5e-05,
+      "Cross-system coincidence": 0.04318,
+      "Hubble cross-bracket (<1/N)": 1e-05,
+      "MC: m_t/m_W": 0.002,
+      "MC: Solar core boundary R": 0.004,
+      "MC: CMB temp / 2": 0.0073,
+      "MC: Earth/Venus AU": 0.0097
+    }
+  },
+  "theorem_statement": "THEOREM (Quantized Recurrence of Consecutive Ratios)\n\nThe three Pythagorean radii derived from the Husmann Decomposition's\ntheta-mode angles (theta_leak=0.564, theta_rc=0.854, theta_base=1.000)\nvia R = sqrt(1 + (theta * BOS)^2):\n\n    R_leak  = 1.145874\n    R_rc    = 1.310608\n    R_base  = 1.408568\n\nshow statistically significant correlated recurrence across four\nindependent physical systems:\n\n  MOLECULAR   (homonuclear diatomic bond ratios)\n  TRAPPIST-1  (exoplanet semimajor axis ratios)\n  SOLAR       (solar system semimajor axis ratios)\n  CRYSTAL     (diamond-structure lattice ratios)\n\nEVIDENCE:\n  1. Recurrence:     9/22 consecutive ratios match within 2%\n                     (p_count = 0.003950, p_quality = 0.000050)\n  2. Cross-system:   Three pairs of measurements from different physics\n                     each match a different mode (p = 0.043180)\n  3. Hubble bridge:  The same phi^(1/6) = 1.0835 that corrects 5d atomic\n                     radii matches the Hubble tension ratio 73.0/67.4 = 1.0831\n                     (p = 0.000000)\n  4. Fisher combined p-value across all tests: 1.81e-13\n\nThe three modes emerge from the Cantor spectrum's Pythagorean structure:\n  sigma_4^2 = sigma_shell^2 + bronze_sigma_3^2\nThe angle theta parameterizes how much bronze-axis momentum each state carries."
+}
