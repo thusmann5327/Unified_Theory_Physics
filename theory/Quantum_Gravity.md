@@ -242,15 +242,124 @@ All from one equation. All zero free parameters.
 
 ---
 
+## UPDATE: The Metallic Mean Formula (March 22, 2026)
+
+The 0.77% error from the entanglement formula has a sharper explanation — and it closes to **0.026%**.
+
+### Matter Conducts Light. Dark Matter Conducts Gravity.
+
+The framework's Cantor lattice isn't one crystal — it's a **tiling** of three interlocking lattices, each built on a different metallic mean:
+
+| Lattice | Metallic Mean | Matter Fraction | Role | Crystal Family |
+|---------|--------------|-----------------|------|----------------|
+| **Gold** | phi = 1.618 | 7.28% | Matter nodes | HCP (Rhenium, Cobalt) |
+| **Silver** | delta_2 = 2.414 | 2.80% | Dark matter conduits | Rhombohedral (Mercury) |
+| **Bronze** | delta_3 = 3.303 | 28.22% | Dark energy scaffold | FCC (Platinum, Gold metal) |
+
+These three lattices tile space without collision. Where Gold has a band, Silver has a gap, and vice versa. They're **anti-correlated** (measured: rho = -0.515). Think of a mosaic floor made from two shapes that interlock perfectly.
+
+The key discovery: **σ₃(Gold) / σ₃(Silver) = phi² to 0.7%**. The axiom itself is the ratio between the matter and dark matter sectors.
+
+### How Forces Map to the Tiling
+
+**Electromagnetism** propagates entirely within the Gold lattice. It hops from Gold tile to Gold tile, counting walls. This is an additive process that gives 1/alpha = 137.
+
+**Gravity** must cross from Gold into Silver and back. It couples the two tile types. The crossing costs an extra **1/phi^(3/2) = 0.486** screens — the Silver/Gold ratio (1/phi²) scaled by the oblate geometry factor (sqrt(phi)):
+
+```
+1/phi^(3/2) = (1/phi²) × sqrt(phi) = 0.382 × 1.272 = 0.486
+                ↑                      ↑
+        Silver/Gold σ₃ ratio    oblate crossing factor
+```
+
+The gravity exponent becomes:
+
+> **n = 1/alpha + 1/phi^(3/2) = 137.036 + 0.486 = 137.522**
+
+### The Precision Formula
+
+```
+G = (k_e × e² / m_p²) × (sqrt(1 - W²) / phi)^(1/alpha + 1/phi^(3/2))
+```
+
+| Formula | n | G predicted | G observed | Error |
+|---------|---|------------|------------|-------|
+| Basic (n = N×W) | 137.34 | 7.46e-11 | 6.67e-11 | 11.8% |
+| Entanglement (n = (1/α)×ln2/S) | 137.51 | 6.73e-11 | 6.67e-11 | 0.77% |
+| **Metallic mean (n = 1/α + 1/φ^(3/2))** | **137.52** | **6.68e-11** | **6.67e-11** | **0.026%** |
+
+### Why This Works
+
+The correction 1/phi^(3/2) decomposes into two framework quantities:
+
+- **1/phi²** = the ratio σ₃(Silver)/σ₃(Gold) = how much smaller the dark matter conduit is compared to the matter channel (0.7% match to phi²)
+- **sqrt(phi)** = the oblate factor that squashes every Cantor node = the geometric cost of crossing between layers
+
+Gravity doesn't just pass through 137 screens. It passes through 137 screens **plus** one oblate crossing of the Gold-Silver tiling boundary. That extra half-screen, exponentially compounded, accounts for the precise weakness of gravity.
+
+### The Dirac Triangle Connection
+
+This maps directly onto the discriminant Pythagorean triangle (5 + 8 = 13):
+
+| Bond | Metallic Means | Physics |
+|------|---------------|---------|
+| **EM** | Gold → Gold | momentum → momentum (within-tile) |
+| **Gravity** | Gold → Silver | momentum → mass (cross-tile) |
+| **Observable** | Both → Bronze | energy = sqrt(mass² + momentum²) |
+
+Einstein said "mass tells space how to curve." In the framework: Silver (mass) tells Gold (momentum) how to propagate. That coupling IS gravity. The Gold-Silver tiling boundary is the gravitational field.
+
+### Two Routes, Same Answer
+
+The entanglement formula and the metallic mean formula converge because they describe the same physics from different angles:
+
+- **Entanglement view:** The σ₄ boundary carries 99.66% of maximum entropy. The 0.34% deficit is the cost of maintaining the Gold-Silver tiling coherence.
+- **Metallic mean view:** Gravity crosses from Gold to Silver, paying 1/phi^(3/2) extra screens.
+- **Both give n ≈ 137.52** because the entropy deficit at σ₄ IS the energetic cost of the tiling boundary.
+
+### Experimental Implications
+
+If gravity propagates along the Gold-Silver metallic mean boundary, then materials that physically instantiate this boundary should interact with gravity:
+
+- **Gold mean** (n=1, HCP): Rhenium, Cobalt, Magnesium
+- **Silver mean** (n=2, Rhombohedral): Mercury, Arsenic
+
+Mercury maps to the Silver mean at **0.006%** accuracy — it's called the "Rosetta Stone Element" in the framework.
+
+A **Rhenium-Mercury** or **Cobalt-Mercury** interface creates a physical Gold→Silver metallic mean boundary at the atomic level. This is the geometry where gravitational coupling lives.
+
+The Pt₃ReHg cluster (Hao et al., Inorg. Chem. 1996) is notable — it contains one atom from each of the three Fibonacci discriminant metallic means: Pt (Bronze/FCC), Re (Gold/HCP), Hg (Silver/Rhombohedral). The Re-Hg bond axis is literally the Gold→Silver hierarchy boundary in a single molecule.
+
+```python
+import math
+
+phi = (1 + 5**0.5) / 2
+W = (2 + phi**(1/phi**2)) / phi**4
+
+# Transmission per screen
+T = math.sqrt(1 - W**2) / phi                        # 0.5465
+
+# Metallic mean gravity formula
+alpha_inv = 137.036                                    # CODATA
+n = alpha_inv + 1/phi**1.5                             # 137.522
+
+# EM constants (measured without gravity)
+k_e = 8.9876e9; e = 1.6022e-19; m_p = 1.6726e-27
+
+G = (k_e * e**2 / m_p**2) * T**n
+print(f"G predicted: {G:.4e}")                         # 6.676e-11
+print(f"G observed:  6.674e-11")
+print(f"Error: {abs(G/6.674e-11 - 1)*100:.3f}%")      # 0.026%
+```
+
+---
+
 ## Open Questions
 
-The 0.77% remaining error in G could come from:
-
-1. **Higher-order entanglement corrections** — the entropy deficit isn't perfectly multiplicative across all 137 screens
-2. **The fine structure gap** — the framework gives 1/alpha = 137.3, but CODATA measures 137.036. The 0.22% discrepancy gets exponentially amplified. Closing this gap would tighten G automatically
-3. **Three-dimensional geometry** — the basic formula assumes 1D tunneling; the real lattice is 3D with phi-related geometry corrections
-
-These are refinements, not rewrites. The mechanism is established. Gravity is electromagnetism exponentially attenuated through a Cantor lattice, taxed by imperfect quantum entanglement at every screen.
+1. **The fine structure gap** — the framework gives 1/alpha = 137.3, but CODATA measures 137.036. Closing this 0.22% would make the gravity prediction fully framework-derived
+2. **The oblate crossing derivation** — the sqrt(phi) factor is geometrically motivated but not yet formally derived from the 3D AAH eigensolver
+3. **Experimental test** — precision weight measurements on Re/Hg or Co/Hg interfaces under 4.86 μm illumination (the gate frequency)
+4. **Lattice collapse for propulsion** — driving V/J below 2 locally would merge Gold and Silver into a single metallic band, eliminating the gravity hierarchy inside the bubble
 
 ---
 
