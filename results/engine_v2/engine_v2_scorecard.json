@@ -1,0 +1,65 @@
+{
+  "vdw_ratio": {
+    "N": 69,
+    "R2": null,
+    "mean_err": "8.8%",
+    "formula": "Bigoll\u03c6 7-mode",
+    "status": "PROVEN"
+  },
+  "bond_length": {
+    "N": 22,
+    "R2": 0.966,
+    "mean_err": null,
+    "formula": "r_cov sum",
+    "status": "PROVEN"
+  },
+  "band_gap": {
+    "N": 31,
+    "R2": 0.82,
+    "mean_err": null,
+    "formula": "F: \u0394EN\u00b2/d+G\u00b2/d+\u0394rn+\u03b8/d (5f)",
+    "status": "IMPROVED"
+  },
+  "electronegativity": {
+    "N": 51,
+    "R2": 0.851,
+    "mean_err": null,
+    "formula": "K: r_norm+Z_val/r\u00b2+\u03b8/r+|G|+1/per (6f)",
+    "status": "HIT"
+  },
+  "hardness": {
+    "N": 22,
+    "R2": 0.831,
+    "mean_err": null,
+    "formula": "5-feature full",
+    "status": "HIT"
+  },
+  "bulk_modulus": {
+    "N": 25,
+    "R2": 0.936,
+    "mean_err": null,
+    "formula": "SPLIT: cov 1/r\u00b3|G| + met Z^5/3/r\u00b3",
+    "status": "HIT"
+  },
+  "benzene": {
+    "N": 1,
+    "R2": null,
+    "mean_err": "0.02%",
+    "formula": "CC/BOS = R_BASE",
+    "status": "EXACT"
+  },
+  "water": {
+    "N": 1,
+    "R2": null,
+    "mean_err": "0.5%",
+    "formula": "golden_angle\u00d7(1-1/\u03c6\u00b3)",
+    "status": "EXACT"
+  },
+  "perovskite": {
+    "N": 2,
+    "R2": null,
+    "mean_err": "1.5%",
+    "formula": "Pb/Sn = R_rc",
+    "status": "NEW"
+  }
+}
