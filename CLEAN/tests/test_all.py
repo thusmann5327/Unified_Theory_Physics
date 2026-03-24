@@ -383,6 +383,100 @@ def run_tests():
           schrödinger_interpolation(1) == 13)
 
     # ═══════════════════════════════════════════════════════════════
+    # 7. ENGINE — Material Property Predictions
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  7. ENGINE")
+    print("  " + "-" * 60)
+
+    from engine.gate_overflow import gate_overflow, gate_overflow_all
+    from engine.bond_lengths import bond_length_test, cross_scale_matches
+    from engine.band_gaps import band_gap_test
+    from engine.hardness import hardness_test
+    from engine.bulk_modulus import bulk_modulus_test
+    from engine.ionic_radii import ionic_radius_test
+    from engine.transport import conductivity_test
+
+    # Gate overflow
+    els = gate_overflow_all()
+    check("Gate overflow computed for 80+ elements",
+          len(els) >= 80, f"got {len(els)}")
+
+    # Ni should have small gate overflow (0.1% error in periodic table)
+    if 'Ni' in els:
+        check("Ni gate overflow < 5%",
+              abs(els['Ni']['G']) < 5, f"G = {els['Ni']['G']:.1f}%")
+
+    # Bond lengths
+    bl = bond_length_test()
+    check("Bond length R² > 0.85",
+          bl['R2'] > 0.85, f"R² = {bl['R2']:.3f}")
+
+    # Cross-scale matches
+    cs = cross_scale_matches()
+    check("Benzene CC/BOS = R_BASELINE (< 0.1%)",
+          cs['benzene_cc_over_bos']['error_pct'] < 0.1,
+          f"{cs['benzene_cc_over_bos']['error_pct']:.3f}%")
+
+    check("Graphite/Diamond = Omega_DE/Omega_M (< 1%)",
+          cs['graphite_over_diamond']['error_pct'] < 1.0,
+          f"{cs['graphite_over_diamond']['error_pct']:.2f}%")
+
+    # Compound hardness
+    hd = hardness_test(els)
+    check("Compound hardness best R² > 0.75",
+          hd['best_R2'] > 0.75, f"R² = {hd['best_R2']:.3f}")
+
+    # Bulk modulus
+    bm = bulk_modulus_test(els)
+    check("Bulk modulus R² > 0.60",
+          bm['best_R2'] > 0.60, f"R² = {bm['best_R2']:.3f}")
+
+    # Ionic radii
+    ir = ionic_radius_test()
+    check("Ionic radii +1: mean error < 25%",
+          ir[1]['mean_error_pct'] < 25, f"{ir[1]['mean_error_pct']:.1f}%")
+
+    # Transport: top 3 conductors are leak mode
+    ct = conductivity_test(els)
+    check("Top 3 conductors (Ag, Cu, Au) all leak mode",
+          ct['top3_all_leak'])
+
+    # g-factor identity
+    from core.constants import G_PROTON, G_ELECTRON
+    g_ratio = (G_PROTON - G_ELECTRON) / (G_PROTON + G_ELECTRON)
+    g_pred = 2 / PHI**3
+    g_err = abs(g_ratio - g_pred) / g_ratio * 100
+    check("g-factor: (gp-ge)/(gp+ge) = 2/phi^3 (< 0.05%)",
+          g_err < 0.05, f"{g_err:.3f}%")
+
+    # ═══════════════════════════════════════════════════════════════
+    # 8. CONE GEOMETRY
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  8. CONE GEOMETRY")
+    print("  " + "-" * 60)
+
+    from geometry.discriminant_cones import cone_angles, verify_sigma4_identity
+
+    ca = cone_angles()
+    check("Three cone angles exist",
+          all(k in ca for k in ['leak', 'rc', 'baseline']))
+
+    check("Leak angle ~ 29 deg",
+          28 < ca['leak']['angle_deg'] < 30,
+          f"{ca['leak']['angle_deg']:.1f} deg")
+
+    check("Baseline angle ~ 45 deg (within 1 deg)",
+          ca['baseline_near_45'] < 1.0,
+          f"deviation = {ca['baseline_near_45']:.2f} deg")
+
+    s4id = verify_sigma4_identity()
+    check("sigma4 identity: THETA_LEAK * BOS = sigma4 (< 0.1%)",
+          s4id['error_pct'] < 0.1,
+          f"{s4id['error_pct']:.3f}%")
+
+    # ═══════════════════════════════════════════════════════════════
     # SUMMARY
     # ═══════════════════════════════════════════════════════════════
     print()

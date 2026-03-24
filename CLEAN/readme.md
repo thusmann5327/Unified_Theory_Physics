@@ -46,12 +46,23 @@ CLEAN/
 ├── crossover/                Universal crossover operator
 │   └── operator.py           Crossover formula + 3D proof + physical instances
 │
+├── engine/                   Material property predictions
+│   ├── gate_overflow.py      G(Z) = the error IS the prediction
+│   ├── bond_lengths.py       Additive r_cov, cross-scale matches
+│   ├── band_gaps.py          ΔEN² + G² hybrid model
+│   ├── electronegativity.py  Framework Mulliken + θ/r model
+│   ├── hardness.py           Gate overflow → Vickers/Mohs
+│   ├── bulk_modulus.py       Split covalent/metallic model
+│   ├── ionic_radii.py        d/φ^(q+1) Shannon validation
+│   └── transport.py          θ mode → conductor classification
+│
 ├── geometry/                 Spatial architecture
 │   ├── cantor_node.py        Five-layer Cantor node, bracket address, Zeckendorf
-│   └── discriminant.py       Discriminant triangle, three-wave frequencies
+│   ├── discriminant.py       Discriminant triangle, three-wave frequencies
+│   └── discriminant_cones.py Three cone angles, σ₄ identity
 │
 └── tests/
-    └── test_all.py           69 verification tests across all modules
+    └── test_all.py           83 verification tests across all modules
 ```
 
 ---
@@ -156,6 +167,50 @@ Universal five-layer architecture at any scale:
 - `zeckendorf(n)` — non-adjacent Fibonacci decomposition (lattice address)
 - `print_scale_table()` — Cantor node from universe (4.5e26 m) to proton (8e-16 m)
 
+### engine/gate_overflow.py
+
+The error IS the prediction:
+
+- `gate_overflow(Z)` — compute G(Z) for element Z
+- `gate_overflow_all()` — G for all elements with radii data
+
+G < 0 means compact cloud → energy into bonding → HARD material.
+G > 0 means extended cloud → SOFT, metallic.
+
+### engine/bond_lengths.py
+
+Additive bond length: d_AB = r_cov(A) + r_cov(B), R² = 0.90.
+
+Cross-scale matches:
+- Benzene CC / BOS = R_BASELINE (0.01%)
+- Graphite interlayer / Diamond CC = Omega_DE / Omega_M (0.4%)
+
+### engine/hardness.py
+
+Compound hardness from gate overflow product |G_A| x |G_B|.
+5-feature model achieves R² = 0.84 on log(Vickers) for 22 compounds.
+Period 2 (B, C, N) has no sigma-3 gate — makes everything superhard.
+
+### engine/bulk_modulus.py
+
+Bulk modulus from log(1/r_cov) + theta + |G|. R² > 0.67 on 25 elements.
+
+### engine/ionic_radii.py
+
+Ionic radius: r_ion(+q) = 2 x r_cov / phi^(q+1). Shannon validation for +1, +2, +3 ions.
+
+### engine/transport.py
+
+Transport classification by theta mode: leak = electron conductor (Ag, Cu, Au),
+baseline = phonon (diamond), p-hole = semiconductor.
+
+### geometry/discriminant_cones.py
+
+Three cone angles from the spectral ratios:
+- `cone_angles()` — leak (29°), rc (40°), baseline (45°)
+- `verify_sigma4_identity()` — THETA_LEAK x BOS = sigma-4 (0.03%)
+- `cone_deviation(theta)` — angular deviation as hardness predictor
+
 ### geometry/discriminant.py
 
 The discriminant Pythagorean triangle:
@@ -168,7 +223,7 @@ The discriminant Pythagorean triangle:
 
 ## Test Coverage
 
-69 tests across 6 sections:
+83 tests across 8 sections:
 
 | Section | Tests | What it verifies |
 |---------|-------|-----------------|
@@ -178,6 +233,8 @@ The discriminant Pythagorean triangle:
 | Crossover Operator | 11 | Boundaries, Fibonacci chain, sqrt5, QH, N-SmA |
 | Cosmology | 7 | Fine structure, W-polynomial, gravity, Lambda, MOND |
 | Geometry | 11 | Cantor node, brackets, Zeckendorf, discriminant |
+| Engine | 10 | Gate overflow, bond R², cross-scale, hardness, transport, g-factor |
+| Cone Geometry | 4 | Three angles, leak ~29°, baseline ~45°, σ₄ identity |
 
 ---
 
