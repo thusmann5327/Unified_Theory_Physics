@@ -3,8 +3,8 @@
     "backend": "NumPy (CPU)",
     "n_trials": 100000,
     "threshold_pct": 2.0,
-    "timestamp": "2026-03-23 11:59:11",
-    "elapsed_seconds": 5.3
+    "timestamp": "2026-03-24 12:21:23",
+    "elapsed_seconds": 5.4
   },
   "framework_triple": {
     "R_leak": 1.1458738247049716,
