@@ -46,6 +46,11 @@ CLEAN/
 ├── crossover/                Universal crossover operator
 │   └── operator.py           Crossover formula + 3D proof + physical instances
 │
+├── particles/                Standard Model predictions
+│   ├── generations.py        Mass ratios, Koide formula, t/c = 136
+│   ├── electroweak.py        sin²θ_W, M_W, M_Z, M_H, α_s from δ₇
+│   └── mixing.py             Cabibbo angle, CKM matrix elements
+│
 ├── engine/                   Material property predictions
 │   ├── gate_overflow.py      G(Z) = the error IS the prediction
 │   ├── bond_lengths.py       Additive r_cov, cross-scale matches
@@ -62,7 +67,7 @@ CLEAN/
 │   └── discriminant_cones.py Three cone angles, σ₄ identity
 │
 └── tests/
-    └── test_all.py           83 verification tests across all modules
+    └── test_all.py           95 verification tests across all modules
 ```
 
 ---
@@ -132,6 +137,46 @@ The twelve-mode unified predictor:
 **Twelve modes**: magnetic, rel-reflect, leak, reflect, standard, f-block, pythagorean, ng-phole, alk-earth, sp3, B-overflow, additive, p-hole
 
 **Results**: 92 elements, 5.0% mean error, d-block 30/30 within 10% at 3.1% mean
+
+### particles/generations.py
+
+Generation mass ratios and the Koide formula:
+
+- `generation_ratios()` — all inter-generation ratios vs framework matches
+- `top_charm_ratio()` — t/c = 136 = 4 × F(9) test (gravity hierarchy connection)
+- `koide_formula()` — Q = 2/3 = ν = 1/(2 - D_s) (0.0009% error)
+- `phi_power_exponents()` — φ-power scaling analysis, lepton ladder 11+6=17
+
+| Ratio | Match | Error |
+|-------|-------|-------|
+| t/c | 4 × F(9) = 136 | 0.023% |
+| τ/μ | W × 36 | 0.002% |
+| c/u | N × 2 = 588 | 0.006% |
+| s/d | 5 × 4 = 20 | 0.000% |
+
+### particles/electroweak.py
+
+Electroweak predictions from (φ, W, δ₇):
+
+- `weinberg_angle()` — sin²θ_W = σ₃ × σ_wall × F(6) (0.047%)
+- `electroweak_predictions()` — all 7 predictions with errors
+
+| Prediction | Formula | Error |
+|-----------|---------|-------|
+| sin²θ_W | σ₃ × σ_wall × F(6) | 0.047% |
+| τ/μ | W × 36 | 0.002% |
+| M_W/m_p | φ² × W⁻² × δ₇ | 0.002% |
+| M_Z/m_p | W⁻⁵ × δ₃⁻¹ × δ₇ | 0.002% |
+| M_H/m_p | φ² × δ₇² | 0.016% |
+| α_s(M_Z) | W⁵ × H × δ₇ | 0.054% |
+| (m_n-m_p)/m_e | r_c⁻¹ × δ₃⁻¹ × δ₇ | 0.005% |
+
+### particles/mixing.py
+
+CKM mixing angles from spectral ratios:
+
+- `cabibbo_angle()` — sin(θ_C) ≈ 3/13 (2.28%)
+- `ckm_elements()` — |V_us|, |V_cb|, |V_ub| predictions
 
 ### cosmology/predictions.py
 
@@ -223,7 +268,7 @@ The discriminant Pythagorean triangle:
 
 ## Test Coverage
 
-83 tests across 8 sections:
+95 tests across 9 sections:
 
 | Section | Tests | What it verifies |
 |---------|-------|-----------------|
@@ -235,6 +280,7 @@ The discriminant Pythagorean triangle:
 | Geometry | 11 | Cantor node, brackets, Zeckendorf, discriminant |
 | Engine | 10 | Gate overflow, bond R², cross-scale, hardness, transport, g-factor |
 | Cone Geometry | 4 | Three angles, leak ~29°, baseline ~45°, σ₄ identity |
+| Particles | 12 | t/c=136, Koide=2/3, τ/μ=W×36, sin²θ_W, M_W, M_H, α_s, CKM |
 
 ---
 

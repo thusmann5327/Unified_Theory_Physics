@@ -477,6 +477,83 @@ def run_tests():
           f"{s4id['error_pct']:.3f}%")
 
     # ═══════════════════════════════════════════════════════════════
+    # 9. PARTICLES — Standard Model from Cantor spectrum
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  9. PARTICLES")
+    print("  " + "-" * 60)
+
+    from particles.generations import (
+        top_charm_ratio, koide_formula, generation_ratios, phi_power_exponents
+    )
+    from particles.electroweak import (
+        weinberg_angle, electroweak_predictions, weinberg_3_over_13
+    )
+    from particles.mixing import cabibbo_angle, ckm_elements
+
+    # t/c = 136 = 4 × F(9)
+    tc = top_charm_ratio()
+    check(f"t/c = {tc['ratio']:.2f} = 136 ({tc['error_pct']:.3f}%)",
+          tc['error_pct'] < 0.05)
+
+    # Koide = 2/3
+    kd = koide_formula()
+    check(f"Koide = {kd['Q']:.6f} = 2/3 ({kd['error_pct']:.4f}%)",
+          kd['error_pct'] < 0.01)
+
+    # τ/μ = W × 36
+    ew = electroweak_predictions()
+    tm = ew['tau/mu']
+    check(f"tau/mu = W*36 = {tm['predicted']:.4f} ({tm['error_pct']:.3f}%)",
+          tm['error_pct'] < 0.01)
+
+    # sin²θ_W = σ₃ × σ_wall × F(6)
+    sw = weinberg_angle()
+    check(f"sin^2(theta_W) = {sw['prediction']:.5f} ({sw['error_pct']:.3f}%)",
+          sw['error_pct'] < 0.1)
+
+    # M_H/m_p = φ² × δ₇²
+    mh = ew['M_H/m_p']
+    check(f"M_H/m_p = phi^2*delta7^2 = {mh['predicted']:.2f} ({mh['error_pct']:.3f}%)",
+          mh['error_pct'] < 0.05)
+
+    # M_W/m_p = φ² × W⁻² × δ₇
+    mw = ew['M_W/m_p']
+    check(f"M_W/m_p = phi^2*W^-2*delta7 = {mw['predicted']:.2f} ({mw['error_pct']:.3f}%)",
+          mw['error_pct'] < 0.01)
+
+    # α_s(M_Z) = W⁵ × H × δ₇
+    als = ew['alpha_s']
+    check(f"alpha_s(M_Z) = {als['predicted']:.5f} ({als['error_pct']:.3f}%)",
+          als['error_pct'] < 0.1)
+
+    # (m_n - m_p)/m_e = r_c⁻¹ × δ₃⁻¹ × δ₇
+    nm = ew['(m_n-m_p)/m_e']
+    check(f"(m_n-m_p)/m_e = {nm['predicted']:.4f} ({nm['error_pct']:.3f}%)",
+          nm['error_pct'] < 0.01)
+
+    # Generation ratios: s/d = 20 exactly
+    gr = generation_ratios()
+    sd = gr['s/d']
+    check(f"s/d = {sd['value']:.2f} = 20 ({sd['error_pct']:.3f}%)",
+          sd['error_pct'] < 0.1)
+
+    # c/u = N × 2 = 588
+    cu = gr['c/u']
+    check(f"c/u = N*2 = {cu['value']:.1f} ({cu['error_pct']:.3f}%)",
+          cu['error_pct'] < 0.05)
+
+    # Cabibbo angle: best match < 5%
+    cab = cabibbo_angle()
+    check(f"Cabibbo best match: {cab['best_match']} ({cab['best_error_pct']:.2f}%)",
+          cab['best_error_pct'] < 5.0)
+
+    # Lepton φ-ladder additivity: 11 + 6 = 17
+    ppe = phi_power_exponents()
+    check("Lepton phi-ladder: 11 + 6 = 17",
+          ppe['lepton_additivity']['consistent'])
+
+    # ═══════════════════════════════════════════════════════════════
     # SUMMARY
     # ═══════════════════════════════════════════════════════════════
     print()

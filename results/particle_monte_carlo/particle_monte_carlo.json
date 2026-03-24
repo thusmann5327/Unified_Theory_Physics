@@ -1,0 +1,112 @@
+{
+  "n_frameworks": 100000,
+  "elapsed_s": 400.07838582992554,
+  "n_blocks": 52,
+  "n_products": 26234,
+  "n_targets": 15,
+  "targets": {
+    "mu/e": 206.768,
+    "tau/mu": 16.817,
+    "tau/e": 3477.22,
+    "c/u": 587.96,
+    "t/c": 136.03,
+    "s/d": 20.0,
+    "b/s": 44.75,
+    "b/d": 895.07,
+    "Koide": 0.6666666666666666,
+    "sin2_thetaW": 0.23122,
+    "sin_thetaC": 0.2253,
+    "dm2_ratio": 32.58,
+    "MW/MZ": 0.8815,
+    "t/u": 79981.5,
+    "c/d": 271.95
+  },
+  "real_hits_01": 14,
+  "real_hits_1": 15,
+  "real_hits_5": 15,
+  "real_errors": [
+    0.000690727584199787,
+    1.0696280249885853e-05,
+    0.001043417561426764,
+    6.803183890054361e-05,
+    0.00022053958685584897,
+    0.0,
+    0.00015064285664320829,
+    0.0007245550467735373,
+    7.903264409564459e-05,
+    0.000191873081913347,
+    0.00021657785507164443,
+    9.480793673521642e-05,
+    0.0006725838199167931,
+    0.00016878903246375724,
+    1.0785188406891904e-05
+  ],
+  "real_geomean": 1.2946755293725181e-05,
+  "p_01": 0.44922,
+  "p_1": 0.98911,
+  "p_5": 1.0,
+  "p_geomean": 0.07392,
+  "hist_01": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    8,
+    36,
+    159,
+    799,
+    2624,
+    7217,
+    16242,
+    27992,
+    30655,
+    14267,
+    0
+  ],
+  "median_01": 13.0,
+  "mean_01": 13.16369,
+  "max_01": 15,
+  "n_same_hits": 30655,
+  "gm_better_fraction": 0.10487685532539553,
+  "random_geomean_median": 2.472035119042895e-05,
+  "cross_correlation": {
+    "n_cross_links": 7,
+    "n_domain_appearances": 18,
+    "shared_constants": {
+      "136 = gravity + t/c": [
+        "t/c",
+        "gravity_hierarchy"
+      ],
+      "2/3 = Koide + NSmA \u03bd": [
+        "Koide",
+        "NSmA_alpha"
+      ],
+      "N = c/u + \u03b1\u207b\u00b9": [
+        "c/u",
+        "fine_structure"
+      ],
+      "W = \u03c4/\u03bc + \u03a9_DE + \u03a9_b": [
+        "tau/mu",
+        "dark_energy",
+        "baryon_fraction"
+      ],
+      "\u03c3\u2083\u03c3_wall = sin\u00b2\u03b8_W + gate": [
+        "sin2_thetaW",
+        "gate_overflow"
+      ],
+      "\u03b4\u2087 = M_W + M_Z + M_H + \u03b1_s": [
+        "M_W",
+        "M_Z",
+        "M_H",
+        "alpha_s"
+      ],
+      "R_C = neutron + NSmA + QH": [
+        "neutron_mass",
+        "NSmA",
+        "QH_kappa"
+      ]
+    }
+  }
+}
