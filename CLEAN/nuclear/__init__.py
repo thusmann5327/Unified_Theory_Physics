@@ -13,14 +13,20 @@ The same spectral ratios that determine atomic subshell capacities
   - 2 and 8 are exact Fibonacci magic numbers
   - 126 has most compact Zeckendorf (island of stability prediction)
 
-Open questions (see TODO below):
-  - Clean single-formula correction factor for magic/F(k) ratios
+Verified (magic.py):
+  - Recursive formula reproduces all 7 magic numbers exactly
+  - Detachment 8,10,12,14 = arithmetic step 2
+  - d-capacity = detach(N=4), f-capacity = detach(N=6)
+  - 82/89 ≈ √R_C to 0.3%
+  - Predicts magic(7) = 184
+
+Open questions:
   - Triangular→odd number transition (why T(n) for nuclei vs 2l+1 for atoms)
   - Binding energy B/A_max at Fe-56 — no clean framework match yet
-  - Spin-orbit fraction ≈ 1/3 per shell (not LEAK = 1/φ⁴)
 
 Modules:
-    shells      — Magic numbers, HO shells, spin-orbit detachment
+    shells      — HO shells, spin-orbit detachment patterns
+    magic       — Magic number formula (all 7 exact), predictions
     scale       — Bracket gap analysis, nuclear-atomic transition
 """
 
@@ -29,4 +35,5 @@ from .shells import (
     ho_shell_capacities, spin_orbit_detachment,
     magic_fibonacci_proximity,
 )
+from .magic import magic_number, magic_sequence, detachment_analysis, sqrt_rc_proximity
 from .scale import bracket_gap, zeckendorf_compactness

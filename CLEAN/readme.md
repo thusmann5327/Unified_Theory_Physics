@@ -59,9 +59,19 @@ CLEAN/
 │   ├── angular.py           2l+1 = round(R_layer × F(7)) mapping
 │   └── madelung.py          Full 19-subshell sequence reconstruction
 │
-├── nuclear/                  Nuclear shell structure (UNDER DEVELOPMENT)
+├── nuclear/                  Nuclear shell structure
 │   ├── shells.py            Magic numbers, HO shells, spin-orbit detachment
+│   ├── magic.py             Magic number formula (all 7 exact), predictions
 │   └── scale.py             Bracket gap analysis, Zeckendorf compactness
+│
+├── lattice/                  Self-referential Fibonacci lattice
+│   ├── fibonacci.py          Fibonacci arithmetic and shift identity
+│   ├── sectors.py            5-sector eigenvalue partition
+│   └── z_max.py              Z_max = 118 derivation, D=233 uniqueness
+│
+├── tiling/                   Triple metallic mean tiling + cosmology
+│   ├── multigrid.py          de Bruijn multigrid construction
+│   └── cosmology.py          5→3 collapse: tiling × G1 = energy budget
 │
 ├── engine/                   Material property predictions
 │   ├── gate_overflow.py      G(Z) = the error IS the prediction
@@ -79,7 +89,7 @@ CLEAN/
 │   └── discriminant_cones.py Three cone angles, σ₄ identity
 │
 └── tests/
-    └── test_all.py           126 verification tests across all modules
+    └── test_all.py           156 verification tests across all modules
 ```
 
 ---
@@ -247,7 +257,76 @@ Full Madelung sequence reconstruction:
 - `madelung_sequence()` — 19 subshells, Z = 118, all capacities from R × 13
 - `z_max_prediction()` — Z_max from D × D_s = 116.5 and from Aufbau sum = 118
 
-### nuclear/shells.py (UNDER DEVELOPMENT)
+### nuclear/magic.py
+
+Nuclear magic number formula from recursive spin-orbit detachment:
+
+- `magic_number(n)` — reproduces all 7 observed magic numbers exactly
+- `magic_sequence(n_shells)` — list of first n magic numbers
+- `detachment_analysis()` — detachment sequence 8, 10, 12, 14 (arithmetic, step 2)
+- `sqrt_rc_proximity()` — magic/Fibonacci ratios vs √R_C (82/89 matches to 0.3%)
+
+| n | magic(n) | Name | Method |
+|---|----------|------|--------|
+| 0 | 2 | HO(0) | Cumulative HO |
+| 1 | 8 | HO(1) | Cumulative HO |
+| 2 | 20 | HO(2) | Cumulative HO |
+| 3 | 28 | SO onset | +detach(3) = 8 |
+| 4 | 50 | | +remain(3) + detach(4) |
+| 5 | 82 | | +remain(4) + detach(5) |
+| 6 | 126 | | +remain(5) + detach(6) |
+| 7 | **184** | **Prediction** | +remain(6) + detach(7) |
+
+Connection to atomic physics: d-capacity = detach(N=4) = 10 = 2×round(R_SHELL×13),
+f-capacity = detach(N=6) = 14 = 2×round(R_OUTER×13).
+
+### lattice/fibonacci.py
+
+Fibonacci arithmetic and the shift identity:
+
+- `fib(n)` — 1-indexed Fibonacci number (extensible table)
+- `fib_index(val)` — inverse lookup: value → index
+- `shift_identity(k_range)` — verifies round(F(k)/φ⁴) = F(k-4) for all k ≥ 5
+
+### lattice/sectors.py
+
+5-sector eigenvalue partition of the AAH spectrum:
+
+- `sector_partition(D)` — partition D-site AAH eigenvalues into 5 sectors
+- `sector_pattern_check(n_range)` — verify pattern F(n-3)|F(n-4)|F(n-3)|F(n-4)|F(n-3)
+
+At D = 233: sectors = [55, 34, 55, 34, 55] = [F(10), F(9), F(10), F(9), F(10)].
+
+### lattice/z_max.py
+
+Z_max = 118 from the Fibonacci lattice:
+
+- `z_max_formula()` — Z_max = 2F(9) + F(10) - F(5) = 68 + 55 - 5 = 118
+- `d233_uniqueness()` — D = 233 = F(13) = F(F(7)) is the unique self-referential lattice
+- `zd_limit()` — Z/D → 1 - 2/φ³ - 1/φ⁸ = 0.5066
+
+### tiling/multigrid.py
+
+de Bruijn multigrid construction for the triple metallic mean tiling:
+
+- `build_triple_tiling()` — construct 3 grids (gold 5-fold, silver 4-fold, bronze 13-fold)
+- `analyze_vertices(vertices)` — classify and count 7 vertex types (G, S, B, GS, GB, BS, GSB)
+
+Key result: GS fraction = 14.6% ≈ LEAK = 1/φ⁴ (0.3% error).
+
+### tiling/cosmology.py
+
+5→3 collapse: tiling vertex fractions → cosmological budget:
+
+- `collapse_budget(vertex_fractions)` — Ω_b, Ω_DM, Ω_DE from tiling × G1
+
+| Budget | Formula | Predicted | Planck | Error |
+|--------|---------|-----------|--------|-------|
+| Ω_b | LEAK × G1 | 4.73% | 4.76% | 0.6% |
+| Ω_DM | (LEAK - W⁴) + (GB+BS)×G1 | 26.7% | 26.5% | 0.8% |
+| Ω_DE | Remainder | 68.5% | 68.5% | 0.1% |
+
+### nuclear/shells.py
 
 Nuclear shell structure from Cantor spectral ratios:
 
@@ -366,7 +445,7 @@ The discriminant Pythagorean triangle:
 
 ## Test Coverage
 
-126 tests across 12 sections:
+156 tests across 15 sections:
 
 | Section | Tests | What it verifies |
 |---------|-------|-----------------|
@@ -382,6 +461,9 @@ The discriminant Pythagorean triangle:
 | Aufbau Bridge | 11 | R×13 rounds to {1,3,5,7}, capacities, full Madelung, Z=118 |
 | Absolute Mass | 10 | K=24/φ³, a_B 0.007%, m_e 0.23%, all boson masses <0.2% |
 | Nuclear (dev) | 10 | HO shells, spin-orbit, magic/Fibonacci, bracket gap, Zeckendorf |
+| Nuclear Magic | 11 | All 7 magic numbers, detachment step 2, R×13 caps, √R_C, predicts 184 |
+| Lattice | 13 | Shift identity, sector partition, Z_max=118, D=233 uniqueness, Z/D limit |
+| Tiling | 6 | Multigrid construction, GS ≈ LEAK, collapse budget Ω_b/Ω_DM/Ω_DE |
 
 ---
 

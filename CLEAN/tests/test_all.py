@@ -731,6 +731,158 @@ def run_tests():
           126 in zc['most_compact'])
 
     # ═══════════════════════════════════════════════════════════════
+    # 13. NUCLEAR MAGIC
+    # ═══════════════════════════════════════════════════════════════
+    print("\n  13. NUCLEAR MAGIC")
+    print("  " + "-" * 60)
+
+    from nuclear.magic import (
+        magic_number, magic_sequence, detachment_analysis,
+        sqrt_rc_proximity, S_CAP, P_CAP, D_CAP, F_CAP,
+        ho_cumulative, detach_capacity,
+    )
+
+    # All 7 magic numbers reproduced exactly
+    predicted = magic_sequence(7)
+    expected_magic = [2, 8, 20, 28, 50, 82, 126]
+    check("magic_sequence(7) = [2, 8, 20, 28, 50, 82, 126]",
+          predicted == expected_magic,
+          f"got {predicted}")
+
+    # Individual checks
+    check("magic_number(0) = 2", magic_number(0) == 2)
+    check("magic_number(3) = 28", magic_number(3) == 28)
+    check("magic_number(6) = 126", magic_number(6) == 126)
+
+    # Detachment analysis
+    da = detachment_analysis()
+    # The detach_capacity formula 2N+2 is arithmetic step 2: 8,10,12,14
+    detach_vals = [detach_capacity(N) for N in range(3, 7)]
+    check("Detachment formula 2N+2 gives 8, 10, 12, 14 (step 2)",
+          detach_vals == [8, 10, 12, 14])
+
+    check("d-capacity = detach(N=4) = 10",
+          da['d_cap_matches_N4'] and D_CAP == 10)
+
+    check("f-capacity = detach(N=6) = 14",
+          da['f_cap_matches_N6'] and F_CAP == 14)
+
+    # Subshell capacities from R×13
+    check("R×13 capacities: s=2, p=6, d=10, f=14",
+          (S_CAP, P_CAP, D_CAP, F_CAP) == (2, 6, 10, 14))
+
+    # √R_C proximity: 82/89
+    sr = sqrt_rc_proximity()
+    m82 = next(r for r in sr if r['magic'] == 82)
+    check(f"82/89 ≈ √R_C to <1% (got {m82['error_pct']}%)",
+          m82['near_sqrt_rc'] and m82['error_pct'] < 1)
+
+    # Predicts 184
+    check("magic_number(7) = 184 (island of stability)",
+          magic_number(7) == 184)
+
+    # HO cumulative
+    check("HO cumulative: 2, 8, 20, 40, 70, 112, 168",
+          [ho_cumulative(n) for n in range(7)] == [2, 8, 20, 40, 70, 112, 168])
+
+    # ═══════════════════════════════════════════════════════════════
+    # 14. LATTICE
+    # ═══════════════════════════════════════════════════════════════
+    print("\n  14. LATTICE")
+    print("  " + "-" * 60)
+
+    from lattice import (
+        fib, fib_index, shift_identity,
+        sector_partition, sector_pattern_check,
+        z_max_formula, d233_uniqueness, zd_limit,
+    )
+
+    # Fibonacci basics
+    check("F(13) = 233", fib(13) == 233)
+    check("fib_index(233) = 13", fib_index(233) == 13)
+
+    # Shift identity
+    si = shift_identity()
+    check(f"Shift identity holds for all k in 5..16 ({si['n_tested']} tested)",
+          si['all_match'])
+
+    # Specific: round(F(9)/φ⁴) = F(5) = 5
+    check("round(F(9)/φ⁴) = F(5) = 5",
+          round(fib(9) / PHI**4) == fib(5))
+
+    # 5-sector partition at D=233
+    sp = sector_partition(233)
+    check("D=233 sectors: [55, 34, 55, 34, 55]",
+          sp['sectors'] == [55, 34, 55, 34, 55],
+          f"got {sp['sectors']}")
+
+    check("D=233 all sectors are Fibonacci",
+          sp['all_fibonacci'])
+
+    # Sector pattern holds across multiple Fibonacci sizes
+    spc = sector_pattern_check(range(11, 15))
+    check(f"Sector pattern matches {spc['n_matching']}/{spc['n_tested']} tested sizes",
+          spc['n_matching'] >= 3)
+
+    # Z_max = 118
+    zm = z_max_formula()
+    check("Z_max = 118",
+          zm['is_118'] and zm['z_max'] == 118)
+
+    check("Shift identity holds in Z_max derivation",
+          zm['shift_identity_holds'])
+
+    check("Algebraic identity 3F(10)+2F(9) = F(13)",
+          zm['algebraic_identity_holds'])
+
+    # D=233 uniqueness
+    d233 = d233_uniqueness()
+    check("D=233 = F(13) = F(F(7)) self-referential",
+          d233['self_referential'] and d233['D_is_F_of_F_7'])
+
+    # Z/D limit
+    zdl = zd_limit()
+    check(f"Z/D limit = {zdl['limit']} ≈ 118/233 = {zdl['physical_Z_D']} ({zdl['error_pct']}%)",
+          zdl['error_pct'] < 2)
+
+    # ═══════════════════════════════════════════════════════════════
+    # 15. TILING
+    # ═══════════════════════════════════════════════════════════════
+    print("\n  15. TILING")
+    print("  " + "-" * 60)
+
+    from tiling import build_triple_tiling, analyze_vertices, collapse_budget
+
+    # Build tiling and classify vertices
+    vertices = build_triple_tiling()
+    vf, vtotal = analyze_vertices(vertices)
+
+    check(f"Tiling produces vertices (got {vtotal})",
+          vtotal > 100)
+
+    # Should have multiple vertex types
+    check(f"At least 5 vertex types (got {len(vf)})",
+          len(vf) >= 5)
+
+    # GS fraction ≈ LEAK = 1/φ⁴
+    gs_frac = vf.get('GS', {}).get('fraction', 0)
+    gs_err = abs(gs_frac - LEAK) / LEAK * 100 if gs_frac > 0 else 100
+    check(f"GS fraction ≈ LEAK = 1/φ⁴ ({gs_err:.1f}% error)",
+          gs_err < 5)
+
+    # Collapse budget
+    budget = collapse_budget(vf)
+
+    check(f"Ω_b baryon error < 5% (got {budget['baryon']['error_pct']}%)",
+          budget['baryon']['error_pct'] < 5)
+
+    check(f"Ω_DM dark matter error < 5% (got {budget['dark_matter']['error_pct']}%)",
+          budget['dark_matter']['error_pct'] < 5)
+
+    check(f"Ω_DE dark energy error < 2% (got {budget['dark_energy']['error_pct']}%)",
+          budget['dark_energy']['error_pct'] < 2)
+
+    # ═══════════════════════════════════════════════════════════════
     # SUMMARY
     # ═══════════════════════════════════════════════════════════════
     print()
