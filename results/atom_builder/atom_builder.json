@@ -1,0 +1,106 @@
+{
+  "n_bgs_cells": 405,
+  "orbital_counts": {
+    "p": 2430,
+    "f": 1224,
+    "s": 810,
+    "d": 3744
+  },
+  "scorecard": [
+    [
+      "Tetrahedral (sp\u00b3) subset exists",
+      "YES",
+      "108.7\u00b0 vs 109.5\u00b0"
+    ],
+    [
+      "Octahedral subset exists",
+      "YES",
+      "score 0.853"
+    ],
+    [
+      "BCC (8-coord) subset",
+      "YES",
+      "align 94%"
+    ],
+    [
+      "FCC (12-coord) subset",
+      "YES",
+      "align 96%"
+    ],
+    [
+      "s-orbital faces (2 expected)",
+      "2.0",
+      "MATCH"
+    ],
+    [
+      "p-orbital faces (6 expected)",
+      "6.0",
+      "MATCH"
+    ],
+    [
+      "d-orbital faces (10 expected)",
+      "9.2",
+      "MATCH"
+    ],
+    [
+      "f-orbital faces (14 expected)",
+      "3.0",
+      "MISS"
+    ],
+    [
+      "H-O-H angle from faces",
+      "105.4\u00b0 vs 104.5\u00b0",
+      "err 0.9\u00b0"
+    ],
+    [
+      "d\u2082/d\u2081 vs \u03c3\u2084/\u03c3_shell (1.409)",
+      "1.000",
+      "\u0394=0.409"
+    ]
+  ],
+  "bond_lengths": {
+    "d1": 0.816496580927726,
+    "d2": 0.816496580927726,
+    "d3": 0.8585153110652072,
+    "d2_d1": 1.0,
+    "d3_d1": 1.0514622242382672,
+    "peaks": [
+      [
+        1.432028834817122,
+        1050
+      ],
+      [
+        1.6214233744753979,
+        300
+      ],
+      [
+        1.9055151839628115,
+        1700
+      ],
+      [
+        2.284304263279363,
+        2070
+      ],
+      [
+        2.6630933425959142,
+        960
+      ],
+      [
+        2.947185152083328,
+        2520
+      ],
+      [
+        3.136579691741604,
+        2220
+      ],
+      [
+        3.420671501229017,
+        1092
+      ]
+    ]
+  },
+  "representative_cell": {
+    "idx": 78,
+    "n_faces": 23
+  }
+}
