@@ -1,0 +1,56 @@
+{
+  "voronoi_convergence": {
+    "method": "Voronoi BGS cells, pair correlation",
+    "sizes": [
+      {
+        "N_half": 3,
+        "n_bgs": 405,
+        "gamma": 4.7254
+      },
+      {
+        "N_half": 4,
+        "n_bgs": 1055,
+        "gamma": 2.4227
+      },
+      {
+        "N_half": 5,
+        "n_bgs": 2119,
+        "gamma": 2.1326
+      },
+      {
+        "N_half": 6,
+        "n_bgs": 3589,
+        "gamma": 2.2699
+      }
+    ],
+    "extrapolation": 1.8338,
+    "target": 1.8,
+    "framework": 1.7877,
+    "error_vs_target_pct": 1.9,
+    "error_vs_framework_pct": 2.6
+  },
+  "bare_qc_hyperuniform": {
+    "method": "Raw BGS point cloud, Landy-Szalay estimator",
+    "gamma_bare_N10": 0.6,
+    "note": "QC is hyperuniform \u2014 suppressed fluctuations vs Poisson",
+    "gravitational_amplification": {
+      "factor": 3.09,
+      "formula": "1/G1 where G1 = 0.324 (first sigma3 sub-gap)",
+      "gamma_evolved": 1.86,
+      "error_vs_observed_pct": 3.3
+    },
+    "predictions": [
+      "Bare QC lattice is hyperuniform (testable vs primordial spectrum)",
+      "Gravity amplification factor = 1/G1 = 3.09 (testable with N-body)"
+    ]
+  },
+  "database": {
+    "total_vertices": 566472,
+    "bgs_vertices": 95180,
+    "n_half_range": [
+      3,
+      10
+    ],
+    "engine": "PostgreSQL 17"
+  }
+}

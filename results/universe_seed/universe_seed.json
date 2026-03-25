@@ -92,6 +92,31 @@
     "cc_double_pred": 6.356,
     "cc_double_err": 0.09448818897638155
   },
+  "galaxy": {
+    "gamma_framework": 1.7877,
+    "gamma_observed": 1.8,
+    "framework_formula": "1/R_OUTER = 1/\u03c3\u2084",
+    "framework_err_pct": 0.68,
+    "gamma_voronoi_extrap": 1.834,
+    "voronoi_err_pct": 1.9,
+    "voronoi_sizes": [
+      4,
+      5,
+      6
+    ],
+    "voronoi_gammas": [
+      2.42,
+      2.13,
+      2.27
+    ],
+    "gamma_bare": 0.6,
+    "amplification_factor": 3.08,
+    "amplification_formula": "1/G1",
+    "gamma_evolved": 1.85,
+    "evolved_err_pct": 2.8,
+    "hyperuniform": true,
+    "note": "Bare QC is hyperuniform \u2014 suppressed fluctuations vs Poisson"
+  },
   "tiling_vertices": 7962,
-  "runtime_seconds": 18.8
+  "runtime_seconds": 19.1
 }

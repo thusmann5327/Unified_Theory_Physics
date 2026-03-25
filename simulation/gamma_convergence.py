@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-gamma_convergence.py — Galaxy correlation exponent convergence study
-=====================================================================
+gamma_convergence.py — Galaxy correlation exponent convergence study (JAX-accelerated)
+======================================================================================
 
 The finite-size QC at N_half=3 gives γ≈2.6 instead of the observed 1.8.
 Hypothesis: the mismatch is a finite-size effect. More BGS nodes →
 proper cosmic-web filaments → correct γ.
 
 Prediction: γ → 1/σ₄ = 1.788 as N → ∞
+
+Uses JAX on Apple Metal GPU for the 6D lattice generation bottleneck.
+Scipy handles Voronoi (no JAX equivalent).
 
 Run: python3 simulation/gamma_convergence.py
 """
@@ -25,12 +28,22 @@ sys.path.insert(0, os.path.join(ROOT, 'CLEAN'))
 from core.constants import PHI
 from core.spectrum import R_OUTER
 from geometry.voronoi_qc import (
-    build_quasicrystal, assign_types, voronoi_cell_faces, icosahedral_axes,
+    assign_types, voronoi_cell_faces, icosahedral_axes,
 )
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+# ── JAX setup ────────────────────────────────────────────────────
+try:
+    import jax
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+    print(f"  JAX {jax.__version__} on {jax.devices()[0].platform.upper()}")
+except ImportError:
+    JAX_AVAILABLE = False
+    print("  JAX not available — falling back to numpy")
 
 VIZDIR = os.path.join(ROOT, 'simulation', 'visualizations')
 os.makedirs(VIZDIR, exist_ok=True)
@@ -39,8 +52,98 @@ GAMMA_TARGET = 1.8
 GAMMA_FRAMEWORK = 1.0 / R_OUTER  # 1.788
 
 
-def correlation_function(pts, n_bins=60, max_frac=0.5, n_sample=2000):
-    """Two-point correlation ξ(r) with power-law fit."""
+# ── JAX-accelerated QC generation ────────────────────────────────
+
+def build_projection_matrices():
+    """Build 3×6 parallel/perpendicular projection matrices (Elser 1986)."""
+    tau = PHI
+    verts = np.array([
+        [1, tau, 0], [-1, tau, 0], [1, -tau, 0], [-1, -tau, 0],
+        [0, 1, tau], [0, -1, tau], [0, 1, -tau], [0, -1, -tau],
+        [tau, 0, 1], [-tau, 0, 1], [tau, 0, -1], [-tau, 0, -1]
+    ], dtype=np.float64)
+    sel = verts[[0, 2, 4, 6, 8, 10]]
+    norms = np.linalg.norm(sel, axis=1, keepdims=True)
+    e_par = (sel / norms).T
+
+    tau_conj = -1.0 / tau
+    sel_conj = np.array([
+        [1, tau_conj, 0], [1, -tau_conj, 0],
+        [0, 1, tau_conj], [0, 1, -tau_conj],
+        [tau_conj, 0, 1], [tau_conj, 0, -1],
+    ], dtype=np.float64)
+    norms_c = np.linalg.norm(sel_conj, axis=1, keepdims=True)
+    e_perp = (sel_conj / norms_c).T
+
+    scale = np.sqrt(2.0 / 3.0)
+    return scale * e_par, scale * e_perp
+
+
+def build_quasicrystal_jax(N_half, target_range=(2000, 5000)):
+    """Generate icosahedral QC via cut-and-project, JAX-accelerated 6D→3D."""
+    P_par, P_perp = build_projection_matrices()
+
+    if JAX_AVAILABLE:
+        # Build 6D lattice on GPU
+        coords_1d = jnp.arange(-N_half, N_half + 1, dtype=jnp.float32)
+        grids = jnp.meshgrid(*([coords_1d] * 6), indexing='ij')
+        lattice = jnp.stack([g.ravel() for g in grids], axis=1)
+
+        # Project on GPU (float32 for speed, sufficient for QC)
+        P_par_j = jnp.array(P_par.T, dtype=jnp.float32)
+        P_perp_j = jnp.array(P_perp.T, dtype=jnp.float32)
+
+        par = lattice @ P_par_j
+        perp = lattice @ P_perp_j
+        perp_norms = jnp.linalg.norm(perp, axis=1)
+
+        # Auto-tune acceptance radius (on GPU)
+        R_accept = float(jnp.max(perp_norms)) * 0.5
+        for _ in range(40):
+            count = int(jnp.sum(perp_norms < R_accept))
+            if count < target_range[0]:
+                R_accept *= 1.05
+            elif count > target_range[1]:
+                R_accept *= 0.95
+            else:
+                break
+
+        mask = perp_norms < R_accept
+        # Transfer filtered results to numpy (for scipy Voronoi)
+        par_out = np.array(par[mask], dtype=np.float64)
+        perp_out = np.array(perp[mask], dtype=np.float64)
+
+        # Free GPU memory
+        del lattice, grids, par, perp, perp_norms, mask
+    else:
+        # Numpy fallback
+        coords_1d = np.arange(-N_half, N_half + 1)
+        grids = np.meshgrid(*([coords_1d] * 6), indexing='ij')
+        lattice = np.stack([g.ravel() for g in grids], axis=1).astype(np.float64)
+
+        par = lattice @ P_par.T
+        perp = lattice @ P_perp.T
+        perp_norms = np.linalg.norm(perp, axis=1)
+
+        R_accept = np.max(perp_norms) * 0.5
+        for _ in range(40):
+            count = (perp_norms < R_accept).sum()
+            if count < target_range[0]:
+                R_accept *= 1.05
+            elif count > target_range[1]:
+                R_accept *= 0.95
+            else:
+                break
+
+        mask = perp_norms < R_accept
+        par_out = par[mask]
+        perp_out = perp[mask]
+
+    return par_out, perp_out, R_accept
+
+
+def correlation_function(pts, n_bins=40, n_sample=3000):
+    """Two-point correlation ξ(r) with power-law fit using log-spaced bins."""
     n = len(pts)
     if n > n_sample:
         np.random.seed(42)
@@ -50,30 +153,36 @@ def correlation_function(pts, n_bins=60, max_frac=0.5, n_sample=2000):
         sample = pts.copy()
 
     dists = pdist(sample)
-    r_max = np.percentile(dists, 70)  # avoid boundary artifacts
-    r_min = np.percentile(dists, 5)   # skip the nearest-neighbor spike
-    r_bins = np.linspace(r_min, r_max, n_bins + 1)
-    r_centers = 0.5 * (r_bins[:-1] + r_bins[1:])
-    dr = r_bins[1] - r_bins[0]
+    # Log-spaced bins for better power-law sensitivity
+    r_min = np.percentile(dists, 3)
+    r_max = np.percentile(dists, 60)
+    r_bins = np.logspace(np.log10(r_min), np.log10(r_max), n_bins + 1)
+    r_centers = np.sqrt(r_bins[:-1] * r_bins[1:])  # geometric mean
+    dr = np.diff(r_bins)
 
-    counts = np.histogram(dists, bins=r_bins)[0]
+    counts = np.histogram(dists, bins=r_bins)[0].astype(float)
 
-    # Expected for uniform random
+    # Expected for uniform random in a sphere
     box_extent = np.max(np.abs(sample), axis=0)
     V_box = np.prod(2 * box_extent)
     n_s = len(sample)
     rho = n_s / max(V_box, 1e-15)
-    expected = np.array([4 * np.pi * r**2 * dr * rho * n_s / 2 for r in r_centers])
+    n_pairs = n_s * (n_s - 1) / 2
+    # Shell volume for each log-spaced bin
+    shell_vol = (4.0 / 3.0) * np.pi * (r_bins[1:]**3 - r_bins[:-1]**3)
+    expected = n_pairs * shell_vol * rho / V_box
 
-    xi = np.where(expected > 1, counts / expected - 1, 0)
+    xi = np.where(expected > 5, counts / expected - 1, 0)
 
-    # Power-law fit in intermediate range (avoid nearest-neighbor and boundary)
-    fit_mask = (xi > 0.05) & (r_centers > r_centers[5]) & (r_centers < r_centers[-10])
+    # Power-law fit: use bins where ξ > 0.01 and in intermediate range
+    n_skip = max(3, n_bins // 10)
+    fit_mask = (xi > 0.01) & np.arange(n_bins) >= n_skip
+    fit_mask[-(n_bins // 8):] = False  # skip boundary bins
     gamma = 0.0
     r0 = 0.0
     if fit_mask.sum() > 5:
         log_r = np.log10(r_centers[fit_mask])
-        log_xi = np.log10(xi[fit_mask])
+        log_xi = np.log10(np.maximum(xi[fit_mask], 1e-10))
         coeffs = np.polyfit(log_r, log_xi, 1)
         gamma = -coeffs[0]
         r0 = 10**(coeffs[1] / gamma) if gamma > 0 else 0
@@ -83,9 +192,7 @@ def correlation_function(pts, n_bins=60, max_frac=0.5, n_sample=2000):
 
 def run_at_size(N_half, target_range=None):
     """Run QC generation + Voronoi + correlation at given size."""
-    # Scale target range with volume
     if target_range is None:
-        # Roughly: points scale as N_half^3 within acceptance sphere
         base = 3000
         scale = (N_half / 3.0) ** 3
         lo = int(base * scale * 0.8)
@@ -93,27 +200,33 @@ def run_at_size(N_half, target_range=None):
         target_range = (lo, hi)
 
     t0 = time.time()
-    print(f"\n  N_half={N_half}: generating 6D lattice ({(2*N_half+1)**6:,} points)...")
+    n_lattice = (2 * N_half + 1) ** 6
+    print(f"\n  N_half={N_half}: generating 6D lattice ({n_lattice:,} points)...")
+    sys.stdout.flush()
 
-    pts, pts_perp, R_accept = build_quasicrystal(N_half=N_half, target_range=target_range)
+    pts, pts_perp, R_accept = build_quasicrystal_jax(N_half=N_half, target_range=target_range)
     types = assign_types(pts_perp, R_accept)
     n_pts = len(pts)
     dt_qc = time.time() - t0
     print(f"    QC points: {n_pts:,} ({dt_qc:.1f}s)")
+    sys.stdout.flush()
 
     # Voronoi
     t1 = time.time()
     print(f"    Computing Voronoi...")
+    sys.stdout.flush()
     cells = voronoi_cell_faces(pts, types)
     n_cells = len(cells)
     dt_vor = time.time() - t1
     print(f"    Interior cells: {n_cells:,} ({dt_vor:.1f}s)")
+    sys.stdout.flush()
 
     # BGS cells
     bgs_idx = [i for i in cells if cells[i]['type'] == 'BGS']
     n_bgs = len(bgs_idx)
     bgs_frac = n_bgs / max(n_cells, 1)
     print(f"    BGS cells: {n_bgs:,} ({bgs_frac*100:.1f}%)")
+    sys.stdout.flush()
 
     # Correlation on BGS points
     t2 = time.time()
@@ -129,6 +242,7 @@ def run_at_size(N_half, target_range=None):
 
     total = time.time() - t0
     print(f"    Total: {total:.1f}s")
+    sys.stdout.flush()
 
     return {
         'N_half': N_half,
@@ -148,10 +262,11 @@ def run_at_size(N_half, target_range=None):
 
 def main():
     print("=" * 70)
-    print("  GALAXY CORRELATION CONVERGENCE STUDY")
+    print("  GALAXY CORRELATION CONVERGENCE STUDY (JAX-accelerated)")
     print(f"  Target: γ = {GAMMA_TARGET}")
     print(f"  Framework prediction: 1/σ₄ = {GAMMA_FRAMEWORK:.4f}")
     print("=" * 70)
+    sys.stdout.flush()
 
     # Progressive sizes
     sizes = [3, 4, 5, 6]
@@ -165,7 +280,9 @@ def main():
             print(f"\n  N_half={N_half}: OUT OF MEMORY — stopping here")
             break
         except Exception as e:
+            import traceback
             print(f"\n  N_half={N_half}: ERROR — {e}")
+            traceback.print_exc()
             break
 
     if not results:
@@ -187,17 +304,19 @@ def main():
     print(f"  Framework 1/σ₄ = {GAMMA_FRAMEWORK:.4f}")
 
     # Extrapolate if we have enough points
+    coeffs = None
+    gamma_inf = None
     if len(results) >= 3:
         ns = [r['n_bgs'] for r in results]
         gs = [r['gamma_bgs'] for r in results]
-        # Fit γ = γ_∞ + a/N^b  →  in log space
-        # Simple: fit γ vs 1/N_bgs
         inv_n = [1.0 / n for n in ns]
         coeffs = np.polyfit(inv_n, gs, 1)
         gamma_inf = coeffs[1]
         print(f"\n  Linear extrapolation γ(∞) = {gamma_inf:.3f}")
         print(f"  Error vs 1.8: {abs(gamma_inf - 1.8) / 1.8 * 100:.1f}%")
         print(f"  Error vs 1/σ₄: {abs(gamma_inf - GAMMA_FRAMEWORK) / GAMMA_FRAMEWORK * 100:.1f}%")
+
+    sys.stdout.flush()
 
     # ─── VISUALIZATION ────────────────────────────────────────────
 
@@ -213,8 +332,7 @@ def main():
     ax.axhline(GAMMA_TARGET, color='green', linewidth=2, linestyle='--', label=f'Galaxy surveys γ={GAMMA_TARGET}')
     ax.axhline(GAMMA_FRAMEWORK, color='gold', linewidth=2, linestyle=':', label=f'1/σ₄={GAMMA_FRAMEWORK:.3f}')
 
-    if len(results) >= 3:
-        # Extrapolation line
+    if coeffs is not None:
         ns_ext = np.linspace(ns[0], ns[-1] * 5, 100)
         inv_ext = 1.0 / ns_ext
         gamma_ext = coeffs[0] * inv_ext + coeffs[1]
@@ -237,7 +355,6 @@ def main():
             ax.loglog(r['r_centers'][mask], r['xi'][mask], 'o-', color=colors[idx_r % len(colors)],
                       markersize=3, linewidth=1.5, alpha=0.8,
                       label=f"N={r['N_half']} ({r['n_bgs']} BGS) γ={r['gamma_bgs']:.2f}")
-    # Reference power law
     r_ref = np.linspace(0.5, 10, 100)
     xi_ref = (r_ref / 2.0) ** (-GAMMA_TARGET)
     ax.loglog(r_ref, xi_ref, 'k--', linewidth=1, alpha=0.5, label=f'r⁻¹·⁸ (galaxy)')
@@ -269,7 +386,7 @@ def main():
     ax.set_title('Matter Fraction vs Lattice Size', fontsize=14)
     ax.legend(fontsize=11)
 
-    plt.suptitle('Quasicrystal Finite-Size Convergence Study', fontsize=16, y=1.02)
+    plt.suptitle('Quasicrystal Finite-Size Convergence Study (JAX-accelerated)', fontsize=16, y=1.02)
     plt.tight_layout()
     outpath = os.path.join(VIZDIR, '13_gamma_convergence.png')
     plt.savefig(outpath, dpi=150, bbox_inches='tight')
@@ -278,7 +395,9 @@ def main():
 
     # Save results
     import json
-    res_path = os.path.join(ROOT, 'results', 'simulation', 'gamma_convergence.json')
+    res_dir = os.path.join(ROOT, 'results', 'simulation')
+    os.makedirs(res_dir, exist_ok=True)
+    res_path = os.path.join(res_dir, 'gamma_convergence.json')
     save_data = [{
         'N_half': r['N_half'], 'n_pts': r['n_pts'], 'n_cells': r['n_cells'],
         'n_bgs': r['n_bgs'], 'bgs_frac': round(r['bgs_frac'], 4),

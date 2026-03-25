@@ -17,5 +17,6 @@ from .voronoi_qc import (
 from .qc_bonds import (
     classify_faces_orbital, bond_energy, predict_bond_energies,
     build_bgs_graph, find_tetrahedral_clusters, correlation_function,
+    galaxy_correlation_prediction,
     E_BRACKET, THETA_LEAK, THETA_RC, THETA_BASE,
 )

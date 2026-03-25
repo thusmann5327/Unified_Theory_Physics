@@ -3,3 +3,4 @@ simulator/debug_screenshots/
 __pycache__/
 *.pyc
 .DS_Store
+database/universe_backup.sql

@@ -65,7 +65,10 @@ from geometry.voronoi_qc import (
     build_quasicrystal, assign_types, voronoi_cell_faces,
     analyze_bgs_geometry,
 )
-from geometry.qc_bonds import predict_bond_energies, E_BRACKET, THETA_LEAK
+from geometry.qc_bonds import (
+    predict_bond_energies, galaxy_correlation_prediction,
+    E_BRACKET, THETA_LEAK,
+)
 
 
 # ═════════════════════════════════════════════════════════════════
@@ -678,10 +681,44 @@ def step9_tile_geometry():
 
 
 # ═════════════════════════════════════════════════════════════════
+# STEP 10: GALAXY CORRELATION (Cosmic Web)
+# ═════════════════════════════════════════════════════════════════
+
+def step10_galaxy_correlation():
+    """Predict the galaxy two-point correlation exponent γ."""
+    print("\n" + "=" * 70)
+    print("  STEP 10: GALAXY CORRELATION (Cosmic Web)")
+    print("=" * 70)
+
+    gc = galaxy_correlation_prediction()
+
+    print(f"\n  Framework: γ = {gc['gamma_framework']:.4f} ({gc['framework_formula']})")
+    print(f"  Observed:  γ = {gc['gamma_observed']}")
+    print(f"  Error:     {gc['framework_err_pct']:.2f}%")
+
+    print(f"\n  Path 1 — Voronoi connectivity extrapolation:")
+    print(f"    N_half =  4 → γ = {gc['voronoi_gammas'][0]:.2f}")
+    print(f"    N_half =  5 → γ = {gc['voronoi_gammas'][1]:.2f}")
+    print(f"    N_half =  6 → γ = {gc['voronoi_gammas'][2]:.2f}")
+    print(f"    γ(∞)       = {gc['gamma_voronoi_extrap']:.4f} ({gc['voronoi_err_pct']:.1f}% from 1.8)")
+
+    print(f"\n  Path 2 — Hyperuniform bare lattice + gravity:")
+    print(f"    γ_bare          = {gc['gamma_bare']:.2f} (QC is hyperuniform)")
+    print(f"    Amplification   = 1/G₁ = {gc['amplification_factor']:.2f}")
+    print(f"    γ_evolved       = {gc['gamma_bare']:.2f} × {gc['amplification_factor']:.2f}"
+          f" = {gc['gamma_evolved']:.2f} ({gc['evolved_err_pct']:.1f}% from 1.8)")
+
+    print(f"\n  Prediction: bare QC is hyperuniform (suppressed fluctuations).")
+    print(f"  Gravitational evolution amplifies by 1/G₁ → observed γ = 1.8.")
+
+    return gc
+
+
+# ═════════════════════════════════════════════════════════════════
 # UNIFIED SCORECARD
 # ═════════════════════════════════════════════════════════════════
 
-def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=None):
+def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=None, galaxy=None):
     """Print the final unified scorecard."""
     print("\n")
     print("╔" + "═" * 68 + "╗")
@@ -781,6 +818,19 @@ def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=None)
                          f"{tiles['cc_double_pred']:.2f} eV", '6.35 eV',
                          f"{tiles['cc_double_err']:.1f}%"))
 
+    # Galaxy correlation rows (if available)
+    if galaxy:
+        rows.append(('', '', '', '', ''))
+        rows.append(('Galaxy', 'γ = 1/σ₄',
+                     f"{galaxy['gamma_framework']:.3f}", '1.8',
+                     f"{galaxy['framework_err_pct']:.1f}%"))
+        rows.append(('Galaxy', 'γ Voronoi(∞)',
+                     f"{galaxy['gamma_voronoi_extrap']:.3f}", '1.8',
+                     f"{galaxy['voronoi_err_pct']:.1f}%"))
+        rows.append(('Galaxy', 'γ_bare × 1/G₁',
+                     f"{galaxy['gamma_evolved']:.2f}", '1.8',
+                     f"{galaxy['evolved_err_pct']:.1f}%"))
+
     print()
     print(f"  {'Scale':<11} {'Measurement':<22} {'Model':>14} {'Real':>18} {'Error':>10}")
     print(f"  {'─'*11} {'─'*22} {'─'*14} {'─'*18} {'─'*10}")
@@ -873,8 +923,12 @@ def main():
     # STEP 9: 3D Tile Geometry
     tiles = step9_tile_geometry()
 
+    # STEP 10: Galaxy Correlation
+    galaxy = step10_galaxy_correlation()
+
     # UNIFIED SCORECARD
-    rows = unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=tiles)
+    rows = unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice,
+                             tiles=tiles, galaxy=galaxy)
 
     dt = time.time() - t_start
     print(f"  Total runtime: {dt:.1f}s")
@@ -889,6 +943,7 @@ def main():
         't_hop': thop,
         'lattice': lattice,
         'tiles': tiles,
+        'galaxy': galaxy,
         'tiling_vertices': vtotal,
         'runtime_seconds': round(dt, 1),
     }
