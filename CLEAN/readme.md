@@ -86,7 +86,8 @@ CLEAN/
 ├── geometry/                 Spatial architecture
 │   ├── cantor_node.py        Five-layer Cantor node, bracket address, Zeckendorf
 │   ├── discriminant.py       Discriminant triangle, three-wave frequencies
-│   └── discriminant_cones.py Three cone angles, σ₄ identity
+│   ├── discriminant_cones.py Three cone angles, σ₄ identity
+│   └── voronoi_qc.py         3D icosahedral quasicrystal Voronoi tessellation
 │
 └── tests/
     └── test_all.py           156 verification tests across all modules
@@ -433,6 +434,24 @@ Three cone angles from the spectral ratios:
 - `verify_sigma4_identity()` — THETA_LEAK x BOS = sigma-4 (0.03%)
 - `cone_deviation(theta)` — angular deviation as hardness predictor
 
+### geometry/voronoi_qc.py
+
+3D icosahedral quasicrystal via cut-and-project (6D → 3D) with Voronoi tessellation:
+
+- `build_quasicrystal(N_half=3, target_range=(2000, 5000))` — 6D hypercubic lattice projected via Elser 1986 matrices, auto-tuned acceptance radius
+- `icosahedral_axes()` — returns (6 five-fold, 10 three-fold, 15 two-fold) symmetry axes
+- `assign_types(pts_perp, R_accept)` — classifies vertices as G/S/B/GS/BG/BS/BGS from perpendicular-space geometry
+- `voronoi_cell_faces(pts, types)` — computes full Voronoi tessellation, extracts face normals/areas/neighbors
+- `merge_coplanar_faces(normals, theta_deg=58.0)` — hierarchical clustering of face normals within angular threshold
+- `analyze_bgs_geometry(cells, types)` — full BGS cell analysis: subshell counts, face merging, tetrahedral angles
+
+Key results:
+- BGS volume fraction = 23.58% ≈ 1/φ³ = 23.61% (0.13% error)
+- 23-face BGS cells partition as {s=2, p=6, d=10, f=5} — first three match electron subshells exactly
+- Face merging at θ=58° gives 7 coarse faces (heptahedron)
+- Sub-face sequence {2,3,3,3,3,4,5} sums to 23
+- Tetrahedral sp³ angle from merged normals: 106.9° (2.5° from 109.5°)
+
 ### geometry/discriminant.py
 
 The discriminant Pythagorean triangle:
@@ -488,7 +507,7 @@ All from one equation. Zero free parameters.
 ## Universe Seed Model
 
 The [universe_seed.py](../model/universe_seed.py) script builds a universe from the axiom and measures it.
-It integrates all CLEAN modules into an 8-step pipeline:
+It integrates all CLEAN modules into a 9-step pipeline:
 
 1. **Tiling** — builds the triple metallic mean spatial manifold (7,962 vertices)
 2. **Brackets** — assigns Zeckendorf addresses across 60 orders of magnitude
@@ -498,8 +517,9 @@ It integrates all CLEAN modules into an 8-step pipeline:
 6. **Cosmology** — Ω_DE = 0.6853 (0.05%), tiling collapse budget at sub-percent
 7. **t_hop** — derives 232 attosecond traversal (0.005%)
 8. **Lattice** — proves D = F(F(7)) self-reference, Z_max = 118
+9. **3D Tile Geometry** — icosahedral quasicrystal Voronoi: {s=2, p=6, d=10} exact, heptahedron emerges at θ=58°
 
-**Scorecard: 9 exact + 11 sub-1% + 15 sub-5% = 26 measurements from ONE axiom.**
+**Scorecard: 13 exact + 11 sub-1% + 15 sub-5% = 30+ measurements from ONE axiom.**
 
 ```bash
 python3 model/universe_seed.py

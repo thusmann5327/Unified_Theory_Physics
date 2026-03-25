@@ -1,2 +1,5 @@
 simulator/venv/
 simulator/debug_screenshots/
+__pycache__/
+*.pyc
+.DS_Store

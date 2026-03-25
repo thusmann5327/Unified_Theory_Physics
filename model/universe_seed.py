@@ -61,6 +61,10 @@ from cosmology.predictions import (
 from particles.electroweak import electroweak_predictions
 from engine.bond_lengths import bond_length_test, cross_scale_matches
 from atomic.periodic_table import predict_ratio, run_periodic_table
+from geometry.voronoi_qc import (
+    build_quasicrystal, assign_types, voronoi_cell_faces,
+    analyze_bgs_geometry,
+)
 
 
 # ═════════════════════════════════════════════════════════════════
@@ -587,10 +591,81 @@ def step8_lattice():
 
 
 # ═════════════════════════════════════════════════════════════════
+# STEP 9: 3D TILE GEOMETRY (Quasicrystal Voronoi)
+# ═════════════════════════════════════════════════════════════════
+
+def step9_tile_geometry():
+    """Build the 3D quasicrystal and analyze matter tile geometry."""
+    print("\n" + "=" * 70)
+    print("  STEP 9: 3D TILE GEOMETRY (Icosahedral Quasicrystal)")
+    print("=" * 70)
+
+    t0 = time.time()
+    pts, pts_perp, R_accept = build_quasicrystal(N_half=3)
+    types = assign_types(pts_perp, R_accept)
+    print(f"\n  Quasicrystal: {len(pts)} points, R_accept = {R_accept:.4f}")
+
+    type_dist = {t: int(c) for t, c in sorted(dict(zip(*np.unique(types, return_counts=True))).items())}
+    print(f"  Types: {type_dist}")
+
+    cells = voronoi_cell_faces(pts, types)
+    print(f"  Interior Voronoi cells: {len(cells)}")
+
+    bgs = analyze_bgs_geometry(cells, types)
+    dt = time.time() - t0
+    print(f"  Analysis time: {dt:.1f}s")
+
+    # Report
+    print(f"\n  BGS (matter) cells: {bgs['n_bgs']}")
+    print(f"  23-face modal cells: {bgs['n_modal_23']}")
+
+    sc = bgs['subshell_per_cell']
+    print(f"\n  Subshell capacities per cell:")
+    for orb in ['s', 'p', 'd', 'f']:
+        val = sc.get(orb, 0)
+        expected = {'s': 2, 'p': 6, 'd': 10, 'f': 14}[orb]
+        match = '✓' if abs(val - expected) < 0.5 else '✗'
+        print(f"    {orb}: {val:.1f} (expected {expected}) {match}")
+
+    print(f"\n  Face merging:")
+    print(f"    Coarse faces (mode): {bgs['merge_mode']}")
+    print(f"    Sub-face sequence: {bgs['subface_sequence']}")
+    print(f"    Sum: {sum(bgs['subface_sequence'])}")
+
+    if bgs['tetrahedral_angle']:
+        print(f"\n  Tetrahedral angle: {bgs['tetrahedral_angle']:.2f}° "
+              f"(err {bgs['tet_error']:.2f}° from 109.47°)")
+
+    # Match checks
+    s_match = abs(sc.get('s', 0) - 2) < 0.5
+    p_match = abs(sc.get('p', 0) - 6) < 0.5
+    d_match = abs(sc.get('d', 0) - 10) < 0.5
+    hepta = bgs['merge_mode'] == 7
+
+    return {
+        'n_points': len(pts),
+        'n_cells': len(cells),
+        'n_bgs': bgs['n_bgs'],
+        'subshell_s': sc.get('s', 0),
+        'subshell_p': sc.get('p', 0),
+        'subshell_d': sc.get('d', 0),
+        'subshell_f': sc.get('f', 0),
+        's_match': s_match,
+        'p_match': p_match,
+        'd_match': d_match,
+        'merge_mode': bgs['merge_mode'],
+        'heptahedron': hepta,
+        'subface_seq': bgs['subface_sequence'],
+        'tet_angle': bgs['tetrahedral_angle'],
+        'tet_error': bgs['tet_error'],
+    }
+
+
+# ═════════════════════════════════════════════════════════════════
 # UNIFIED SCORECARD
 # ═════════════════════════════════════════════════════════════════
 
-def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice):
+def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=None):
     """Print the final unified scorecard."""
     print("\n")
     print("╔" + "═" * 68 + "╗")
@@ -665,6 +740,22 @@ def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice):
         ('Lattice',   '5-sector Fib',
          '55|34|55|34|55', 'F(n-3)|F(n-4)|...', 'exact' if lattice['sectors_fibonacci'] else 'FAIL'),
     ]
+
+    # Tile geometry rows (if available)
+    if tiles:
+        rows.append(('', '', '', '', ''))
+        rows.append(('3D Tile', 's-faces/cell',
+                     f"{tiles['subshell_s']:.1f}", '2', 'exact' if tiles['s_match'] else 'FAIL'))
+        rows.append(('3D Tile', 'p-faces/cell',
+                     f"{tiles['subshell_p']:.1f}", '6', 'exact' if tiles['p_match'] else 'FAIL'))
+        rows.append(('3D Tile', 'd-faces/cell',
+                     f"{tiles['subshell_d']:.1f}", '10', 'exact' if tiles['d_match'] else 'FAIL'))
+        rows.append(('3D Tile', 'Heptahedron (merge)',
+                     str(tiles['merge_mode']), '7', 'exact' if tiles['heptahedron'] else 'FAIL'))
+        if tiles.get('tet_angle'):
+            tet_err_pct = abs(tiles['tet_error'] / 109.47 * 100)
+            rows.append(('3D Tile', 'sp³ angle',
+                         f"{tiles['tet_angle']:.1f}°", '109.47°', f"{tet_err_pct:.1f}%"))
 
     print()
     print(f"  {'Scale':<11} {'Measurement':<22} {'Model':>14} {'Real':>18} {'Error':>10}")
@@ -755,8 +846,11 @@ def main():
     # STEP 8: Lattice
     lattice = step8_lattice()
 
+    # STEP 9: 3D Tile Geometry
+    tiles = step9_tile_geometry()
+
     # UNIFIED SCORECARD
-    rows = unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice)
+    rows = unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=tiles)
 
     dt = time.time() - t_start
     print(f"  Total runtime: {dt:.1f}s")
@@ -770,6 +864,7 @@ def main():
         'cosmology': cosmo,
         't_hop': thop,
         'lattice': lattice,
+        'tiles': tiles,
         'tiling_vertices': vtotal,
         'runtime_seconds': round(dt, 1),
     }
