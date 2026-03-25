@@ -148,6 +148,17 @@ canvas { display: block; }
         </button>
     </div>
 
+    <h2>Galaxy Structures</h2>
+    <div class="toggle-grid">
+        <button class="toggle-btn" id="btn-galaxies" onclick="toggleGalaxies()">
+            <span class="dot" style="background:#ff4444"></span>Galaxy Halos
+        </button>
+        <button class="toggle-btn" id="btn-density" onclick="toggleDensity()">
+            <span class="dot" style="background:#00ffff"></span>Overdensity
+        </button>
+    </div>
+    <div id="galaxy-info" style="font-size:9px; color:#555; margin-top:4px;"></div>
+
     <h2>Evolution</h2>
     <div class="slider-row">
         <label>Bracket</label>
@@ -249,6 +260,12 @@ let showBonds = true;    // BGS bonds on by default
 let showFilaments = false;
 let currentMode = 'all';
 let sizeMul = 1.0;
+
+// Galaxy structure state
+let galaxyHalos = [];       // THREE.Mesh objects for galaxy halos
+let showGalaxyHalos = false;
+let showDensityColor = false;
+let galaxyData = null;      // from /api/evolve/galaxies
 
 // Evolution state
 let evoFrames = null;      // array of frames (each frame = flat position array)
@@ -698,6 +715,9 @@ async function pollEvolution() {
     const shapeStr = dsRatio < 0.5 ? 'spherical' : dsRatio < 2 ? 'oblate' : dsRatio < 10 ? 'disc' : 'filamentary';
     document.getElementById('hud-shape').textContent = shapeStr + ' (' + dsRatio.toFixed(1) + ')';
 
+    // Load galaxy structures from evolution
+    loadGalaxyData();
+
     // Keep current view mode — show all vertex types during evolution
     // Ensure bonds are visible
     if (!showBonds) toggleBonds();
@@ -776,6 +796,157 @@ function resetEvolution() {
     controls.autoRotate = false;
 
     loadVertices(currentNHalf);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GALAXY STRUCTURES
+// ═══════════════════════════════════════════════════════════════
+function clearGalaxyHalos() {
+    for (const h of galaxyHalos) {
+        scene.remove(h);
+        h.geometry.dispose();
+        h.material.dispose();
+    }
+    galaxyHalos = [];
+}
+
+function buildGalaxyHalos() {
+    clearGalaxyHalos();
+    if (!galaxyData) return;
+
+    const clusters = galaxyData.cluster_structures || [];
+    const galaxies = galaxyData.galaxy_structures || [];
+
+    // Cluster halos (smaller, red-orange)
+    const clusterGeo = new THREE.SphereGeometry(1, 16, 12);
+    for (const g of clusters) {
+        const radius = Math.max(g.radius * 1.5, 0.2);
+        const opacity = Math.min(0.15 + g.n_members * 0.005, 0.4);
+        const color = g.shape === 'disc' ? 0xff6644 :
+                      g.shape === 'filament' ? 0x4466ff :
+                      g.shape === 'sphere' ? 0xff4444 : 0xffaa44;
+        const mat = new THREE.MeshBasicMaterial({
+            color, transparent: true, opacity, wireframe: true,
+            depthWrite: false,
+        });
+        const mesh = new THREE.Mesh(clusterGeo, mat);
+        mesh.position.set(g.center[0], g.center[1], g.center[2]);
+
+        // Shape the halo: flatten for discs, elongate for filaments
+        if (g.shape === 'disc') {
+            mesh.scale.set(radius, radius * 0.3, radius);
+        } else if (g.shape === 'filament') {
+            mesh.scale.set(radius * 0.4, radius * 2.0, radius * 0.4);
+        } else {
+            mesh.scale.setScalar(radius);
+        }
+        mesh.visible = showGalaxyHalos;
+        galaxyHalos.push(mesh);
+        scene.add(mesh);
+    }
+
+    // Galaxy halos (larger, brighter)
+    for (const g of galaxies) {
+        const radius = Math.max(g.radius * 2.0, 0.5);
+        const opacity = Math.min(0.1 + g.n_members * 0.002, 0.3);
+        const mat = new THREE.MeshBasicMaterial({
+            color: 0xffd700, transparent: true, opacity, wireframe: false,
+            depthWrite: false, side: THREE.DoubleSide,
+        });
+        const mesh = new THREE.Mesh(clusterGeo, mat);
+        mesh.position.set(g.center[0], g.center[1], g.center[2]);
+        if (g.shape === 'disc') {
+            mesh.scale.set(radius, radius * 0.2, radius);
+        } else {
+            mesh.scale.setScalar(radius);
+        }
+        mesh.visible = showGalaxyHalos;
+        galaxyHalos.push(mesh);
+        scene.add(mesh);
+    }
+
+    // Update info
+    document.getElementById('galaxy-info').innerHTML =
+        `${clusters.length} clusters · ${galaxies.length} galaxies`;
+}
+
+async function loadGalaxyData() {
+    try {
+        const resp = await fetch('/api/evolve/galaxies');
+        if (!resp.ok) return;
+        galaxyData = await resp.json();
+        buildGalaxyHalos();
+        if (showDensityColor) applyDensityColoring();
+    } catch (e) {
+        console.log('Galaxy data not available:', e);
+    }
+}
+
+function applyDensityColoring() {
+    if (!galaxyData || !galaxyData.overdensity || !galaxyData.bgs_positions) return;
+
+    const od = galaxyData.overdensity;
+    const bgsMesh = instancedMeshes['BGS'];
+    if (!bgsMesh) return;
+
+    // Color BGS vertices by overdensity: blue (void) → white (mean) → red (overdense)
+    const bgsVerts = bgsMesh.userData.vertices;
+    const dummy = new THREE.Object3D();
+    const color = new THREE.Color();
+
+    // Create per-instance colors
+    const colors = new Float32Array(bgsVerts.length * 3);
+    const bgsPositions = galaxyData.bgs_positions;
+
+    for (let i = 0; i < bgsVerts.length && i < od.length; i++) {
+        const d = od[i];
+        if (d > 0) {
+            // Overdense: white → red → yellow
+            const t = Math.min(d / 1.0, 1.0);
+            color.setRGB(1.0, 1.0 - t * 0.7, 1.0 - t);
+        } else {
+            // Underdense: white → blue → dark blue
+            const t = Math.min(-d / 1.0, 1.0);
+            color.setRGB(1.0 - t, 1.0 - t, 1.0);
+        }
+        colors[i * 3] = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
+    }
+
+    bgsMesh.instanceColor = new THREE.InstancedBufferAttribute(colors, 3);
+    bgsMesh.instanceColor.needsUpdate = true;
+    bgsMesh.material.vertexColors = true;
+    bgsMesh.material.needsUpdate = true;
+}
+
+function clearDensityColoring() {
+    const bgsMesh = instancedMeshes['BGS'];
+    if (!bgsMesh) return;
+    bgsMesh.instanceColor = null;
+    bgsMesh.material.vertexColors = false;
+    bgsMesh.material.color.set(TYPE_CONFIG.BGS.color);
+    bgsMesh.material.needsUpdate = true;
+}
+
+function toggleGalaxies() {
+    showGalaxyHalos = !showGalaxyHalos;
+    document.getElementById('btn-galaxies').classList.toggle('active', showGalaxyHalos);
+    if (showGalaxyHalos && !galaxyData) {
+        loadGalaxyData();
+    }
+    for (const h of galaxyHalos) h.visible = showGalaxyHalos;
+}
+
+function toggleDensity() {
+    showDensityColor = !showDensityColor;
+    document.getElementById('btn-density').classList.toggle('active', showDensityColor);
+    if (showDensityColor) {
+        if (!galaxyData) loadGalaxyData();
+        else applyDensityColoring();
+    } else {
+        clearDensityColoring();
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════

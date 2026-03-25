@@ -22,6 +22,15 @@ from simulation.emergent_evolve import (
     LEAK, R_C, STIFFNESS,
 )
 from simulation.shape_operator import bracket_info, BRACKET_LABELS
+try:
+    from simulation.jax_evolve import (
+        evolve_jax, find_structures_multiscale,
+        measure_gamma as jax_measure_gamma,
+        load_vertices as jax_load_vertices,
+    )
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
 import numpy as np
 import threading
 
@@ -164,38 +173,68 @@ def start_evolution():
     def progress_cb(step, total, metrics):
         evolution_state['progress'] = step / total
 
+    use_jax = data.get('use_jax', JAX_AVAILABLE)
+
     def run():
         try:
             positions, types = load_vertices(n_half)
             n_verts = len(positions)
 
-            result = evolve_emergent(
-                positions, types,
-                n_steps=n_steps,
-                perturbation=perturbation,
-                damping=damping,
-                callback=progress_cb,
-                bracket=bracket,
-            )
+            if use_jax and JAX_AVAILABLE:
+                # JAX/Metal GPU evolution
+                result = evolve_jax(
+                    positions, types,
+                    n_steps=n_steps,
+                    perturbation=perturbation,
+                    damping=damping,
+                    bracket=bracket,
+                    callback=progress_cb,
+                )
+                frames_out = [frame.tolist() for frame in result['frames']]
+                bgs_mask = np.array([t == 'BGS' for t in types])
+                final_bgs = result['frames'][-1][bgs_mask]
+                gamma, _, _ = jax_measure_gamma(final_bgs)
 
-            # Convert frames to lists for JSON serialization
-            frames_out = [frame.tolist() for frame in result['frames']]
+                # Find galaxy structures in final frame
+                structures = find_structures_multiscale(
+                    result['frames'][-1], types)
 
-            # Measure final BGS correlation
-            bgs_mask = np.array([t == 'BGS' for t in types])
-            final_bgs = result['frames'][-1][bgs_mask]
-            gamma, _, _ = measure_gamma(final_bgs)
+                evolution_state['result'] = {
+                    'frames': frames_out,
+                    'steps': result['steps'],
+                    'metrics': [{'total_strain': s} for s in result['strain']],
+                    'final_gamma': gamma,
+                    'n_vertices': n_verts,
+                    'types': types,
+                    'params': result['params'],
+                    'ideals': {},
+                    'structures': structures,
+                }
+            else:
+                # NumPy CPU evolution
+                result = evolve_emergent(
+                    positions, types,
+                    n_steps=n_steps,
+                    perturbation=perturbation,
+                    damping=damping,
+                    callback=progress_cb,
+                    bracket=bracket,
+                )
+                frames_out = [frame.tolist() for frame in result['frames']]
+                bgs_mask = np.array([t == 'BGS' for t in types])
+                final_bgs = result['frames'][-1][bgs_mask]
+                gamma, _, _ = measure_gamma(final_bgs)
 
-            evolution_state['result'] = {
-                'frames': frames_out,
-                'steps': result['steps'],
-                'metrics': result['metrics'],
-                'final_gamma': gamma,
-                'n_vertices': n_verts,
-                'types': types,
-                'params': result['params'],
-                'ideals': result['ideals'],
-            }
+                evolution_state['result'] = {
+                    'frames': frames_out,
+                    'steps': result['steps'],
+                    'metrics': result['metrics'],
+                    'final_gamma': gamma,
+                    'n_vertices': n_verts,
+                    'types': types,
+                    'params': result['params'],
+                    'ideals': result['ideals'],
+                }
         except Exception as e:
             evolution_state['error'] = str(e)
             import traceback
@@ -277,6 +316,62 @@ def get_stiffness():
             'LEAK_cubed': LEAK**3,
         }
     })
+
+
+@app.route('/api/evolve/galaxies')
+def evolution_galaxies():
+    """Return galaxy structures from the most recent evolution."""
+    if not evolution_state['result']:
+        return jsonify({'error': 'No evolution result available'}), 404
+
+    result = evolution_state['result']
+    structures = result.get('structures')
+
+    if not structures:
+        return jsonify({'error': 'No structure data (run with JAX)'}), 404
+
+    # Return galaxy-scale structures with overdensity data
+    galaxy_scale = None
+    for sc in structures.get('scales', []):
+        if sc['name'] == 'galaxy':
+            galaxy_scale = sc
+            break
+
+    cluster_scale = None
+    for sc in structures.get('scales', []):
+        if sc['name'] == 'cluster':
+            cluster_scale = sc
+            break
+
+    resp = {
+        'overdensity': structures.get('overdensity', []),
+        'bgs_positions': structures.get('bgs_positions', []),
+        'mean_nn': structures.get('mean_nn', 0),
+        'galaxy_structures': [],
+        'cluster_structures': [],
+    }
+
+    if galaxy_scale:
+        for g in galaxy_scale['structures'][:50]:
+            resp['galaxy_structures'].append({
+                'center': g['center'],
+                'n_members': g['n_members'],
+                'radius': g['radius'],
+                'shape': g['shape'],
+                'axis_ratios': g['axis_ratios'],
+            })
+
+    if cluster_scale:
+        for g in cluster_scale['structures'][:200]:
+            resp['cluster_structures'].append({
+                'center': g['center'],
+                'n_members': g['n_members'],
+                'radius': g['radius'],
+                'shape': g['shape'],
+                'axis_ratios': g['axis_ratios'],
+            })
+
+    return jsonify(resp)
 
 
 @app.route('/api/bracket/<int:bz>')

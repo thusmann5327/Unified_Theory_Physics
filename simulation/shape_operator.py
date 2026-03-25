@@ -173,6 +173,11 @@ def bracket_stiffness_modifiers(bracket, dr_vectors, axis=None):
         fc['f_frac'] * fw['f']
     )
 
+    # Normalize: preserve total energy scale, only redistribute anisotropy
+    mean_mod = np.mean(modifiers)
+    if mean_mod > 1e-10:
+        modifiers = modifiers / mean_mod
+
     return modifiers
 
 
