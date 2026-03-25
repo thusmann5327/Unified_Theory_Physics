@@ -1,0 +1,61 @@
+{
+  "magic_numbers": {
+    "observed": [
+      2,
+      8,
+      20,
+      28,
+      50,
+      82,
+      126
+    ],
+    "predicted": [
+      2,
+      8,
+      20,
+      28,
+      50,
+      82,
+      126
+    ],
+    "all_match": true
+  },
+  "ho_cumulative": [
+    2,
+    8,
+    20,
+    40,
+    70,
+    112,
+    168,
+    240
+  ],
+  "detachment_sequence": [
+    8,
+    10,
+    12,
+    14,
+    16
+  ],
+  "detachment_step": 2,
+  "cantor_capacities": {
+    "s_cap": 2,
+    "p_cap": 6,
+    "d_cap": 10,
+    "f_cap": 14
+  },
+  "sqrt_rc": 0.924176,
+  "magic_over_fib": {
+    "50/55": 0.9091,
+    "82/89": 0.9213,
+    "sqrt_rc": 0.9242
+  },
+  "ho_minus_so_match": false,
+  "extended_predictions": {
+    "magic_7": 184,
+    "magic_8": 258
+  },
+  "critical_bracket": 116.5,
+  "tests_passed": 9,
+  "tests_total": 10
+}
