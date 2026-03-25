@@ -246,6 +246,35 @@ def evolve_emergent(positions, types, n_steps=5000, dt=None,
         shape_mods = bracket_stiffness_modifiers(bracket, dr_init, sym_axis)
         pair_stiffness *= shape_mods
 
+    # ── Asymmetric strain + dark energy expansion ──────────────
+    # Asymmetry: extension penalized more than compression for matter
+    # Expansion: vacuum ideal distances grow each step
+    pair_asymmetry = np.zeros(len(pairs_arr), dtype=np.float64)
+    pair_expansion_rate = np.zeros(len(pairs_arr), dtype=np.float64)
+    expansion_rate = LEAK**3 * 0.5
+
+    for pi, (i, j) in enumerate(pairs_arr):
+        ti, tj = vtypes[i], vtypes[j]
+        # Asymmetry
+        if ti == 'BGS' and tj == 'BGS':
+            pair_asymmetry[pi] = 2.0
+        elif 'BGS' in (ti, tj):
+            other = tj if ti == 'BGS' else ti
+            if other == 'BS': pair_asymmetry[pi] = 1.5
+            elif other == 'GS': pair_asymmetry[pi] = 0.5
+            elif other == 'BG': pair_asymmetry[pi] = 0.3
+        elif pair_stiffness[pi] > LEAK**2:
+            pair_asymmetry[pi] = 0.2
+        # Expansion
+        if ti in ('G', 'S', 'B') and tj in ('G', 'S', 'B'):
+            pair_expansion_rate[pi] = expansion_rate
+        elif ti in ('G', 'S', 'B') or tj in ('G', 'S', 'B'):
+            pair_expansion_rate[pi] = expansion_rate * 0.3
+        elif 'BGS' not in (ti, tj):
+            pair_expansion_rate[pi] = expansion_rate * 0.1
+
+    cumulative_expansion = np.zeros(len(pairs_arr), dtype=np.float64)
+
     # Small perturbation to break perfect QC symmetry
     rng = np.random.RandomState(42)
     pos += rng.normal(0, perturbation * mean_spacing, pos.shape)
@@ -262,16 +291,38 @@ def evolve_emergent(positions, types, n_steps=5000, dt=None,
     t_start = time.time()
 
     for step in range(1, n_steps + 1):
+        # Accumulate expansion
+        cumulative_expansion += pair_expansion_rate
+
         # Optionally rebuild neighbor graph (topology can change)
         if step % rebuild_every == 0 and step > 0:
             pairs_arr, threshold = build_neighbor_graph(pos, nn_multiplier)
             # Recompute stiffness/ideals for new pairs
             pair_stiffness = np.zeros(len(pairs_arr), dtype=np.float64)
             pair_ideal_dist = np.zeros(len(pairs_arr), dtype=np.float64)
+            pair_asymmetry = np.zeros(len(pairs_arr), dtype=np.float64)
+            pair_expansion_rate = np.zeros(len(pairs_arr), dtype=np.float64)
             for pi, (i, j) in enumerate(pairs_arr):
                 key = tuple(sorted([vtypes[i], vtypes[j]]))
                 pair_stiffness[pi] = get_stiffness(vtypes[i], vtypes[j])
                 pair_ideal_dist[pi] = ideals.get(key, mean_spacing)
+                ti, tj = vtypes[i], vtypes[j]
+                if ti == 'BGS' and tj == 'BGS':
+                    pair_asymmetry[pi] = 2.0
+                elif 'BGS' in (ti, tj):
+                    other = tj if ti == 'BGS' else ti
+                    if other == 'BS': pair_asymmetry[pi] = 1.5
+                    elif other == 'GS': pair_asymmetry[pi] = 0.5
+                    elif other == 'BG': pair_asymmetry[pi] = 0.3
+                elif pair_stiffness[pi] > LEAK**2:
+                    pair_asymmetry[pi] = 0.2
+                if ti in ('G','S','B') and tj in ('G','S','B'):
+                    pair_expansion_rate[pi] = expansion_rate
+                elif ti in ('G','S','B') or tj in ('G','S','B'):
+                    pair_expansion_rate[pi] = expansion_rate * 0.3
+                elif 'BGS' not in (ti, tj):
+                    pair_expansion_rate[pi] = expansion_rate * 0.1
+            cumulative_expansion = pair_expansion_rate * step
             # Re-apply shape modifiers with updated positions
             if use_shape and len(pairs_arr) > 0:
                 sym_axis = detect_symmetry_axis(pos, vtypes)
@@ -279,7 +330,7 @@ def evolve_emergent(positions, types, n_steps=5000, dt=None,
                 shape_mods = bracket_stiffness_modifiers(bracket, dr_current, sym_axis)
                 pair_stiffness *= shape_mods
 
-        # ── Vectorized strain gradient computation ──────────────
+        # ── Vectorized strain gradient with asymmetry + expansion ──
         acc = np.zeros((N, 3), dtype=np.float64)
 
         if len(pairs_arr) > 0:
@@ -290,19 +341,19 @@ def evolve_emergent(positions, types, n_steps=5000, dt=None,
             r2 = np.sum(dr * dr, axis=1)                     # (M,)
             r = np.sqrt(r2) + 1e-15                          # (M,)
 
-            # Strain gradient: d/dr [(r - r_ideal)² / r_ideal²]
-            #                = 2(r - r_ideal) / r_ideal²
-            # Force = -stiffness × strain_gradient × direction
-            delta = r - pair_ideal_dist                       # (M,)
-            strain_grad = 2.0 * delta / (pair_ideal_dist**2)  # (M,)
+            # Dark energy: vacuum ideal distances grow
+            ideal_now = pair_ideal_dist * (1.0 + cumulative_expansion)
 
-            # Force magnitude (positive = push apart if too close)
+            delta = r - ideal_now                             # (M,)
+
+            # Asymmetric strain: extension penalized more for matter
+            asym_factor = np.where(delta > 0,
+                                    1.0 + pair_asymmetry, 1.0)
+            strain_grad = 2.0 * delta * asym_factor / (ideal_now**2)
+
             f_mag = -pair_stiffness * strain_grad / r         # (M,)
-
-            # Vector force on each particle
             f_vec = f_mag[:, None] * dr                       # (M, 3)
 
-            # Accumulate: i gets pulled toward j, j pushed from i
             np.add.at(acc, ii, f_vec)
             np.add.at(acc, jj, -f_vec)
 
