@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quasicrystal Universe — Husmann Decomposition</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000011; color: #ccc; font-family: 'SF Mono', 'Fira Code', monospace; overflow: hidden; }
+canvas { display: block; }
+
+#ui {
+    position: fixed; top: 0; left: 0; width: 280px; padding: 16px;
+    background: rgba(0,0,17,0.85); border-right: 1px solid #1a1a4a;
+    height: 100vh; overflow-y: auto; z-index: 10;
+    backdrop-filter: blur(8px);
+}
+#ui h1 { font-size: 14px; color: #ffd700; margin-bottom: 4px; letter-spacing: 1px; }
+#ui .subtitle { font-size: 10px; color: #666; margin-bottom: 16px; }
+#ui h2 { font-size: 11px; color: #888; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: 2px; }
+
+.slider-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.slider-row label { font-size: 11px; min-width: 50px; }
+.slider-row input[type=range] { flex: 1; accent-color: #ffd700; }
+.slider-row .val { font-size: 11px; color: #ffd700; min-width: 30px; text-align: right; }
+
+.toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 6px 0; }
+.toggle-btn {
+    padding: 6px 8px; border: 1px solid #333; border-radius: 4px;
+    background: rgba(255,255,255,0.05); color: #aaa; font-size: 10px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    font-family: inherit;
+}
+.toggle-btn.active { border-color: var(--clr, #ffd700); color: var(--clr, #ffd700); background: rgba(255,255,255,0.1); }
+.toggle-btn .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+.mode-btns { display: flex; gap: 4px; margin: 6px 0; flex-wrap: wrap; }
+.mode-btn {
+    flex: 1; padding: 8px 4px; border: 1px solid #333; border-radius: 4px;
+    background: rgba(255,255,255,0.05); color: #aaa; font-size: 10px;
+    cursor: pointer; text-align: center; transition: all 0.2s;
+    font-family: inherit; min-width: 60px;
+}
+.mode-btn.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.1); }
+.mode-btn.evolve-btn { border-color: #ff4444; color: #ff6666; }
+.mode-btn.evolve-btn.active { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,0.15); }
+
+#info {
+    position: fixed; bottom: 16px; left: 16px; z-index: 10;
+    font-size: 10px; color: #555; line-height: 1.6;
+}
+#info .highlight { color: #ffd700; }
+
+#status {
+    position: fixed; top: 16px; right: 16px; z-index: 10;
+    font-size: 11px; color: #ffd700; text-align: right;
+    line-height: 1.6;
+}
+
+#loading {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-size: 14px; color: #ffd700; z-index: 100; text-align: center;
+}
+#loading .spin { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#tooltip {
+    position: fixed; display: none; padding: 8px 12px;
+    background: rgba(0,0,17,0.95); border: 1px solid #ffd700;
+    border-radius: 4px; font-size: 11px; color: #ccc;
+    pointer-events: none; z-index: 20; max-width: 240px;
+}
+
+/* Evolution HUD */
+#evolve-hud {
+    position: fixed; bottom: 16px; right: 16px; z-index: 10;
+    background: rgba(0,0,17,0.9); border: 1px solid #1a1a4a;
+    border-radius: 6px; padding: 12px 16px; display: none;
+    min-width: 240px; backdrop-filter: blur(8px);
+}
+#evolve-hud h3 { font-size: 11px; color: #ff6666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+#evolve-hud .metric { font-size: 10px; margin: 3px 0; }
+#evolve-hud .metric .label { color: #666; }
+#evolve-hud .metric .value { color: #ffd700; float: right; }
+
+/* Progress bar */
+.progress-bar {
+    width: 100%; height: 4px; background: #111; border-radius: 2px;
+    margin: 8px 0; overflow: hidden;
+}
+.progress-bar .fill {
+    height: 100%; background: linear-gradient(90deg, #ff4444, #ffd700);
+    border-radius: 2px; transition: width 0.3s;
+}
+
+/* Timeline scrubber */
+#timeline {
+    display: none; position: fixed; bottom: 60px; left: 300px;
+    right: 20px; z-index: 10;
+}
+#timeline input[type=range] {
+    width: 100%; accent-color: #ff4444;
+}
+#timeline .labels {
+    display: flex; justify-content: space-between;
+    font-size: 9px; color: #555; margin-top: 2px;
+}
+</style>
+</head>
+<body>
+
+<div id="ui">
+    <h1>QUASICRYSTAL UNIVERSE</h1>
+    <div class="subtitle">Husmann Decomposition — φ²=φ+1</div>
+
+    <h2>Lattice Size</h2>
+    <div class="slider-row">
+        <label>N_half</label>
+        <input type="range" id="nhalf" min="3" max="10" value="3" step="1">
+        <span class="val" id="nhalf-val">3</span>
+    </div>
+    <div id="vertex-count" style="font-size:10px; color:#555; margin-top:2px;"></div>
+
+    <h2>Vertex Types</h2>
+    <div class="toggle-grid" id="type-toggles"></div>
+
+    <h2>Display</h2>
+    <div class="slider-row">
+        <label>Size</label>
+        <input type="range" id="pt-size" min="0.2" max="3" value="1" step="0.1">
+        <span class="val" id="pt-size-val">1.0</span>
+    </div>
+
+    <h2>View Mode</h2>
+    <div class="mode-btns">
+        <button class="mode-btn active" data-mode="all">All</button>
+        <button class="mode-btn" data-mode="molecules">Molecules</button>
+        <button class="mode-btn" data-mode="cosmic">Cosmic</button>
+    </div>
+
+    <h2>Bonds</h2>
+    <div class="toggle-grid">
+        <button class="toggle-btn" id="btn-bonds" onclick="toggleBonds()">
+            <span class="dot" style="background:#444"></span>BGS Bonds
+        </button>
+        <button class="toggle-btn" id="btn-filaments" onclick="toggleFilaments()">
+            <span class="dot" style="background:#1a1a8a"></span>Filaments
+        </button>
+    </div>
+
+    <h2>Evolution</h2>
+    <div class="slider-row">
+        <label>Bracket</label>
+        <input type="range" id="bracket" min="94" max="294" value="119" step="1">
+        <span class="val" id="bracket-val">119</span>
+    </div>
+    <div id="bracket-info" style="font-size:9px; color:#555; margin:2px 0 6px; line-height:1.4;">
+        Atom · disc/sphere: 5.00 · oblate
+    </div>
+    <div class="mode-btns">
+        <button class="mode-btn evolve-btn" id="btn-evolve" onclick="startEvolution()">
+            EVOLVE
+        </button>
+        <button class="mode-btn" id="btn-play" onclick="togglePlayback()" style="display:none">
+            Play
+        </button>
+        <button class="mode-btn" id="btn-reset-evo" onclick="resetEvolution()" style="display:none">
+            Reset
+        </button>
+    </div>
+    <div class="slider-row" id="speed-row" style="display:none">
+        <label>Speed</label>
+        <input type="range" id="evo-speed" min="1" max="30" value="10" step="1">
+        <span class="val" id="evo-speed-val">10</span>
+    </div>
+    <div id="evolve-progress" style="display:none">
+        <div class="progress-bar"><div class="fill" id="progress-fill"></div></div>
+        <div style="font-size:10px; color:#666;" id="progress-text">Computing...</div>
+    </div>
+
+    <h2>Camera</h2>
+    <div class="mode-btns">
+        <button class="mode-btn" onclick="resetCamera()">Reset</button>
+        <button class="mode-btn" onclick="autoRotate()">Auto Rotate</button>
+    </div>
+</div>
+
+<div id="tooltip"></div>
+<div id="loading"><span class="spin">◈</span> Loading quasicrystal...</div>
+<div id="status"></div>
+
+<div id="evolve-hud">
+    <h3>Emergent Physics</h3>
+    <div class="metric"><span class="label">Step</span><span class="value" id="hud-step">0</span></div>
+    <div class="metric"><span class="label">Total Strain</span><span class="value" id="hud-strain">—</span></div>
+    <div class="metric"><span class="label">BGS Clustering</span><span class="value" id="hud-clustering">—</span></div>
+    <div class="metric"><span class="label">Void Fraction</span><span class="value" id="hud-void">—</span></div>
+    <div class="metric"><span class="label">Largest Cluster</span><span class="value" id="hud-cluster">—</span></div>
+    <div class="metric"><span class="label">γ (final)</span><span class="value" id="hud-gamma">—</span></div>
+    <div class="metric"><span class="label">Bracket</span><span class="value" id="hud-bracket">—</span></div>
+    <div class="metric"><span class="label">Shape</span><span class="value" id="hud-shape">—</span></div>
+    <div style="margin-top:8px; font-size:9px; color:#444; line-height:1.5;">
+        No coded forces. Only stiffness:<br>
+        BGS-BGS: 1.0 | BS: 0.854 | GS: 0.146<br>
+        BG: 0.021 | vacuum: 0.003
+    </div>
+</div>
+
+<div id="timeline">
+    <input type="range" id="timeline-scrub" min="0" max="100" value="0" step="1">
+    <div class="labels">
+        <span>t = 0 (uniform QC)</span>
+        <span id="timeline-label">—</span>
+        <span>t = final</span>
+    </div>
+</div>
+
+<div id="info">
+    <span class="highlight">φ²=φ+1</span> — One axiom, zero free parameters<br>
+    Drag to rotate · Scroll to zoom · Click BGS for details
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════
+const TYPE_CONFIG = {
+    BGS: { color: 0xffffff, emissive: 0x444444, size: 1.0,  cssColor: '#ffffff' },
+    GS:  { color: 0x00ff88, emissive: 0x003322, size: 0.6,  cssColor: '#00ff88' },
+    BG:  { color: 0x1a1a8a, emissive: 0x0a0a3a, size: 0.6,  cssColor: '#4444cc' },
+    BS:  { color: 0x8a1a8a, emissive: 0x3a0a3a, size: 0.6,  cssColor: '#aa44aa' },
+    G:   { color: 0xffd700, emissive: 0x000000, size: 0.35, cssColor: '#ffd700' },
+    S:   { color: 0xc0c0c0, emissive: 0x000000, size: 0.35, cssColor: '#c0c0c0' },
+    B:   { color: 0xcd7f32, emissive: 0x000000, size: 0.35, cssColor: '#cd7f32' },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let vertices = [];
+let currentNHalf = 3;
+let visibleTypes = new Set(['B', 'BGS']);  // Bronze + Matter by default
+let instancedMeshes = {};
+let bondLines = null;
+let filamentLines = null;
+let showBonds = true;    // BGS bonds on by default
+let showFilaments = false;
+let currentMode = 'all';
+let sizeMul = 1.0;
+
+// Evolution state
+let evoFrames = null;      // array of frames (each frame = flat position array)
+let evoTypes = null;        // vertex types for evolution
+let evoSteps = null;        // step numbers
+let evoMetrics = null;      // metrics per frame
+let evoPlaying = false;
+let evoFrameIdx = 0;
+let evoSpeed = 10;          // frames per second
+let evoLastTime = 0;
+let evoFinalGamma = null;
+let currentBracket = 119;  // default: atom scale
+
+// Bracket labels
+const BRACKET_LABELS = {
+    94: 'Nucleus', 119: 'Atom', 160: 'Molecule',
+    200: 'Solar System', 230: 'Galaxy', 260: 'Cluster', 294: 'Universe'
+};
+
+// ═══════════════════════════════════════════════════════════════
+// THREE.JS SETUP
+// ═══════════════════════════════════════════════════════════════
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000011);
+scene.fog = new THREE.FogExp2(0x000011, 0.012);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+camera.position.set(20, 14, 20);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.rotateSpeed = 0.6;
+controls.autoRotate = false;
+controls.autoRotateSpeed = 0.5;
+
+// Lighting
+scene.add(new THREE.AmbientLight(0x222244, 0.6));
+const pointLight = new THREE.PointLight(0xffffff, 1.0, 200);
+scene.add(pointLight);
+scene.add(new THREE.DirectionalLight(0x4444ff, 0.3).translateX(-10).translateY(10));
+
+// Raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let highlightMesh = null;
+
+// ═══════════════════════════════════════════════════════════════
+// UI SETUP
+// ═══════════════════════════════════════════════════════════════
+(function buildToggles() {
+    const container = document.getElementById('type-toggles');
+    for (const [type, cfg] of Object.entries(TYPE_CONFIG)) {
+        const btn = document.createElement('button');
+        const isOn = visibleTypes.has(type);
+        btn.className = 'toggle-btn' + (isOn ? ' active' : '');
+        btn.style.setProperty('--clr', cfg.cssColor);
+        btn.innerHTML = `<span class="dot" style="background:${cfg.cssColor}"></span>${type}`;
+        btn.dataset.type = type;
+        btn.addEventListener('click', () => {
+            visibleTypes.has(type) ? visibleTypes.delete(type) : visibleTypes.add(type);
+            btn.classList.toggle('active', visibleTypes.has(type));
+            updateVisibility();
+        });
+        container.appendChild(btn);
+    }
+    // Mark BGS bonds button active on load
+    document.getElementById('btn-bonds').classList.add('active');
+})();
+
+document.getElementById('nhalf').addEventListener('input', function() {
+    document.getElementById('nhalf-val').textContent = this.value;
+    currentNHalf = parseInt(this.value);
+    resetEvolution();
+    loadVertices(currentNHalf);
+});
+
+document.getElementById('pt-size').addEventListener('input', function() {
+    document.getElementById('pt-size-val').textContent = parseFloat(this.value).toFixed(1);
+    sizeMul = parseFloat(this.value);
+    rebuildMeshes();
+});
+
+document.getElementById('evo-speed').addEventListener('input', function() {
+    evoSpeed = parseInt(this.value);
+    document.getElementById('evo-speed-val').textContent = this.value;
+});
+
+document.getElementById('bracket').addEventListener('input', function() {
+    currentBracket = parseInt(this.value);
+    document.getElementById('bracket-val').textContent = this.value;
+    updateBracketInfo(currentBracket);
+});
+
+function updateBracketInfo(bz) {
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const b_offset = (bz - 119) / 50;
+    const s = Math.pow(PHI, -5 * b_offset);
+    const d = Math.pow(PHI, 4 * b_offset);
+    const ratio = d / s;  // per-face anisotropy
+
+    // Find nearest label
+    let label = BRACKET_LABELS[bz] || '';
+    if (!label) {
+        let nearest = 119, minDist = 999;
+        for (const k of Object.keys(BRACKET_LABELS)) {
+            const dist = Math.abs(parseInt(k) - bz);
+            if (dist < minDist) { minDist = dist; nearest = parseInt(k); }
+        }
+        if (minDist < 15) label = 'near ' + BRACKET_LABELS[nearest];
+        else label = 'bz=' + bz;
+    }
+
+    const shape = ratio < 0.5 ? 'spherical' : ratio < 2 ? 'oblate' : ratio < 10 ? 'disc' : 'filamentary';
+    document.getElementById('bracket-info').innerHTML =
+        `<span style="color:#ffd700">${label}</span> · disc/sphere: ${ratio.toFixed(2)} · ${shape}`;
+}
+
+document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn[data-mode]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        applyMode();
+    });
+});
+
+document.getElementById('timeline-scrub').addEventListener('input', function() {
+    if (!evoFrames) return;
+    evoFrameIdx = Math.round(this.value / 100 * (evoFrames.length - 1));
+    applyEvolutionFrame(evoFrameIdx);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════════════════════════
+async function loadVertices(nHalf) {
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('loading').innerHTML = `<span class="spin">◈</span> Loading N_half=${nHalf}...`;
+    try {
+        const resp = await fetch(`/api/vertices/${nHalf}`);
+        vertices = await resp.json();
+        document.getElementById('vertex-count').textContent =
+            `${vertices.length.toLocaleString()} vertices loaded`;
+        document.getElementById('loading').style.display = 'none';
+        rebuildMeshes();
+        applyMode();
+        updateStatus();
+    } catch (e) {
+        document.getElementById('loading').innerHTML = `Error: ${e.message}`;
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INSTANCED MESH BUILDER
+// ═══════════════════════════════════════════════════════════════
+function rebuildMeshes() {
+    for (const mesh of Object.values(instancedMeshes)) {
+        scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose();
+    }
+    instancedMeshes = {};
+    removeBonds(); removeFilaments();
+
+    const groups = {};
+    for (const v of vertices) {
+        if (!groups[v.type]) groups[v.type] = [];
+        groups[v.type].push(v);
+    }
+
+    const sphereGeo = new THREE.SphereGeometry(1, 10, 7);
+    const dummy = new THREE.Object3D();
+
+    for (const [type, verts] of Object.entries(groups)) {
+        const cfg = TYPE_CONFIG[type] || TYPE_CONFIG.B;
+        const radius = cfg.size * sizeMul * 0.12;
+        const mat = new THREE.MeshPhongMaterial({
+            color: cfg.color, emissive: cfg.emissive,
+            shininess: type === 'BGS' ? 80 : 30,
+            transparent: true, opacity: 0.85,
+        });
+        const mesh = new THREE.InstancedMesh(sphereGeo, mat, verts.length);
+        mesh.userData = { type, vertices: verts };
+        for (let i = 0; i < verts.length; i++) {
+            dummy.position.set(verts[i].x, verts[i].y, verts[i].z);
+            dummy.scale.setScalar(radius);
+            dummy.updateMatrix();
+            mesh.setMatrixAt(i, dummy.matrix);
+        }
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.visible = visibleTypes.has(type);
+        instancedMeshes[type] = mesh;
+        scene.add(mesh);
+    }
+    if (showBonds) buildBonds();
+    if (showFilaments) buildFilaments();
+}
+
+function updateVisibility() {
+    for (const [type, mesh] of Object.entries(instancedMeshes)) {
+        mesh.visible = visibleTypes.has(type);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BOND / FILAMENT BUILDERS
+// ═══════════════════════════════════════════════════════════════
+function getBondThreshold(verts) {
+    const sample = verts.slice(0, Math.min(200, verts.length));
+    let total = 0, count = 0;
+    for (let i = 0; i < sample.length; i++) {
+        let minD = Infinity;
+        for (let j = 0; j < verts.length; j++) {
+            if (i === j) continue;
+            const dx = sample[i].x-verts[j].x, dy = sample[i].y-verts[j].y, dz = sample[i].z-verts[j].z;
+            const d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+            if (d < minD) minD = d;
+        }
+        if (minD < Infinity) { total += minD; count++; }
+    }
+    return (total / count) * 1.6;
+}
+
+function buildSpatialLines(verts, threshold, color, opacity) {
+    const cellSize = threshold;
+    const grid = {};
+    for (let i = 0; i < verts.length; i++) {
+        const key = `${Math.floor(verts[i].x/cellSize)},${Math.floor(verts[i].y/cellSize)},${Math.floor(verts[i].z/cellSize)}`;
+        if (!grid[key]) grid[key] = [];
+        grid[key].push(i);
+    }
+    const positions = [];
+    const t2 = threshold * threshold;
+    for (const [key, indices] of Object.entries(grid)) {
+        const [cx, cy, cz] = key.split(',').map(Number);
+        for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+            const nbrs = grid[`${cx+dx},${cy+dy},${cz+dz}`];
+            if (!nbrs) continue;
+            for (const i of indices) for (const j of nbrs) {
+                if (j <= i) continue;
+                const ddx=verts[i].x-verts[j].x, ddy=verts[i].y-verts[j].y, ddz=verts[i].z-verts[j].z;
+                if (ddx*ddx+ddy*ddy+ddz*ddz < t2) {
+                    positions.push(verts[i].x,verts[i].y,verts[i].z, verts[j].x,verts[j].y,verts[j].z);
+                }
+            }
+        }
+    }
+    if (!positions.length) return null;
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    return new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color, transparent: true, opacity }));
+}
+
+function buildBonds() {
+    removeBonds();
+    const bgs = vertices.filter(v => v.type === 'BGS');
+    if (bgs.length < 2) return;
+    bondLines = buildSpatialLines(bgs, getBondThreshold(bgs), 0x333355, 0.5);
+    if (bondLines) scene.add(bondLines);
+}
+
+function buildFilaments() {
+    removeFilaments();
+    const bgs = vertices.filter(v => v.type === 'BGS');
+    if (bgs.length < 2) return;
+    filamentLines = buildSpatialLines(bgs, getBondThreshold(bgs) * 2.5, 0x0a0a5a, 0.25);
+    if (filamentLines) scene.add(filamentLines);
+}
+
+function removeBonds() { if (bondLines) { scene.remove(bondLines); bondLines.geometry.dispose(); bondLines = null; } }
+function removeFilaments() { if (filamentLines) { scene.remove(filamentLines); filamentLines.geometry.dispose(); filamentLines = null; } }
+
+function toggleBonds() {
+    showBonds = !showBonds;
+    document.getElementById('btn-bonds').classList.toggle('active', showBonds);
+    showBonds ? buildBonds() : removeBonds();
+}
+function toggleFilaments() {
+    showFilaments = !showFilaments;
+    document.getElementById('btn-filaments').classList.toggle('active', showFilaments);
+    showFilaments ? buildFilaments() : removeFilaments();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VIEW MODES
+// ═══════════════════════════════════════════════════════════════
+function applyMode() {
+    const btns = document.querySelectorAll('#type-toggles .toggle-btn');
+    if (currentMode === 'all') {
+        // Keep current toggle selections — don't override
+        scene.fog.density = 0.012;
+    } else if (currentMode === 'molecules') {
+        visibleTypes = new Set(['BGS']);
+        btns.forEach(b => b.classList.toggle('active', b.dataset.type === 'BGS'));
+        if (!showBonds) toggleBonds();
+        scene.fog.density = 0.008;
+    } else if (currentMode === 'cosmic') {
+        visibleTypes = new Set(['BGS']);
+        btns.forEach(b => b.classList.toggle('active', b.dataset.type === 'BGS'));
+        if (!showFilaments) toggleFilaments();
+        scene.fog.density = 0.005;
+    }
+    updateVisibility();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLICK / RAYCAST
+// ═══════════════════════════════════════════════════════════════
+renderer.domElement.addEventListener('click', function(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const bgsMesh = instancedMeshes['BGS'];
+    if (!bgsMesh || !bgsMesh.visible) return;
+    const hits = raycaster.intersectObject(bgsMesh);
+    if (hits.length > 0) {
+        const v = bgsMesh.userData.vertices[hits[0].instanceId];
+        showTooltip(v, event.clientX, event.clientY);
+    } else {
+        document.getElementById('tooltip').style.display = 'none';
+        clearHighlight();
+    }
+});
+
+function showTooltip(v, mx, my) {
+    clearHighlight();
+    const tip = document.getElementById('tooltip');
+    const bgs = vertices.filter(vv => vv.type === 'BGS');
+    const dists = bgs.map(vv => {
+        const dx=v.x-vv.x, dy=v.y-vv.y, dz=v.z-vv.z;
+        return Math.sqrt(dx*dx+dy*dy+dz*dz);
+    }).filter(d => d > 0.001).sort((a,b) => a-b);
+    const nNear = dists.filter(d => d < dists[0]*1.6).length;
+    tip.style.display = 'block';
+    tip.style.left = (mx+16)+'px'; tip.style.top = (my+16)+'px';
+    tip.innerHTML = `<b style="color:#ffd700">BGS Vertex</b><br>
+        (${v.x.toFixed(3)}, ${v.y.toFixed(3)}, ${v.z.toFixed(3)})<br>
+        Neighbors: ${nNear} · Nearest: ${dists[0]?.toFixed(4) || '—'}<br>
+        <span style="color:#555">${nNear<=2?'linear':nNear===3?'sp² planar':nNear===4?'sp³ tetrahedral':nNear+'-fold'}</span>`;
+
+    // Highlight sphere
+    const geo = new THREE.SphereGeometry(sizeMul*0.25, 20, 14);
+    const mat = new THREE.MeshBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.4, wireframe: true });
+    highlightMesh = new THREE.Mesh(geo, mat);
+    highlightMesh.position.set(v.x, v.y, v.z);
+    scene.add(highlightMesh);
+}
+
+function clearHighlight() {
+    if (highlightMesh) { scene.remove(highlightMesh); highlightMesh.geometry.dispose(); highlightMesh = null; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVOLUTION ENGINE (client-side controls, server-side computation)
+// ═══════════════════════════════════════════════════════════════
+async function startEvolution() {
+    const btn = document.getElementById('btn-evolve');
+    if (evoFrames) { togglePlayback(); return; }
+
+    btn.textContent = 'Computing...';
+    btn.classList.add('active');
+    document.getElementById('evolve-progress').style.display = 'block';
+
+    // Start server-side evolution
+    const resp = await fetch('/api/evolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            n_half: currentNHalf,
+            n_steps: currentNHalf <= 4 ? 5000 : 3000,
+            perturbation: 0.02,
+            damping: 0.9985,
+            bracket: currentBracket,
+        })
+    });
+
+    if (!resp.ok) {
+        const err = await resp.json();
+        btn.textContent = 'EVOLVE';
+        btn.classList.remove('active');
+        alert(err.error || 'Evolution failed');
+        return;
+    }
+
+    // Poll for completion
+    pollEvolution();
+}
+
+async function pollEvolution() {
+    const resp = await fetch('/api/evolve/status');
+    const status = await resp.json();
+
+    document.getElementById('progress-fill').style.width = (status.progress * 100) + '%';
+    document.getElementById('progress-text').textContent =
+        `${Math.round(status.progress * 100)}% — strain minimization...`;
+
+    if (status.error) {
+        document.getElementById('progress-text').textContent = `Error: ${status.error}`;
+        document.getElementById('btn-evolve').textContent = 'EVOLVE';
+        document.getElementById('btn-evolve').classList.remove('active');
+        return;
+    }
+
+    if (status.running) {
+        setTimeout(pollEvolution, 500);
+        return;
+    }
+
+    // Done — fetch frames
+    document.getElementById('progress-text').textContent = 'Loading frames...';
+    const framesResp = await fetch('/api/evolve/frames?stride=1');
+    const data = await framesResp.json();
+
+    evoFrames = data.frames;
+    evoTypes = data.types;
+    evoSteps = data.steps;
+    evoMetrics = data.metrics;
+    evoFinalGamma = data.final_gamma;
+    evoFrameIdx = 0;
+
+    // Show controls
+    document.getElementById('evolve-progress').style.display = 'none';
+    document.getElementById('btn-evolve').textContent = 'EVOLVE';
+    document.getElementById('btn-evolve').classList.remove('active');
+    document.getElementById('btn-play').style.display = '';
+    document.getElementById('btn-reset-evo').style.display = '';
+    document.getElementById('speed-row').style.display = '';
+    document.getElementById('timeline').style.display = '';
+    document.getElementById('evolve-hud').style.display = '';
+    document.getElementById('timeline-scrub').max = evoFrames.length - 1;
+
+    if (evoFinalGamma != null) {
+        document.getElementById('hud-gamma').textContent = evoFinalGamma.toFixed(3);
+    }
+
+    // Show bracket info in HUD
+    const bracketLabel = BRACKET_LABELS[currentBracket] || ('bz=' + currentBracket);
+    document.getElementById('hud-bracket').textContent = currentBracket + ' (' + bracketLabel + ')';
+    const PHI = (1 + Math.sqrt(5)) / 2;
+    const bOff = (currentBracket - 119) / 50;
+    const dsRatio = Math.pow(PHI, 4*bOff) / Math.pow(PHI, -5*bOff);
+    const shapeStr = dsRatio < 0.5 ? 'spherical' : dsRatio < 2 ? 'oblate' : dsRatio < 10 ? 'disc' : 'filamentary';
+    document.getElementById('hud-shape').textContent = shapeStr + ' (' + dsRatio.toFixed(1) + ')';
+
+    // Keep current view mode — show all vertex types during evolution
+    // Ensure bonds are visible
+    if (!showBonds) toggleBonds();
+
+    // Apply first frame
+    applyEvolutionFrame(0);
+
+    // Auto-play
+    togglePlayback();
+}
+
+function applyEvolutionFrame(idx) {
+    if (!evoFrames || idx >= evoFrames.length) return;
+
+    const frame = evoFrames[idx];
+    const N = frame.length;
+
+    // Update vertices array from frame data
+    vertices = [];
+    for (let i = 0; i < N; i++) {
+        vertices.push({
+            x: frame[i][0], y: frame[i][1], z: frame[i][2],
+            type: evoTypes[i]
+        });
+    }
+
+    // Rebuild meshes with new positions (respects current type toggles)
+    rebuildMeshes();
+
+    // Update HUD
+    if (evoMetrics && evoMetrics[idx]) {
+        const m = evoMetrics[idx];
+        document.getElementById('hud-step').textContent = evoSteps[idx] || idx;
+        document.getElementById('hud-strain').textContent = m.total_strain?.toFixed(3) || '—';
+        document.getElementById('hud-clustering').textContent = m.clustering?.toFixed(3) || '—';
+        document.getElementById('hud-void').textContent = (m.void_fraction * 100).toFixed(1) + '%';
+        document.getElementById('hud-cluster').textContent = (m.max_cluster_frac * 100).toFixed(1) + '%';
+    }
+
+    // Update timeline
+    document.getElementById('timeline-scrub').value = idx;
+    const stepNum = evoSteps[idx] || 0;
+    const totalSteps = evoSteps[evoSteps.length-1] || 1;
+    document.getElementById('timeline-label').textContent =
+        `Step ${stepNum} / ${totalSteps}`;
+
+    // Update status
+    const nBgs = vertices.filter(v => v.type === 'BGS').length;
+    document.getElementById('status').textContent =
+        `Evolving · Step ${stepNum} · ${nBgs} BGS vertices · Frame ${idx+1}/${evoFrames.length}`;
+}
+
+function togglePlayback() {
+    evoPlaying = !evoPlaying;
+    document.getElementById('btn-play').textContent = evoPlaying ? 'Pause' : 'Play';
+    document.getElementById('btn-play').classList.toggle('active', evoPlaying);
+    if (evoPlaying) controls.autoRotate = true;
+}
+
+function resetEvolution() {
+    evoPlaying = false;
+    evoFrames = null;
+    evoTypes = null;
+    evoSteps = null;
+    evoMetrics = null;
+    evoFrameIdx = 0;
+    evoFinalGamma = null;
+
+    document.getElementById('btn-play').style.display = 'none';
+    document.getElementById('btn-reset-evo').style.display = 'none';
+    document.getElementById('speed-row').style.display = 'none';
+    document.getElementById('timeline').style.display = 'none';
+    document.getElementById('evolve-hud').style.display = 'none';
+    document.getElementById('evolve-progress').style.display = 'none';
+    document.getElementById('btn-play').classList.remove('active');
+    controls.autoRotate = false;
+
+    loadVertices(currentNHalf);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CAMERA
+// ═══════════════════════════════════════════════════════════════
+function resetCamera() { camera.position.set(20, 14, 20); controls.target.set(0,0,0); controls.update(); }
+function autoRotate() { controls.autoRotate = !controls.autoRotate; }
+
+function updateStatus() {
+    const counts = {};
+    for (const v of vertices) counts[v.type] = (counts[v.type]||0) + 1;
+    const bgs = counts['BGS'] || 0;
+    document.getElementById('status').textContent =
+        `N_half=${currentNHalf} · ${vertices.length.toLocaleString()} vertices · ${bgs} BGS (${(bgs/vertices.length*100).toFixed(1)}%)`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER LOOP
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+function animate(time) {
+    requestAnimationFrame(animate);
+    controls.update();
+    pointLight.position.copy(camera.position);
+
+    // Evolution playback
+    if (evoPlaying && evoFrames) {
+        const interval = 1000 / evoSpeed;
+        if (time - evoLastTime > interval) {
+            evoLastTime = time;
+            evoFrameIdx++;
+            if (evoFrameIdx >= evoFrames.length) {
+                evoFrameIdx = evoFrames.length - 1;
+                evoPlaying = false;
+                document.getElementById('btn-play').textContent = 'Play';
+                document.getElementById('btn-play').classList.remove('active');
+            }
+            applyEvolutionFrame(evoFrameIdx);
+        }
+    }
+
+    renderer.render(scene, camera);
+}
+animate(0);
+
+// ═══════════════════════════════════════════════════════════════
+// INITIAL LOAD
+// ═══════════════════════════════════════════════════════════════
+loadVertices(3);
+</script>
+</body>
+</html>
