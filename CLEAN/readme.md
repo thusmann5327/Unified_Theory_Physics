@@ -452,6 +452,23 @@ Key results:
 - Sub-face sequence {2,3,3,3,3,4,5} sums to 23
 - Tetrahedral sp³ angle from merged normals: 106.9° (2.5° from 109.5°)
 
+### geometry/qc_bonds.py
+
+Bond energies and molecular geometry from quasicrystal tile face analysis:
+
+- `classify_faces_orbital(normals, five_fold)` — capacity-ranked s/p/d/f assignment by 5-fold alignment
+- `bond_energy(face_orbital, face_area, mean_area)` — E = E_bracket × mode_factor × (area/mean)
+- `predict_bond_energies()` — zero-parameter predictions for C-C, C=C, C≡C, O-H, H-H
+- `build_bgs_graph(cells, bgs_set)` — BGS-BGS neighbor edges and coordination numbers
+- `find_tetrahedral_clusters(cells, bgs_set)` — sp³ geometry search in tile neighbor graph
+- `find_water_geometry(cells, bgs_set, depth_map)` — H₂O-like angle search
+- `correlation_function(pts)` — two-point ξ(r) with power-law fit
+
+Key results:
+- C-C single: θ_leak × E_bracket = 3.58 eV (obs 3.61 eV, 0.7%)
+- C=C double: E_bracket = 6.36 eV (obs 6.35 eV, 0.1%)
+- Bond type determined by orbital face mediating the bond (s/p/d/f)
+
 ### geometry/discriminant.py
 
 The discriminant Pythagorean triangle:

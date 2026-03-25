@@ -1,0 +1,180 @@
+{
+  "n_points": 4401,
+  "n_cells": 2599,
+  "n_bgs": 405,
+  "bgs_fraction_pct": 15.58,
+  "mode_bgs_faces": 23,
+  "mode_vac_faces": 9,
+  "subshell_s": 2.0,
+  "subshell_p": 6.0,
+  "subshell_d": 10.0,
+  "subshell_f": 5.0,
+  "merge_mode": 7,
+  "subface_sequence": [
+    2,
+    3,
+    3,
+    3,
+    3,
+    4,
+    5
+  ],
+  "sp3_angle": 106.92,
+  "water_angle": 107.27,
+  "mean_bgs_coordination": 2.6,
+  "h2_bond_A": 0.777,
+  "water_oh_A": 0.739,
+  "water_angle_found": 116.6,
+  "bcc_dist_A": null,
+  "fcc_dist_A": null,
+  "galaxy_gamma": 2.604,
+  "omega_b": 0.04762,
+  "omega_dm": 0.26703,
+  "omega_de": 0.68535,
+  "n_exact": 6,
+  "n_sub5": 14,
+  "n_total": 20,
+  "runtime_s": 21.0,
+  "scorecard": [
+    [
+      "Atomic",
+      "s-faces/cell",
+      "2",
+      "2",
+      "exact"
+    ],
+    [
+      "Atomic",
+      "p-faces/cell",
+      "6",
+      "6",
+      "exact"
+    ],
+    [
+      "Atomic",
+      "d-faces/cell",
+      "10",
+      "10",
+      "exact"
+    ],
+    [
+      "Atomic",
+      "Heptahedron",
+      "7",
+      "7",
+      "exact"
+    ],
+    [
+      "Atomic",
+      "sp3 angle",
+      "106.92 deg",
+      "109.47 deg",
+      "2.3%"
+    ],
+    [
+      "Atomic",
+      "Water angle",
+      "107.27 deg",
+      "104.5 deg",
+      "2.7%"
+    ],
+    [
+      "Tiles",
+      "BGS fraction",
+      "15.58%",
+      "23.61%",
+      "34.0%"
+    ],
+    [
+      "Tiles",
+      "BGS face count",
+      "23",
+      "23",
+      "exact"
+    ],
+    [
+      "Tiles",
+      "Sub-face sum",
+      "23",
+      "23",
+      "exact"
+    ],
+    [
+      "Molecular",
+      "H2 bond",
+      "0.78 A",
+      "0.74 A",
+      "5.0%"
+    ],
+    [
+      "Molecular",
+      "H2O angle",
+      "116.6 deg",
+      "104.5 deg",
+      "11.5%"
+    ],
+    [
+      "Molecular",
+      "O-H length",
+      "0.74 A",
+      "0.96 A",
+      "23.0%"
+    ],
+    [
+      "Energy",
+      "C-C single",
+      "3.58 eV",
+      "3.61 eV",
+      "0.7%"
+    ],
+    [
+      "Energy",
+      "C=C double",
+      "6.36 eV",
+      "6.35 eV",
+      "0.1%"
+    ],
+    [
+      "Cosmo",
+      "Omega_b",
+      "0.0476",
+      "0.0486",
+      "2.0%"
+    ],
+    [
+      "Cosmo",
+      "Omega_DM",
+      "0.2670",
+      "0.265",
+      "0.8%"
+    ],
+    [
+      "Cosmo",
+      "Omega_DE",
+      "0.6853",
+      "0.685",
+      "0.1%"
+    ],
+    [
+      "Cosmo",
+      "Galaxy gamma",
+      "2.60",
+      "1.8",
+      "44.7%"
+    ],
+    [
+      "Fund.",
+      "alpha^-1",
+      "137.3",
+      "137.036",
+      "0.22%"
+    ],
+    [
+      "Fund.",
+      "BGS = 1/phi^3",
+      "15.58%",
+      "23.61%",
+      "34.0%"
+    ]
+  ]
+}

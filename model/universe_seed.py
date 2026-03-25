@@ -65,6 +65,7 @@ from geometry.voronoi_qc import (
     build_quasicrystal, assign_types, voronoi_cell_faces,
     analyze_bgs_geometry,
 )
+from geometry.qc_bonds import predict_bond_energies, E_BRACKET, THETA_LEAK
 
 
 # ═════════════════════════════════════════════════════════════════
@@ -642,6 +643,17 @@ def step9_tile_geometry():
     d_match = abs(sc.get('d', 0) - 10) < 0.5
     hepta = bgs['merge_mode'] == 7
 
+    # Bond energy predictions
+    bonds = predict_bond_energies()
+    cc_single = bonds['C-C_single']
+    cc_double = bonds['C=C_double']
+    cc_single_err = abs(cc_single['pred_eV'] - cc_single['obs_eV']) / cc_single['obs_eV'] * 100
+    cc_double_err = abs(cc_double['pred_eV'] - cc_double['obs_eV']) / cc_double['obs_eV'] * 100
+
+    print(f"\n  Bond energy predictions (from tile face geometry):")
+    print(f"    C-C single: {cc_single['pred_eV']:.2f} eV (obs {cc_single['obs_eV']}, err {cc_single_err:.1f}%)")
+    print(f"    C=C double: {cc_double['pred_eV']:.2f} eV (obs {cc_double['obs_eV']}, err {cc_double_err:.1f}%)")
+
     return {
         'n_points': len(pts),
         'n_cells': len(cells),
@@ -658,6 +670,10 @@ def step9_tile_geometry():
         'subface_seq': bgs['subface_sequence'],
         'tet_angle': bgs['tetrahedral_angle'],
         'tet_error': bgs['tet_error'],
+        'cc_single_pred': cc_single['pred_eV'],
+        'cc_single_err': cc_single_err,
+        'cc_double_pred': cc_double['pred_eV'],
+        'cc_double_err': cc_double_err,
     }
 
 
@@ -756,6 +772,14 @@ def unified_scorecard(atomic, nuclear, forces, cosmo, thop, lattice, tiles=None)
             tet_err_pct = abs(tiles['tet_error'] / 109.47 * 100)
             rows.append(('3D Tile', 'sp³ angle',
                          f"{tiles['tet_angle']:.1f}°", '109.47°', f"{tet_err_pct:.1f}%"))
+        if tiles.get('cc_single_pred'):
+            rows.append(('3D Tile', 'C-C single',
+                         f"{tiles['cc_single_pred']:.2f} eV", '3.61 eV',
+                         f"{tiles['cc_single_err']:.1f}%"))
+        if tiles.get('cc_double_pred'):
+            rows.append(('3D Tile', 'C=C double',
+                         f"{tiles['cc_double_pred']:.2f} eV", '6.35 eV',
+                         f"{tiles['cc_double_err']:.1f}%"))
 
     print()
     print(f"  {'Scale':<11} {'Measurement':<22} {'Model':>14} {'Real':>18} {'Error':>10}")

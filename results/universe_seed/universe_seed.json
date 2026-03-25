@@ -63,6 +63,35 @@
     "shift_identity": true,
     "sectors_fibonacci": true
   },
+  "tiles": {
+    "n_points": 4401,
+    "n_cells": 2599,
+    "n_bgs": 405,
+    "subshell_s": 2.0,
+    "subshell_p": 6.0,
+    "subshell_d": 10.0,
+    "subshell_f": 5.0,
+    "s_match": true,
+    "p_match": true,
+    "d_match": true,
+    "merge_mode": 7,
+    "heptahedron": true,
+    "subface_seq": [
+      2,
+      3,
+      3,
+      3,
+      3,
+      4,
+      5
+    ],
+    "tet_angle": 106.9217706272268,
+    "tet_error": 2.548229372773193,
+    "cc_single_pred": 3.5847839999999995,
+    "cc_single_err": 0.6985041551246635,
+    "cc_double_pred": 6.356,
+    "cc_double_err": 0.09448818897638155
+  },
   "tiling_vertices": 7962,
-  "runtime_seconds": 0.0
+  "runtime_seconds": 18.8
 }
