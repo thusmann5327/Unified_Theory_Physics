@@ -554,6 +554,183 @@ def run_tests():
           ppe['lepton_additivity']['consistent'])
 
     # ═══════════════════════════════════════════════════════════════
+    # 10. AUFBAU BRIDGE — Subshell capacities from Cantor layers
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  10. AUFBAU BRIDGE")
+    print("  " + "-" * 60)
+
+    from aufbau_bridge.angular import (
+        angular_modes, subshell_capacity, all_layers,
+        verify_uniqueness, F7, LAYER_RATIOS
+    )
+    from aufbau_bridge.madelung import (
+        madelung_sequence, z_max_prediction, MADELUNG_CAPACITIES
+    )
+
+    # F(7) = 13 = Δ₃
+    check("F(7) = 13 = bronze discriminant",
+          F7 == 13)
+
+    # Each layer rounds correctly
+    for l in range(4):
+        am = angular_modes(l)
+        check(f"R({am['layer']}) × 13 = {am['R_times_13']:.2f} → "
+              f"{am['predicted_2l1']} = 2×{l}+1",
+              am['match'],
+              f"got {am['predicted_2l1']}, expected {am['expected_2l1']}")
+
+    # Subshell capacities
+    caps = [subshell_capacity(l) for l in range(4)]
+    check(f"Capacities = {caps} = [2, 6, 10, 14]",
+          caps == [2, 6, 10, 14])
+
+    # Full Madelung sequence
+    seq = madelung_sequence()
+    check(f"Full Madelung: {seq['total']} electrons, 19 subshells",
+          seq['all_match'] and seq['total'] == 118)
+
+    # Z_max consistency
+    zp = z_max_prediction()
+    check(f"Z_max(D×D_s) = {zp['z_spectrum']:.1f} vs 118 ({zp['spectrum_error_pct']}%)",
+          zp['spectrum_error_pct'] < 2.0)
+
+    check("Z_max(Aufbau) = 118 exact",
+          zp['aufbau_match'])
+
+    # k=13 uniqueness or best fit
+    valid_k = verify_uniqueness(30)
+    k13_err = next(err for k, err in valid_k if k == 13)
+    is_best = all(k13_err <= err for _, err in valid_k)
+    check(f"k=13 best among valid k's (err {k13_err:.1f}%)",
+          is_best or len(valid_k) == 1)
+
+    # Mean error < 7% (all four layers)
+    mean_err = sum(angular_modes(l)['error_pct'] for l in range(4)) / 4
+    check(f"Mean layer error = {mean_err:.1f}% (< 7%)",
+          mean_err < 7.0)
+
+    # ═══════════════════════════════════════════════════════════════
+    # 11. ABSOLUTE MASS — m_e from attosecond bridge
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  11. ABSOLUTE MASS")
+    print("  " + "-" * 60)
+
+    from absolute_mass.bridge import (
+        K_BRIDGE, A_LATTICE, T_HOP, ALPHA_PRED,
+        predict_bohr_radius, predict_electron_mass, predict_proton_mass,
+        alternative_K_formulas,
+    )
+    from absolute_mass.propagate import mass_table
+
+    # K = 24/φ³
+    from core.constants import PHI as _PHI
+    check("K = 24/phi^3 = 5.666",
+          abs(K_BRIDGE - 24.0 / _PHI**3) < 1e-10)
+
+    # Bohr radius
+    aB = predict_bohr_radius()
+    check(f"a_B = {aB['a_B_predicted']:.6e} m ({aB['error_pct']:.3f}%)",
+          aB['error_pct'] < 0.05)
+
+    # Electron mass
+    me = predict_electron_mass()
+    check(f"m_e = {me['m_e_predicted']:.4e} kg ({me['error_pct']:.3f}%)",
+          me['error_pct'] < 0.5)
+
+    # Proton mass
+    mp = predict_proton_mass()
+    check(f"m_p/m_e = {mp['mp_me_framework']:.1f} vs {mp['mp_me_observed']:.1f} "
+          f"({mp['mp_me_error_pct']:.2f}%)",
+          mp['mp_me_error_pct'] < 0.5)
+
+    # Full mass table
+    mt = mass_table()
+
+    check(f"tau mass ({mt['tau']['error_pct']:.2f}%)",
+          mt['tau']['error_pct'] < 1.0)
+
+    check(f"W boson mass ({mt['W_boson']['error_pct']:.2f}%)",
+          mt['W_boson']['error_pct'] < 1.0)
+
+    check(f"Z boson mass ({mt['Z_boson']['error_pct']:.2f}%)",
+          mt['Z_boson']['error_pct'] < 1.0)
+
+    check(f"Higgs mass ({mt['Higgs']['error_pct']:.2f}%)",
+          mt['Higgs']['error_pct'] < 1.0)
+
+    # Alternative K formulas exist
+    alts = alternative_K_formulas()
+    n_good = sum(1 for a in alts if a['error_pct'] < 0.3)
+    check(f"Multiple K routes: {n_good} formulas within 0.3%",
+          n_good >= 3)
+
+    # Independence: only 1 empirical input (t_hop)
+    check("a_lattice = c * t_hop (no a_B input)",
+          abs(A_LATTICE - 299792458 * 1e-18) < 1e-15)
+
+    # ═══════════════════════════════════════════════════════════════
+    # 12. NUCLEAR — Shell structure from Cantor spectral ratios
+    # ═══════════════════════════════════════════════════════════════
+    print()
+    print("  12. NUCLEAR (under development)")
+    print("  " + "-" * 60)
+
+    from nuclear.shells import (
+        NUCLEAR_MAGIC, HO_MAGIC,
+        ho_shell_capacities, spin_orbit_detachment, magic_fibonacci_proximity,
+    )
+    from nuclear.scale import bracket_gap, zeckendorf, zeckendorf_compactness
+
+    # HO shell capacities = 2 × triangular numbers
+    ho = ho_shell_capacities()
+    check("HO capacities = n(n+1) = 2×T(n)",
+          all(h['capacity'] == h['shell'] * (h['shell'] + 1) for h in ho))
+
+    # Spin-orbit detachment
+    so = spin_orbit_detachment()
+    check("Detach capacities = [10, 12, 14] (arithmetic, step 2)",
+          so['capacities'] == [10, 12, 14] and so['is_arithmetic'])
+
+    check(f"Detach starts at d-capacity = {so['d_capacity']}",
+          so['starts_at_d_capacity'])
+
+    # Magic numbers 2 and 8 are exact Fibonacci
+    mfp = magic_fibonacci_proximity()
+    exact_fibs = [r for r in mfp if r['is_exact']]
+    exact_vals = sorted(r['magic'] for r in exact_fibs)
+    check("2 and 8 are exact Fibonacci magic numbers",
+          2 in exact_vals and 8 in exact_vals)
+
+    # 20 is within 1 of F(8) = 21
+    m20 = next(r for r in mfp if r['magic'] == 20)
+    check("Magic 20 within 1 of F(8) = 21",
+          abs(m20['offset']) <= 1)
+
+    # Bracket gap ≈ F(8) = 21
+    bg = bracket_gap()
+    check(f"Bracket gap mean ≈ 21 = F(8) (got {bg['mean_gap']})",
+          bg['nearest_fib_to_mean'] == 21)
+
+    check("Bracket gap decreases with Z (H > Z=100)",
+          bg['gaps'][0][1] > bg['gaps'][99][1])
+
+    # Zeckendorf
+    z126 = zeckendorf(126)
+    check(f"Zeckendorf(126) = {z126} (3 terms)",
+          len(z126) == 3 and sum(z126) == 126)
+
+    z294 = zeckendorf(294)
+    check("Zeckendorf(294) = [233, 55, 5, 1]",
+          z294 == [233, 55, 5, 1])
+
+    # Zeckendorf compactness: 126 most compact among island candidates
+    zc = zeckendorf_compactness()
+    check("126 most compact Zeckendorf among island candidates",
+          126 in zc['most_compact'])
+
+    # ═══════════════════════════════════════════════════════════════
     # SUMMARY
     # ═══════════════════════════════════════════════════════════════
     print()

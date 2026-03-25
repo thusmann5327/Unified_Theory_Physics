@@ -1,0 +1,43 @@
+{
+  "fibonacci_shift_identity": {
+    "all_match": true,
+    "description": "round(F(k)/phi^4) = F(k-4) for k >= 5"
+  },
+  "sector_partition": {
+    "D_233": [
+      55,
+      34,
+      55,
+      34,
+      55
+    ],
+    "pattern": "F(n-3)|F(n-4)|F(n-3)|F(n-4)|F(n-3)",
+    "lattices_matching": 6,
+    "lattices_tested": 7
+  },
+  "z_max_derivation": {
+    "n_spatial": 123,
+    "collapse": 5,
+    "z_max": 118,
+    "formula": "2F(9) + F(10) - F(5)"
+  },
+  "z_d_limit": {
+    "value": 0.50657781,
+    "formula": "1 - 2/phi^3 - 1/phi^8",
+    "collapse_is_leak_squared": true
+  },
+  "uniqueness": {
+    "D_233_is_unique": true,
+    "reason": "k=13 is only aufbau multiplier; D=F(k)=F(13)=233",
+    "self_referential": "F(F(7)) = F(13) = 233"
+  },
+  "three_routes_to_118": {
+    "route_1_D_Ds": 116.5,
+    "route_2_aufbau": 118,
+    "route_3_fibonacci": 118,
+    "routes_2_3_match": true
+  },
+  "derivation_chain": "8/8",
+  "tests_passed": 9,
+  "tests_total": 9
+}

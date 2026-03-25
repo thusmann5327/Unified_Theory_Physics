@@ -1,0 +1,58 @@
+{
+  "grid_params": {
+    "gold_dirs": 5,
+    "silver_dirs": 4,
+    "bronze_dirs": 13,
+    "gold_spacing": 1.0,
+    "silver_spacing": 0.4142,
+    "bronze_spacing": 0.3028
+  },
+  "vertex_counts": {
+    "B": 647,
+    "BG": 2341,
+    "BGS": 1189,
+    "BS": 1802,
+    "G": 591,
+    "GS": 1165,
+    "S": 227
+  },
+  "vertex_fractions": {
+    "B": 0.081261,
+    "BG": 0.294022,
+    "BGS": 0.149334,
+    "BS": 0.226325,
+    "G": 0.074228,
+    "GS": 0.14632,
+    "S": 0.02851
+  },
+  "total_vertices": 7962,
+  "corrected_analysis": {
+    "GS_fraction": 0.14632,
+    "GS_vs_LEAK": 0.3,
+    "LEAK": 0.145898,
+    "W4": 0.047617
+  },
+  "collapse_analysis": {
+    "G1": 0.3243,
+    "LEAK_x_G1": 0.047315,
+    "LEAK_x_G1_vs_W4_pct": 0.6,
+    "walls_GB_BS": 0.520347,
+    "conduit_dm_walls_x_G1": 0.168749,
+    "local_dm_LEAK_minus_W4": 0.098281,
+    "total_dm_pred": 0.267029,
+    "total_dm_vs_planck_pct": 0.8,
+    "de_pred": 0.685353,
+    "de_vs_planck_pct": 0.1
+  },
+  "sigma3_ratios": {
+    "bronze_over_gold": 1.6695,
+    "gold_over_silver": 1.3801,
+    "phi": 1.618,
+    "sqrt2": 1.4142
+  },
+  "e_bracket_vs_cc": 0.09,
+  "bcc_fcc_ratio": 1.639,
+  "n_tile_types": 83,
+  "tests_passed": 12,
+  "tests_total": 12
+}

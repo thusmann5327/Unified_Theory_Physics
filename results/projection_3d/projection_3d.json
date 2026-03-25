@@ -1,0 +1,46 @@
+{
+  "sector_counts": [
+    55,
+    34,
+    55,
+    34,
+    55
+  ],
+  "sector_names": [
+    "\u03c3\u2081 (dark\u2212)",
+    "\u03c3\u2082 (inner)",
+    "\u03c3\u2083 (core)",
+    "\u03c3\u2084 (outer)",
+    "\u03c3\u2085 (dark+)"
+  ],
+  "n_spatial": 123,
+  "n_energy": 110,
+  "total": 233,
+  "Z_max_comparison": {
+    "n_spatial": 123,
+    "Z_max": 118,
+    "difference": 5,
+    "error_pct": 4.24
+  },
+  "inter_layer_ratios": {
+    "sigma2_over_sigma1": 2.7287,
+    "sigma3_over_sigma2": 1.815,
+    "sigma4_over_sigma3": 1.1019,
+    "sigma5_over_sigma4": 1.4084
+  },
+  "danzer_matches": {
+    "ratio_1_vs_2phi": 18.59,
+    "ratio_3_vs_rho6": 1.67
+  },
+  "cosmic_phi_ratios": {
+    "50_30": 1.6667,
+    "150_30": 5.0,
+    "150_50": 3.0
+  },
+  "inflation_n_for_Wb": 2.914,
+  "mean_magic_correction": 0.8963,
+  "sqrt_RC": 0.9242,
+  "inverse_T3T4": 0.9075,
+  "tests_passed": 8,
+  "tests_total": 10
+}

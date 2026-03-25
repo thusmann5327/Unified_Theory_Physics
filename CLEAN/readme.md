@@ -51,6 +51,18 @@ CLEAN/
 │   ├── electroweak.py        sin²θ_W, M_W, M_Z, M_H, α_s from δ₇
 │   └── mixing.py             Cabibbo angle, CKM matrix elements
 │
+├── absolute_mass/            Derive m_e from spectrum + attosecond bridge
+│   ├── bridge.py            K = 24/φ³, Bohr radius, electron mass
+│   └── propagate.py         All particle masses from derived m_e
+│
+├── aufbau_bridge/            Subshell capacities from Cantor layers
+│   ├── angular.py           2l+1 = round(R_layer × F(7)) mapping
+│   └── madelung.py          Full 19-subshell sequence reconstruction
+│
+├── nuclear/                  Nuclear shell structure (UNDER DEVELOPMENT)
+│   ├── shells.py            Magic numbers, HO shells, spin-orbit detachment
+│   └── scale.py             Bracket gap analysis, Zeckendorf compactness
+│
 ├── engine/                   Material property predictions
 │   ├── gate_overflow.py      G(Z) = the error IS the prediction
 │   ├── bond_lengths.py       Additive r_cov, cross-scale matches
@@ -67,7 +79,7 @@ CLEAN/
 │   └── discriminant_cones.py Three cone angles, σ₄ identity
 │
 └── tests/
-    └── test_all.py           95 verification tests across all modules
+    └── test_all.py           126 verification tests across all modules
 ```
 
 ---
@@ -178,6 +190,92 @@ CKM mixing angles from spectral ratios:
 - `cabibbo_angle()` — sin(θ_C) ≈ 3/13 (2.28%)
 - `ckm_elements()` — |V_us|, |V_cb|, |V_ub| predictions
 
+### absolute_mass/bridge.py
+
+The attosecond bridge to absolute mass:
+
+- `predict_bohr_radius()` — a_B = c × t_hop / K, where K = 24/φ³ (0.007%)
+- `predict_electron_mass()` — m_e = ℏK/(a_lat × c × α) (0.23%)
+- `predict_proton_mass()` — m_p = m_e × 3Dφ² (0.55% absolute)
+- `alternative_K_formulas()` — 7 independent routes to K, all within 0.3%
+
+| Input | Source | Type |
+|-------|--------|------|
+| φ | Axiom | Mathematical |
+| N, W | AAH eigensolver | Derived |
+| t_hop = 1 as | TU Wien measurement | One measurement |
+| ℏ, c | SI 2019 definitions | Exact |
+
+No empirical m_e or a_B anywhere in the chain.
+
+### absolute_mass/propagate.py
+
+All particle masses from the derived m_e:
+
+| Particle | Formula | Error |
+|----------|---------|-------|
+| electron | ℏK/(a_lat×c×α) | 0.23% |
+| proton | m_e × 3Dφ² | 0.55% |
+| tau | m_μ × W × 36 | 0.23% |
+| W boson | m_p × φ²W⁻²δ₇ | 0.12% |
+| Z boson | m_p × W⁻⁵δ₃⁻¹δ₇ | 0.11% |
+| Higgs | m_p × φ²δ₇² | 0.12% |
+
+### aufbau_bridge/angular.py
+
+Layer-to-angular-momentum mapping via the Aufbau bridge formula:
+
+- `angular_modes(l)` — R_layer × F(7) → 2l+1 with error analysis
+- `subshell_capacity(l)` — 2 × round(R_layer × 13) = {2, 6, 10, 14}
+- `all_layers()` — info for all four layers
+- `verify_uniqueness(k_max)` — test which k values produce {1, 3, 5, 7}
+
+| Layer | R | R × 13 | 2l+1 | Capacity | Orbital |
+|-------|------|--------|------|----------|---------|
+| σ₃ core | 0.0728 | 0.95 | 1 | 2 | s |
+| σ₂ inner | 0.199 | 2.58 | 3 | 6 | p |
+| σ_wall | 0.397 | 5.16 | 5 | 10 | d |
+| σ₄ outer | 0.559 | 7.27 | 7 | 14 | f |
+
+F(7) = 13 = Δ₃ (bronze discriminant) = 5 + 8. The same number that proves
+three spatial dimensions is the scaling factor for angular mode counts.
+
+### aufbau_bridge/madelung.py
+
+Full Madelung sequence reconstruction:
+
+- `madelung_sequence()` — 19 subshells, Z = 118, all capacities from R × 13
+- `z_max_prediction()` — Z_max from D × D_s = 116.5 and from Aufbau sum = 118
+
+### nuclear/shells.py (UNDER DEVELOPMENT)
+
+Nuclear shell structure from Cantor spectral ratios:
+
+- `ho_shell_capacities()` — HO shell capacities = n(n+1) = 2 × triangular numbers
+- `spin_orbit_detachment()` — detaching sublevel capacities 10, 12, 14 (arithmetic, step 2)
+- `magic_fibonacci_proximity()` — distance from each magic number to nearest Fibonacci
+
+| Magic | Nearest F | Offset | Exact? |
+|-------|-----------|--------|--------|
+| 2 | F(3) = 2 | 0 | Yes |
+| 8 | F(6) = 8 | 0 | Yes |
+| 20 | F(8) = 21 | -1 | No |
+| 28 | F(8) = 21 | +7 | No |
+| 50 | F(10) = 55 | -5 | No |
+| 82 | F(11) = 89 | -7 | No |
+| 126 | F(12) = 144 | -18 | No |
+
+### nuclear/scale.py (UNDER DEVELOPMENT)
+
+Nuclear-to-atomic scale transition analysis:
+
+- `bracket_gap()` — bracket address gap between nuclear and atomic radii ≈ F(8) = 21
+- `zeckendorf(n)` — non-adjacent Fibonacci decomposition
+- `zeckendorf_compactness()` — island of stability prediction via Fibonacci alignment
+
+126 has the most compact Zeckendorf representation (3 terms: 89 + 34 + 3) among
+island-of-stability candidates (114, 120, 126, 184), predicting enhanced stability.
+
 ### cosmology/predictions.py
 
 Four hierarchy predictions from three constants (phi, W, N):
@@ -268,7 +366,7 @@ The discriminant Pythagorean triangle:
 
 ## Test Coverage
 
-95 tests across 9 sections:
+126 tests across 12 sections:
 
 | Section | Tests | What it verifies |
 |---------|-------|-----------------|
@@ -281,6 +379,9 @@ The discriminant Pythagorean triangle:
 | Engine | 10 | Gate overflow, bond R², cross-scale, hardness, transport, g-factor |
 | Cone Geometry | 4 | Three angles, leak ~29°, baseline ~45°, σ₄ identity |
 | Particles | 12 | t/c=136, Koide=2/3, τ/μ=W×36, sin²θ_W, M_W, M_H, α_s, CKM |
+| Aufbau Bridge | 11 | R×13 rounds to {1,3,5,7}, capacities, full Madelung, Z=118 |
+| Absolute Mass | 10 | K=24/φ³, a_B 0.007%, m_e 0.23%, all boson masses <0.2% |
+| Nuclear (dev) | 10 | HO shells, spin-orbit, magic/Fibonacci, bracket gap, Zeckendorf |
 
 ---
 
@@ -294,7 +395,8 @@ from the Hubble radius to the proton.
 The gap fraction W = 0.467 generates the cosmological energy budget (Omega_DE = W^2+W),
 the fine structure constant (1/alpha = 294*W), the gravity hierarchy ((sqrt(1-W^2)/phi)^136),
 and the cosmological constant ((1/phi)^588).
-The discriminant Fibonacci chain 5+8=13 proves exactly three spatial dimensions.
+The discriminant Fibonacci chain 5+8=13 proves exactly three spatial dimensions
+and — via 2l+1 = round(R_layer × 13) — generates the Madelung subshell capacities {2, 6, 10, 14}.
 The crossover operator f_dec(x) = ((x-r_c)/(1-r_c))^4 solves the 40-year-old N-SmA
 universality problem and predicts quantum Hall scaling.
 All from one equation. Zero free parameters.

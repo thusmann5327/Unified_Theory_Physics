@@ -1,0 +1,32 @@
+TRIPLE METALLIC MEAN TILING — CORRECTED SCORECARD
+====================================================
+Date: March 24, 2026
+
+KEY INSIGHT: Tiling = pre-collapse 5-band state.
+Cosmological budget = tiling vertex fractions × G1.
+G1 = 0.3243 = first σ₃ sub-gap = collapse transmission.
+
+5→3 COLLAPSE CHAIN:
+  GS = LEAK = 1/φ⁴:           14.632% vs 14.590%  (0.3%)  PASS
+  LEAK × G1 = W⁴ = Ω_b:       4.731% vs 4.762%  (0.6%)  PASS
+  (LEAK-W⁴) + (GB+BS)×G1 = Ω_DM: 26.703% vs 26.500%  (0.8%)  PASS
+  Remainder = Ω_DE:            68.535% vs 68.500%  (0.1%)  PASS
+
+FULL VERTEX HIERARCHY (pre-collapse):
+  G only:   7.423%   (≈ R_MATTER = 7.28%)
+  S only:   2.851%   (≈ silver σ₃ = 2.80%)
+  B only:   8.126%
+  GS:       14.632%   = LEAK (gate transmission)
+  GB:       29.402%   (conduit wall σ₂ analog)
+  BS:       22.633%   (conduit wall σ₄ analog)
+  GSB:      14.933%   ≈ LEAK (pre-collapse)
+  Sum:      100.000%
+
+OTHER CONFIRMATIONS:
+  BCC/FCC = φ:       ratio 1.639 (1.3%)
+  E_bracket = C=C:   0.09%
+  Bronze/Gold σ₃ ≈ φ: 3.2%
+  Gold/Silver σ₃ ≈ √2: 2.4%
+  G only ≈ R_MATTER:  2.0%
+
+TESTS: 12/12 passed
