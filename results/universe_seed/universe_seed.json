@@ -1,0 +1,68 @@
+{
+  "atomic": {
+    "n_elements": 92,
+    "mean_error": 5.0,
+    "within_10_pct": 86,
+    "within_20_pct": 90,
+    "d_block_mean": 3.1,
+    "z_max": 118,
+    "n_subshells": 19
+  },
+  "nuclear": {
+    "magic_all_match": true,
+    "magic_predicted": [
+      2,
+      8,
+      20,
+      28,
+      50,
+      82,
+      126
+    ],
+    "magic_8": 184,
+    "ho_all_2T": true,
+    "so_arithmetic": true
+  },
+  "forces": {
+    "alpha_inv": 137.337,
+    "alpha_inv_err": 0.22,
+    "alpha_s": 0.11796,
+    "alpha_s_err": 0.054,
+    "gravity_log": -35.7,
+    "gravity_err": 1.1,
+    "bond_R2": 0.9,
+    "cc_double_pred": 6.68,
+    "cc_double_err": 5.1,
+    "cc_single_pred": 4.13
+  },
+  "cosmology": {
+    "omega_de": 0.6853,
+    "omega_dm": 0.267,
+    "omega_b": 0.04762,
+    "omega_de_err": 0.05,
+    "omega_dm_err": 0.4,
+    "omega_b_err": 2.8,
+    "tiling_b_err": 0.6,
+    "tiling_dm_err": 0.8,
+    "tiling_de_err": 0.1,
+    "lambda_log": -122.9,
+    "lambda_err": 0.7,
+    "a0_err": 3.4
+  },
+  "t_hop": {
+    "t_hop_pred": 2.3199556752603057e-16,
+    "t_hop_obs": 2.32e-16,
+    "t_hop_err": 0.0,
+    "t_alt_err": 0.0,
+    "f_ratio": 1.31,
+    "f_ratio_err": 0.02
+  },
+  "lattice": {
+    "z_max_is_118": true,
+    "self_referential": true,
+    "shift_identity": true,
+    "sectors_fibonacci": true
+  },
+  "tiling_vertices": 7962,
+  "runtime_seconds": 0.0
+}

@@ -1,0 +1,271 @@
+{
+  "n_vertices": 7962,
+  "n_cells": 6372,
+  "global_edge_mean": 5.995134965473948,
+  "global_edge_mode": 6,
+  "cell_stats": {
+    "G": {
+      "count": 313,
+      "edges_mean": 5.552715654952077,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 11,
+      "edges_std": 1.1464352190508462,
+      "edges_histogram": {
+        "7": 39,
+        "4": 59,
+        "6": 105,
+        "5": 94,
+        "8": 11,
+        "3": 1,
+        "9": 3,
+        "11": 1
+      },
+      "area_mean": 0.02200746903218454,
+      "area_std": 0.013080098697885595,
+      "area_total": 6.8883378070737615,
+      "iso_mean": 0.7025568528417626
+    },
+    "S": {
+      "count": 222,
+      "edges_mean": 6.13963963963964,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 4,
+      "edges_max": 9,
+      "edges_std": 1.25323216569453,
+      "edges_histogram": {
+        "8": 21,
+        "7": 55,
+        "4": 26,
+        "5": 38,
+        "9": 8,
+        "6": 74
+      },
+      "area_mean": 0.019763915844577245,
+      "area_std": 0.01478344054682239,
+      "area_total": 4.387589317496149,
+      "iso_mean": 0.7453748213583485
+    },
+    "B": {
+      "count": 624,
+      "edges_mean": 6.355769230769231,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 16,
+      "edges_std": 1.4428311016093338,
+      "edges_histogram": {
+        "7": 136,
+        "8": 60,
+        "6": 202,
+        "5": 142,
+        "9": 37,
+        "4": 33,
+        "16": 1,
+        "12": 1,
+        "10": 9,
+        "3": 1,
+        "15": 1,
+        "11": 1
+      },
+      "area_mean": 0.017098772570725316,
+      "area_std": 0.020075560162236297,
+      "area_total": 10.669634084132598,
+      "iso_mean": 0.766265684722549
+    },
+    "GS": {
+      "count": 803,
+      "edges_mean": 5.785803237858032,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 11,
+      "edges_std": 1.2321745991251574,
+      "edges_histogram": {
+        "4": 102,
+        "5": 257,
+        "6": 258,
+        "9": 17,
+        "8": 56,
+        "7": 107,
+        "11": 2,
+        "10": 3,
+        "3": 1
+      },
+      "area_mean": 0.02315200458343842,
+      "area_std": 0.017745071064450387,
+      "area_total": 18.59105968050105,
+      "iso_mean": 0.7174938411362803
+    },
+    "BG": {
+      "count": 1658,
+      "edges_mean": 5.9837153196622435,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 11,
+      "edges_std": 1.3056803415002716,
+      "edges_histogram": {
+        "7": 324,
+        "5": 450,
+        "8": 141,
+        "6": 490,
+        "9": 45,
+        "4": 189,
+        "10": 11,
+        "11": 5,
+        "3": 3
+      },
+      "area_mean": 0.024648434539186647,
+      "area_std": 0.019686733103425294,
+      "area_total": 40.86710446597146,
+      "iso_mean": 0.7268509877363
+    },
+    "BS": {
+      "count": 1703,
+      "edges_mean": 6.1485613623018205,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 12,
+      "edges_std": 1.2980436011362473,
+      "edges_histogram": {
+        "6": 529,
+        "5": 420,
+        "7": 375,
+        "4": 139,
+        "8": 172,
+        "9": 41,
+        "11": 6,
+        "10": 19,
+        "12": 1,
+        "3": 1
+      },
+      "area_mean": 0.01788341691721804,
+      "area_std": 0.01777205412805196,
+      "area_total": 30.455459010022324,
+      "iso_mean": 0.749734010421665
+    },
+    "BGS": {
+      "count": 1049,
+      "edges_mean": 5.8112488083889415,
+      "edges_median": 6.0,
+      "edges_mode": 6,
+      "edges_min": 3,
+      "edges_max": 12,
+      "edges_std": 1.240647476972111,
+      "edges_histogram": {
+        "5": 306,
+        "4": 136,
+        "6": 328,
+        "7": 182,
+        "8": 68,
+        "9": 16,
+        "3": 6,
+        "11": 2,
+        "10": 4,
+        "12": 1
+      },
+      "area_mean": 0.01599482780185267,
+      "area_std": 0.016435091756977258,
+      "area_total": 16.778574364143452,
+      "iso_mean": 0.7411308769736024
+    }
+  },
+  "packing": {
+    "total_area": 128.63775872934076,
+    "matter_BGS": 0.13043273242537035,
+    "conduit_GS": 0.14452257147621347,
+    "dark_BG_BS": 0.5544450103958931,
+    "pure_G_S_B": 0.17059968570252282,
+    "matter_plus_conduit": 0.27495530390158385
+  },
+  "packing_comparisons": {
+    "BGS vs W\u2074": {
+      "value": 0.13043273242537035,
+      "target": 0.047617381777310515,
+      "error_pct": 173.91832048926514
+    },
+    "BGS vs LEAK": {
+      "value": 0.13043273242537035,
+      "target": 0.14589803375031543,
+      "error_pct": 10.600075221994999
+    },
+    "BGS+GS vs LEAK": {
+      "value": 0.27495530390158385,
+      "target": 0.14589803375031543,
+      "error_pct": 88.45716891026257
+    }
+  },
+  "dual_lattice": {
+    "set_a_size": 1852,
+    "set_b_size": 4520,
+    "set_a_connected": false,
+    "set_a_components": 574,
+    "set_b_connected": false,
+    "set_b_components": 16,
+    "boundary_edges": 7483,
+    "total_edges": 18870,
+    "boundary_fraction": 0.3965553789083201
+  },
+  "edge_physics": {
+    "G": {
+      "mode": 6,
+      "mean": 5.552715654952077,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "S": {
+      "mode": 6,
+      "mean": 6.13963963963964,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "B": {
+      "mode": 6,
+      "mean": 6.355769230769231,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "GS": {
+      "mode": 6,
+      "mean": 5.785803237858032,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "BG": {
+      "mode": 6,
+      "mean": 5.9837153196622435,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "BS": {
+      "mode": 6,
+      "mean": 6.1485613623018205,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    },
+    "BGS": {
+      "mode": 6,
+      "mean": 5.8112488083889415,
+      "nearest_fibonacci": 5,
+      "is_fibonacci": false,
+      "is_discriminant": false,
+      "discriminant_name": null
+    }
+  }
+}

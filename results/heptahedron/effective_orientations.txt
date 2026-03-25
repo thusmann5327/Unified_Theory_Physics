@@ -1,0 +1,65 @@
+EFFECTIVE ORIENTATIONS: Monte Carlo Heptahedral Tiling
+============================================================
+
+Three junction rule sets tested (500 MC runs each):
+  LOOSE   — 3 forbidden pairs only (G↔B, G↔BG, G↔BGS)
+  STRICT  — 17 allowed pairs only (neutral = forbidden)
+  PHYSICS — same-type + shared-letter pairs only (6 blocked)
+
+RESULT: All three rule sets converge to 60.
+        Junction matching does NOT reduce 60 → 13.
+
+SCALING (median orientations vs tiling size):
+Mode         @20   @50  @100  @200  @300
+────────── ───── ───── ───── ───── ─────
+loose         17    34    48    58    60
+strict        17    34    48    58    60
+physics       17    34    49    58    60
+
+NOTABLE COINCIDENCES IN SCALING:
+  @20 tiles:  median = 17 = number of ALLOWED junction types
+  @50 tiles:  median = 34 = F(9) = number of Cantor gaps in D=233
+  @300 tiles: saturates at 60 (all orientations appear)
+
+FORBIDDEN BLOCKING RATES:
+  LOOSE:   11.8% of placement attempts blocked
+  STRICT:  39.5% of placement attempts blocked
+  PHYSICS: 16.2% of placement attempts blocked
+  → Higher blocking rate does NOT reduce effective orientation count
+
+JUNCTION DIVERSITY:
+  LOOSE  sample: 25 junction types appear (of 25 allowed)
+  STRICT sample: 17 junction types appear (of 17 allowed)
+  All allowed junction types are realized in every large tiling.
+
+FACE TYPE DISTRIBUTION (200-tile random tiling, STRICT):
+  G     16.0% (target  7.4%) — over-represented
+  S      7.1% (target  2.9%) — over-represented
+  B      5.2% (target  8.1%) — under-represented
+  GS    17.4% (target 14.6%) — close
+  BG    16.1% (target 29.4%) — under-represented
+  BS    16.9% (target 22.6%) — under-represented
+  BGS   21.4% (target 14.9%) — over-represented
+  → Random tiling does NOT reproduce the target fractions
+  → A non-random (quasiperiodic) placement rule is needed
+
+WHY 13 DOES NOT EMERGE FROM FACE MATCHING ALONE:
+  The 60 icosahedral rotations produce 60 distinct face-type
+  permutations. At each face, there are always multiple allowed
+  orientations among the 60 (minimum: 22 for B-face in STRICT).
+  Since every face can always be filled, no orientation is ever
+  eliminated globally.
+
+  For 60 → 13 to occur, the constraint must be GEOMETRIC:
+  - 3D packing: tiles must fit without overlaps
+  - Vertex matching: where 3+ tiles meet at a point
+  - Quasiperiodic order: aperiodic matching rules (arrows/marks)
+
+  The face-type matching rules constrain WHICH junctions form
+  but not WHICH orientations exist.
+
+φ CONNECTIONS:
+  60/13 = 4.6154
+  φ³   = 4.2361  (error: 9.0%)
+  60/φ³ = 14.1641 ≈ 13 + 1.16
+  F(7) = 13 = bronze discriminant

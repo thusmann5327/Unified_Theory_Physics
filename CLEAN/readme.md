@@ -485,5 +485,27 @@ All from one equation. Zero free parameters.
 
 ---
 
+## Universe Seed Model
+
+The [universe_seed.py](../model/universe_seed.py) script builds a universe from the axiom and measures it.
+It integrates all CLEAN modules into an 8-step pipeline:
+
+1. **Tiling** — builds the triple metallic mean spatial manifold (7,962 vertices)
+2. **Brackets** — assigns Zeckendorf addresses across 60 orders of magnitude
+3. **Atomic** — derives subshell capacities, Madelung sequence, 92 element radii (5.0% mean)
+4. **Nuclear** — reproduces all 7 magic numbers exactly, predicts 184
+5. **Forces** — α⁻¹ = 137.337, α_s = 0.118, G/F_EM = 10⁻³⁵·⁷, 7 electroweak predictions
+6. **Cosmology** — Ω_DE = 0.6853 (0.05%), tiling collapse budget at sub-percent
+7. **t_hop** — derives 232 attosecond traversal (0.005%)
+8. **Lattice** — proves D = F(F(7)) self-reference, Z_max = 118
+
+**Scorecard: 9 exact + 11 sub-1% + 15 sub-5% = 26 measurements from ONE axiom.**
+
+```bash
+python3 model/universe_seed.py
+```
+
+---
+
 *Copyright 2026 Thomas A. Husmann / iBuilt LTD. All rights reserved.*
 *Patent Pending: US 19/560,637*

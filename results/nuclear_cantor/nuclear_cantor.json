@@ -1,0 +1,60 @@
+{
+  "nuclear_magic": [
+    2,
+    8,
+    20,
+    28,
+    50,
+    82,
+    126
+  ],
+  "ho_magic": [
+    2,
+    8,
+    20,
+    40,
+    70,
+    112,
+    168
+  ],
+  "atomic_noble": [
+    2,
+    10,
+    18,
+    36,
+    54,
+    86,
+    118
+  ],
+  "ho_caps_are_triangular": true,
+  "detach_capacities": [
+    10,
+    12,
+    14
+  ],
+  "detach_starts_at_d_capacity": true,
+  "zeckendorf_126": [
+    89,
+    34,
+    3
+  ],
+  "zeckendorf_114": [
+    89,
+    21,
+    3,
+    1
+  ],
+  "zeckendorf_120": [
+    89,
+    21,
+    8,
+    2
+  ],
+  "most_compact": [
+    126
+  ],
+  "bracket_gap_H": 24,
+  "bracket_gap_Og": 21,
+  "tests_passed": 10,
+  "tests_total": 10
+}

@@ -191,6 +191,49 @@ If either script reports a failure, the papers contain an error. They don't.
 
 ---
 
+## Universe Seed Model
+
+The `model/universe_seed.py` script builds a universe from the axiom and measures it.
+It integrates all CLEAN modules into an 8-step pipeline:
+
+1. **Tiling** — builds the triple metallic mean spatial manifold (7,962 vertices)
+2. **Brackets** — assigns Zeckendorf addresses across 60 orders of magnitude
+3. **Atomic** — derives subshell capacities, Madelung sequence, 92 element radii (5.0% mean)
+4. **Nuclear** — reproduces all 7 magic numbers exactly, predicts 184
+5. **Forces** — α⁻¹ = 137.337, α_s = 0.118, G/F_EM = 10⁻³⁵·⁷, 7 electroweak predictions
+6. **Cosmology** — Ω_DE = 0.6853 (0.05%), tiling collapse budget at sub-percent
+7. **t_hop** — derives 232 attosecond traversal (0.005%)
+8. **Lattice** — proves D = F(F(7)) self-reference, Z_max = 118
+
+**Scorecard: 9 exact + 11 sub-1% + 15 sub-5% = 26 measurements from ONE axiom.**
+
+```bash
+python3 model/universe_seed.py
+```
+
+---
+
+## Tiling & Spatial Structure
+
+The triple metallic mean tiling (gold 5-fold × silver 4-fold × bronze 13-fold) produces 7 vertex types: G, S, B, GS, BG, BS, BGS. These tiles the 2D spatial manifold with Fibonacci-structured quasiperiodic order.
+
+### Heptahedral Prototile Analysis
+
+```bash
+python3 tiling/heptahedron.py          # 6-phase icosahedral analysis
+python3 tiling/effective_orientations.py   # 60 orientations under matching rules
+python3 tiling/multi_tile_lattice.py   # Monte Carlo junction statistics
+python3 tiling/voronoi_cells.py        # Voronoi tessellation — natural tile shape
+```
+
+**Key results:**
+- 7 face types map to 60 icosahedral orientations, 17 allowed / 3 forbidden junctions
+- Monte Carlo: all junction rule sets converge to 60 effective orientations at large tiling size
+- Voronoi tessellation: BGS (matter) cells are hexagonal (mode = 6 edges), global mean = 6.00
+- BGS area fraction = 13.0% ≈ LEAK (14.6%), error 10.6%
+
+---
+
 ## Repository Structure
 
 ```
@@ -205,6 +248,21 @@ Unified_Theory_Physics/
 │   ├── Quantum_Rosetta.md
 │   ├── Husmann_Rosetta.md
 │   └── ...
+├── CLEAN/                                 ← Modular computation engine (155/155 tests)
+│   ├── core/                              ← Constants, AAH spectrum
+│   ├── tiling/                            ← Triple metallic mean multigrid
+│   ├── atomic/                            ← Subshell derivation, outer wall
+│   ├── nuclear/                           ← Magic numbers from Cantor ratios
+│   ├── cosmology/                         ← Energy budget, W-polynomial
+│   ├── particles/                         ← Electroweak predictions via δ₇
+│   └── tests/                             ← 155 unit tests
+├── model/                                 ← Universe seed (integrated pipeline)
+│   └── universe_seed.py                   ← 8-step axiom → measurement
+├── tiling/                                ← Spatial structure analysis
+│   ├── heptahedron.py                     ← Icosahedral prototile (6 phases)
+│   ├── effective_orientations.py          ← Matching-constrained orientations
+│   ├── multi_tile_lattice.py              ← Monte Carlo junction statistics
+│   └── voronoi_cells.py                   ← Voronoi tessellation of tiling
 ├── algorithms/                            ← Code
 │   ├── atomic_scorecard.py                ← v10, 151 tests, 54 elements
 │   ├── UNIVERSE.py                        ← Flask visualization server
@@ -214,6 +272,13 @@ Unified_Theory_Physics/
 │   ├── verify_paper.py                    ← 59/59
 │   ├── Quantum_Gravity_verification.py    ← 70/70
 │   ├── bridge_computations.py             ← 6 bridges, 3 theorems
+│   ├── absolute_mass_proof.py             ← Absolute mass derivation
+│   ├── aufbau_bridge.py                   ← Aufbau principle from tiling
+│   ├── nuclear_cantor.py                  ← Nuclear magic numbers
+│   └── ...
+├── results/                               ← Computed outputs
+│   ├── voronoi/                           ← Voronoi tessellation data
+│   ├── heptahedron/                       ← Tiling analysis results
 │   └── ...
 ├── patents/                               ← Patent portfolio (16 provisionals)
 └── docs/                                  ← Assumptions, open problems, predictions

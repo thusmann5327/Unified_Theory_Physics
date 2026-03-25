@@ -1,0 +1,27 @@
+VORONOI TESSELLATION OF THE TRIPLE TILING
+==================================================
+
+Vertices: 7962, Interior cells: 6372
+Global edge count: mean=6.00, mode=6
+
+Cell statistics by vertex type:
+  G      count= 313, edges: mode=6, mean=5.6, area=0.0220
+  S      count= 222, edges: mode=6, mean=6.1, area=0.0198
+  B      count= 624, edges: mode=6, mean=6.4, area=0.0171
+  GS     count= 803, edges: mode=6, mean=5.8, area=0.0232
+  BG     count=1658, edges: mode=6, mean=6.0, area=0.0246
+  BS     count=1703, edges: mode=6, mean=6.1, area=0.0179
+  BGS    count=1049, edges: mode=6, mean=5.8, area=0.0160
+
+Packing fractions:
+  Matter (BGS):     0.1304
+  Conduit (GS):     0.1445
+  Dark (BG+BS):     0.5544
+  Pure (G+S+B):     0.1706
+
+Dual lattice:
+  Matter network: fragmented (574 comp)
+  Vacuum network: fragmented (16 comp)
+  Boundary: 39.7% of edges
+
+BGS (matter) Voronoi cell: mode = 6 edges
