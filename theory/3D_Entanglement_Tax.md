@@ -67,11 +67,27 @@ Bronze is the outer surface where gold and silver become observable together. It
 
 ### Why "Origami"
 
-The 6D $\rightarrow$ 3D icosahedral projection that generates the quasicrystal lattice is literally a fold — higher-dimensional structure collapsed into observable space. But 3D space cannot perfectly accommodate the fold. Five regular tetrahedra around a shared edge leave a gap:
+The triple metallic mean tiling (`algorithms/triple_tiling.py`) builds physical space from three superimposed multigrids, each with its own rotational symmetry:
 
-$$\delta_{\text{Aristotle}} = 360° - 5 \times 72° = 7.36°$$
+| Grid | Metallic Mean | Direction Families | Symmetry | Spacing |
+|------|--------------|-------------------|----------|---------|
+| Gold | $\varphi$ = 1.618 | **5** | Pentagonal (5-fold) | 1.000 |
+| Silver | $\delta_S$ = 2.414 | **4** | Square (4-fold/8-fold) | $1/\delta_S$ = 0.414 |
+| Bronze | $\delta_B$ = 3.303 | **13** | Aperiodic (13-fold) | $1/\delta_B$ = 0.303 |
 
-This is the **Aristotle gap** — the irreducible angular deficit that makes perfect 3D tiling impossible. The lattice must strain, buckle, and accommodate. The fold is always imperfect, always under tension.
+Total direction families: **5 + 4 + 13 = 22**. This is the 22-sided origami — not an icosahedron, but a de Bruijn multigrid where each metallic mean contributes its natural rotational symmetry as a family of parallel lines.
+
+The lines intersect to create 7 vertex types: G, S, B, GS, GB, BS, and BGS. Where all three grids intersect (BGS vertices) — that is baryonic matter. Where only gold and silver meet (GS vertices) — that is the gate transmission, the LEAK = $1/\varphi^4$. Where bronze alone tiles — that is the dark energy scaffold.
+
+### The 22 Creases
+
+The number 22 is not arbitrary:
+
+- **5 gold directions** encode the pentagonal symmetry of the golden ratio — the same 5-fold axes that make Penrose tilings and icosahedral quasicrystals impossible to tile periodically
+- **4 silver directions** encode the square/octagonal symmetry of $1+\sqrt{2}$ — the Ammann-Beenker tiling, the 8-fold quasicrystal
+- **13 bronze directions** encode the aperiodic 13-fold symmetry of $\Delta_3 = 13$ — the discriminant that forces the tiling out of any periodic plane and into 3D
+
+Bronze's 13 directions are what make the fold three-dimensional. A 5-fold + 4-fold multigrid could tile a plane. Adding 13 aperiodic directions breaks planar periodicity and forces the structure to fold into 3D — literally origami. The Aristotle gap ($\delta = 7.36°$) emerges from the strain of accommodating 13 incommensurate directions in 3D Euclidean space.
 
 The number 7 recurs: $\delta_7 = 7.140$ is the BCC metallic mean that encodes the entire electroweak scale — Higgs mass ($\varphi^2 \delta_7^2 m_p$, 0.015%), W boson ($\varphi^2 W^{-2} \delta_7 m_p$, 0.002%), Weinberg angle ($\sigma_3 \sigma_{\text{wall}} F(6)$, 0.026%). The angular deficit of the origami fold IS the coupling constant of the weak force.
 
@@ -79,22 +95,26 @@ The number 7 recurs: $\delta_7 = 7.140$ is the BCC metallic mean that encodes th
 
 Bronze occupies the outermost Cantor layer ($\sigma_3 = 0.394$, boundary at 0.508R). This is where the internal structure (silver confinement + gold propagation) meets the vacuum. At this surface:
 
-1. The 6D information projects onto 3D observables
-2. The Cantor node's internal hierarchy becomes a physical boundary
-3. The quasicrystalline pattern either **folds coherently** or doesn't
+1. The 13 bronze grid directions create the aperiodic scaffold
+2. Gold and silver vertices either **land on bronze grid lines** (fold locks → matter) or **miss them** (fold fails → void)
+3. The GSB triple-intersection vertices become baryonic matter ($W^4 = 4.76\%$)
 
 When it folds: atoms, molecules, crystals, stars, galaxies.
 When it doesn't: void (61.70% of space — the Cantor gaps).
 
-### The 20-Face Fold
+### The 5→3 Collapse in Tiling Language
 
-An icosahedron has 20 triangular faces, 12 vertices, 30 edges. It is the most symmetric Platonic solid that can approximate a sphere, and it is the natural fold geometry of the quasicrystal:
+The tiling vertex fractions are the **pre-collapse** (5-band) state. The cosmological budget emerges after multiplying by $G_1 = 0.3243$ (first $\sigma_3$ sub-gap fraction — the collapse transmission):
 
-- 12 vertices = five-fold symmetry axes (golden ratio encoded)
-- 20 faces = the surface patches where bronze folds lock
-- 30 edges = the strain channels where the Aristotle gap accumulates
+| Component | Tiling Source | $\times G_1$ | Prediction | Planck | Error |
+|-----------|--------------|-------------|-----------|--------|-------|
+| $\Omega_b$ | GS (LEAK = $1/\varphi^4$) | LEAK $\times$ G1 | 4.74% | 4.86% | 2.5% |
+| $\Omega_{DM}$ (local) | LEAK $- W^4$ | — | 9.8% | — | — |
+| $\Omega_{DM}$ (conduit) | (GB + BS) | $\times$ G1 | 16.9% | — | — |
+| $\Omega_{DM}$ (total) | sum | — | 26.7% | 26.5% | 0.8% |
+| $\Omega_{DE}$ | remainder | 1 $-$ b $-$ DM | 68.6% | 68.5% | 0.1% |
 
-The icosahedral fold IS the bronze origami. Each face is a patch where the silver-gold entanglement is locally resolved into 3D structure.
+The tiling IS the pre-observation state. The 5→3 collapse ($G_1$ transmission) converts it to the observed cosmological budget. Zero free parameters.
 
 ---
 
@@ -201,9 +221,27 @@ The $\gamma$ values tell the same story: random reaches $\gamma \approx 0.8$ (ne
 
 ## 5. The Tiling Confirmation
 
+### The Triple Tiling (Established March 24, 2026)
+
+The `algorithms/triple_tiling.py` multigrid directly constructs the tiling that the phi seed experiment perturbs. Three grids of parallel lines — 5 gold, 4 silver, 13 bronze direction families — intersect to produce 7 vertex types:
+
+| Vertex Type | Meaning | Tiling Role |
+|-------------|---------|-------------|
+| G only | Gold grid intersection only | Momentum node (matter core) |
+| S only | Silver grid intersection only | Confinement node (DM seed) |
+| B only | Bronze grid intersection only | Scaffold node (DE background) |
+| **GS** | Gold + Silver intersect | **Gate transmission = LEAK = $1/\varphi^4$** |
+| GB | Gold + Bronze intersect | Conduit wall ($\sigma_2$ analog) |
+| BS | Silver + Bronze intersect | Conduit wall ($\sigma_4$ analog) |
+| **BGS** | All three grids intersect | **Baryonic matter = $W^4$** |
+
+The GS vertices — where gold (momentum) meets silver (confinement) but bronze (surface) is absent — are the **dark matter**. The entanglement between the two potentials exists there, but the origami fold hasn't locked. The bronze grid missed that point. You can't see it, but the gold-silver potential is real.
+
+The BGS vertices — where all three grids intersect — are where the origami completed. The bronze surface locked onto the gold-silver entanglement and made it observable. That's baryonic matter: $W^4 = 4.76\%$ of all vertices.
+
 ### Complementary Occupation (Established March 13, 2026)
 
-The 3D AAH eigensolver on $L=13$ ($N=2197$) confirmed:
+The 3D AAH eigensolver on $L=13$ ($N=2197$) confirmed the same anti-correlation from the Hamiltonian side:
 
 $$\rho(\text{Gold density}, \text{Silver density}) = -0.5149$$
 
@@ -218,7 +256,7 @@ Bronze fills the remaining space — the outermost 39.4% — creating the conduc
 | Bronze | 28.22% | Surface scaffold (origami folds) |
 | **Void** | **61.70%** | True Cantor gaps (unfolded vacuum) |
 
-The void IS the places where the origami didn't fold. 61.70% of space has no structure because the entanglement tax wasn't paid there — the bronze surface never locked.
+The void IS the places where the origami didn't fold. 61.70% of space has no structure because the entanglement tax wasn't paid there — the bronze surface never locked. No BGS triple intersection occurred. The 13 bronze creases missed.
 
 ### Why the Tax Becomes Gravity
 
