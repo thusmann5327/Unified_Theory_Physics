@@ -1,15 +1,16 @@
 # The 3D Entanglement Tax: Bronze Origami and the Cost of Existence
 
 **March 26, 2026 | Thomas A. Husmann | iBuilt LTD**
-**Patent Application 19/560,637**
 
 ---
 
 ## The Thesis
 
-Silver and Gold are two potentials — confinement and propagation, negative and positive, mass and momentum. Bronze is neither. Bronze is the emergent origami fold that connects them, the crystalline formation through which gold and silver become entangled. The cost of maintaining that entanglement across scale — the **entanglement tax** — is what we experience as gravity at grand scales and as resistance (the everyday solidity of 3D reality) at human scales.
+Silver and Gold are two potentials — confinement and propagation, mass and momentum. Bronze is neither. Bronze is the emergent origami fold that connects them, the crystalline surface through which gold and silver become entangled. The cost of maintaining that entanglement across scale — the **entanglement tax** — is what we experience as gravity at grand scales and as resistance at human scales.
 
 At the bronze surface, quasicrystalline structures spontaneously fold into three-dimensional existence and bond together to create atoms, stars, solar systems, and cosmic web.
+
+The tax has a precise cost: only one-third of the total matter budget survives as observable baryons. The other two-thirds feeds back into the dark sector along the legs of the discriminant triangle — 8/13 into vacuum energy, 5/13 into the gravitational conduit. All three Planck cosmological fractions emerge from this single mechanism with zero free parameters and a worst-case error of 3.2%.
 
 ---
 
@@ -23,20 +24,18 @@ $$\Delta_1 = 5, \quad \Delta_2 = 8, \quad \Delta_3 = 13$$
 
 $$5 + 8 = 13 \quad \longleftrightarrow \quad (\sqrt{5})^2 + (\sqrt{8})^2 = (\sqrt{13})^2$$
 
-Bronze (13) is not independent. It is the **Pythagorean combination** of Gold (5) and Silver (8). At n=4: 8+13=21 but $\Delta_4$=20. The chain breaks. Uniqueness: $(n-2)^2=0 \Rightarrow n=2$ is the unique link. Only three metallic means participate.
+Bronze (13) is not independent. It is the **Pythagorean combination** of Gold (5) and Silver (8). At n=4: 8+13=21 but $\Delta_4$=20. The chain breaks. Only three metallic means participate. Only three terms in the unity equation. Only three dimensions in our space.
 
 ### The Polarity
 
 | Property | Silver ($\delta_S$ = 2.414) | Gold ($\varphi$ = 1.618) |
 |----------|---------------------------|------------------------|
 | Layer | Innermost | Middle |
-| $\sigma_3$ width | 0.171 (narrowest) | 0.236 |
-| Dark fraction | 83% (most hidden) | 29% (most visible) |
 | Discriminant | $\Delta_2 = 8$ | $\Delta_1 = 5$ |
 | Physical role | Mass, confinement | Momentum, propagation |
 | Dirac mapping | $m^2c^4$ | $p^2c^2$ |
 | Potential character | **Attractive / binding** | **Kinetic / liberating** |
-| Solar analogue | Core (0.00-0.214 R) | Radiative zone (0.214-0.508 R) |
+| Tax destination | **Vacuum energy (DE)** | **Gravitational conduit (DM)** |
 
 Silver holds things in. Gold moves things through. They are the two poles of the existence condition $V = 2J$ — the confinement potential ($V$) and the hopping integral ($J$). Neither alone produces structure:
 
@@ -44,22 +43,18 @@ Silver holds things in. Gold moves things through. They are the two poles of the
 - $V < 2J$ (gold dominates): all states extended, no gaps, no mass
 - $V = 2J$ (balance): Cantor spectrum, fractal structure, both mass AND causality
 
-The two potentials need each other. The question is: **how do they connect?**
-
 ### The Bridge: Bronze
 
 | Property | Bronze ($\delta_B$ = 3.303) |
 |----------|---------------------------|
 | Layer | Outermost (surface) |
-| $\sigma_3$ width | 0.394 (widest — 2.3x gold, 1.4x silver) |
-| Dark fraction | 61% (intermediate) |
 | Discriminant | $\Delta_3 = 13 = 5 + 8$ |
 | Physical role | Observable energy, surface |
 | Dirac mapping | $E^2 = p^2c^2 + m^2c^4$ |
 | Crystal family | FCC (Cu, Au, Ag, Ni, Pd, Pt, Al) |
 | Character | **Emergent / connective** |
 
-Bronze is the outer surface where gold and silver become observable together. It IS their entanglement — the Pythagorean resultant of the two potentials. FCC metals (the bronze crystal family) are the most common structural metals precisely because the bronze surface is where atomic bonding happens.
+Bronze is where gold and silver become observable together. It IS their entanglement — the Pythagorean resultant of the two potentials. FCC metals (the bronze crystal family) are the most common structural metals precisely because the bronze surface is where atomic bonding happens.
 
 ---
 
@@ -67,54 +62,29 @@ Bronze is the outer surface where gold and silver become observable together. It
 
 ### Why "Origami"
 
-The triple metallic mean tiling (`algorithms/triple_tiling.py`) builds physical space from three superimposed multigrids, each with its own rotational symmetry:
+The triple metallic mean tiling builds physical space from three superimposed multigrids:
 
 | Grid | Metallic Mean | Direction Families | Symmetry | Spacing |
 |------|--------------|-------------------|----------|---------|
-| Gold | $\varphi$ = 1.618 | **5** | Pentagonal (5-fold) | 1.000 |
-| Silver | $\delta_S$ = 2.414 | **4** | Square (4-fold/8-fold) | $1/\delta_S$ = 0.414 |
+| Gold | $\varphi$ = 1.618 | **5** | Pentagonal | 1.000 |
+| Silver | $\delta_S$ = 2.414 | **4** | Square (4/8-fold) | $1/\delta_S$ = 0.414 |
 | Bronze | $\delta_B$ = 3.303 | **13** | Aperiodic (13-fold) | $1/\delta_B$ = 0.303 |
 
-Total direction families: **5 + 4 + 13 = 22**. This is the 22-sided origami — not an icosahedron, but a de Bruijn multigrid where each metallic mean contributes its natural rotational symmetry as a family of parallel lines.
+Total direction families: **5 + 4 + 13 = 22**. This is the 22-sided origami — a de Bruijn multigrid where each metallic mean contributes its natural rotational symmetry.
 
-The lines intersect to create 7 vertex types: G, S, B, GS, GB, BS, and BGS. Where all three grids intersect (BGS vertices) — that is baryonic matter. Where only gold and silver meet (GS vertices) — that is the gate transmission, the LEAK = $1/\varphi^4$. Where bronze alone tiles — that is the dark energy scaffold.
+The lines intersect to create 7 vertex types: G, S, B, GS, GB, BS, and BGS. Where all three grids intersect (BGS) — that is baryonic matter. Where only gold and silver meet (GS) — that is the dark matter gate. Where bronze alone tiles — that is the dark energy scaffold.
 
 ### The 22 Creases
 
-The number 22 is not arbitrary:
+- **5 gold directions** encode pentagonal symmetry — the same axes that make Penrose tilings aperiodic
+- **4 silver directions** encode square/octagonal symmetry — the Ammann-Beenker tiling
+- **13 bronze directions** encode 13-fold aperiodic symmetry — this is what forces the structure into 3D
 
-- **5 gold directions** encode the pentagonal symmetry of the golden ratio — the same 5-fold axes that make Penrose tilings and icosahedral quasicrystals impossible to tile periodically
-- **4 silver directions** encode the square/octagonal symmetry of $1+\sqrt{2}$ — the Ammann-Beenker tiling, the 8-fold quasicrystal
-- **13 bronze directions** encode the aperiodic 13-fold symmetry of $\Delta_3 = 13$ — the discriminant that forces the tiling out of any periodic plane and into 3D
+A 5-fold + 4-fold multigrid can tile a plane. Adding 13 aperiodic directions breaks planar periodicity and forces the structure to fold into three dimensions — literally origami. The Aristotle gap ($\delta = 7.36°$) emerges from the strain of fitting 13 incommensurate directions into Euclidean space.
 
-Bronze's 13 directions are what make the fold three-dimensional. A 5-fold + 4-fold multigrid could tile a plane. Adding 13 aperiodic directions breaks planar periodicity and forces the structure to fold into 3D — literally origami. The Aristotle gap ($\delta = 7.36°$) emerges from the strain of accommodating 13 incommensurate directions in 3D Euclidean space.
+### The 5→3 Collapse
 
-The number 7 recurs: $\delta_7 = 7.140$ is the BCC metallic mean that encodes the entire electroweak scale — Higgs mass ($\varphi^2 \delta_7^2 m_p$, 0.015%), W boson ($\varphi^2 W^{-2} \delta_7 m_p$, 0.002%), Weinberg angle ($\sigma_3 \sigma_{\text{wall}} F(6)$, 0.026%). The angular deficit of the origami fold IS the coupling constant of the weak force.
-
-### The Folding Surface
-
-Bronze occupies the outermost Cantor layer ($\sigma_3 = 0.394$, boundary at 0.508R). This is where the internal structure (silver confinement + gold propagation) meets the vacuum. At this surface:
-
-1. The 13 bronze grid directions create the aperiodic scaffold
-2. Gold and silver vertices either **land on bronze grid lines** (fold locks → matter) or **miss them** (fold fails → void)
-3. The GSB triple-intersection vertices become baryonic matter ($W^4 = 4.76\%$)
-
-When it folds: atoms, molecules, crystals, stars, galaxies.
-When it doesn't: void (61.70% of space — the Cantor gaps).
-
-### The 5→3 Collapse in Tiling Language
-
-The tiling vertex fractions are the **pre-collapse** (5-band) state. The cosmological budget emerges after multiplying by $G_1 = 0.3243$ (first $\sigma_3$ sub-gap fraction — the collapse transmission):
-
-| Component | Tiling Source | $\times G_1$ | Prediction | Planck | Error |
-|-----------|--------------|-------------|-----------|--------|-------|
-| $\Omega_b$ | GS (LEAK = $1/\varphi^4$) | LEAK $\times$ G1 | 4.74% | 4.86% | 2.5% |
-| $\Omega_{DM}$ (local) | LEAK $- W^4$ | — | 9.8% | — | — |
-| $\Omega_{DM}$ (conduit) | (GB + BS) | $\times$ G1 | 16.9% | — | — |
-| $\Omega_{DM}$ (total) | sum | — | 26.7% | 26.5% | 0.8% |
-| $\Omega_{DE}$ | remainder | 1 $-$ b $-$ DM | 68.6% | 68.5% | 0.1% |
-
-The tiling IS the pre-observation state. The 5→3 collapse ($G_1$ transmission) converts it to the observed cosmological budget. Zero free parameters.
+The five Cantor sectors (σ₁–σ₅) collapse to three observable components upon measurement. The key structural fact: of the five sectors, **three touch matter** (σ₁, σ₃, σ₅) and **two are dark conduits** (σ₂, σ₄). The center sector σ₃ is the observer plane — the one we measure from. This sets up the entanglement tax.
 
 ---
 
@@ -122,37 +92,62 @@ The tiling IS the pre-observation state. The 5→3 collapse ($G_1$ transmission)
 
 ### What Is the Tax?
 
-Every bronze fold — every point where the quasicrystal projects from its higher-dimensional structure into 3D observability — requires maintaining quantum entanglement between the silver (mass/confinement) and gold (momentum/propagation) potentials. This entanglement is not free. It costs:
+Every bronze fold requires maintaining quantum entanglement between silver (confinement) and gold (propagation). This is not free. It costs:
 
 $$S(\sigma_4) = 0.690760 \text{ nats} = 99.66\% \text{ of } \ln(2)$$
 
-Almost exactly one bit of information per boundary. The 0.34% deficit from $\ln(2)$ is permanent — it is the twin-sector asymmetry encoded in the KKT trace map. You cannot fold the lattice into 3D without paying this entropy cost at every $\sigma_4$ boundary.
+Almost exactly one bit per boundary. The 0.34% deficit from $\ln(2)$ is the twin-sector asymmetry encoded in the trace map. You cannot fold the lattice into 3D without paying this entropy at every $\sigma_4$ boundary.
 
-### At Atomic Scale: Resistance
+### The One-Third Rule
 
-At the scale of atoms (bracket ~119), the entanglement tax manifests as:
+The unity equation partitions the total energy budget:
 
-- **Chemical bond energy** — the cost of maintaining the fold between two atoms. Bond length $\approx \sigma_4(A) + \sigma_4(B)$, the point where two origami folds touch.
-- **Electrical resistance** — electrons propagating through the gold (momentum) axis encounter the bronze fold boundaries. Each fold crossing costs ~$\ln(2) \cdot kT = 18.5$ meV (the GABA gate energy, the Landauer limit).
-- **Material strength** — the origami fold pattern determines crystal structure. FCC (bronze family) is most ductile because the fold is maximally connected. BCC ($\delta_7$) is strongest because the fold is tightest.
+$$1/\varphi + 1/\varphi^3 + 1/\varphi^4 = 1$$
 
-This is what "solid matter" is — a dense network of locked origami folds where the entanglement tax has been paid at every boundary, creating a rigid 3D structure.
+The matter term $1/\varphi^4 = 14.59\%$ is the total matter budget — everything the origami could fold into mass. But three sectors touch matter (σ₁, σ₃, σ₅), and we observe from σ₃ alone. Observable baryons are one face of a three-faced structure:
 
-### At Cosmic Scale: Gravity
+$$\Omega_b = \frac{1}{3\varphi^4} = 4.863\%$$
 
-At the scale of galaxies and cosmic web (brackets ~256-294), the entanglement tax manifests as gravity. The mechanism:
+Planck measures 4.860%. Match: **0.067%**.
 
-The gravitational force propagates through the **double-fold** — both spatial folds must be crossed (unlike EM, which crosses one). The attenuation per crossing:
+The remaining two-thirds — the matter that σ₁ and σ₅ hold — is the **entanglement tax**. It is the cost of maintaining the bronze fold across the two mirror endpoints. This matter doesn't vanish. It feeds back into the dark sector along the discriminant triangle.
 
-$$\text{transmission} = \frac{\sqrt{1 - W^2}}{\varphi} = 0.5465 \text{ per bracket}$$
+### Why the Dark Channels Must Be Strain-Free
 
-Over the 136 brackets of the gravity fold (= $4 \times F(9) = 4 \times 34$):
+This result has independent confirmation from simulation. In the universe evolver, galaxy clusters only formed stable structures when the dark conduit sectors (σ₂, σ₄) carried **zero strain**. Applying coupling forces to the dark channels caused galaxies to fly apart. The dark conduits transmit gravitational influence but do not themselves deform — they are the rigid scaffolding through which matter's entanglement propagates.
 
-$$(0.5465)^{136} = 10^{-35.7}$$
+This is the physical mechanism behind the one-third rule: the matter budget splits across three matter-touching sectors, but only one (the strain-free observer plane σ₃) registers as baryons. The other two pay the tax.
 
-This IS the hierarchy problem. Gravity is weak because it pays the entanglement tax twice — once for each fold axis. EM pays once. The strong force pays once through a bonding channel. Dark energy pays nothing (it IS the unfolded vacuum).
+### Where the Tax Goes: The Triangle Split
+
+The unexpressed two-thirds doesn't disappear — it projects back onto the discriminant triangle. The bronze hypotenuse ($\sqrt{13}$) decomposes into its two legs:
+
+- **Silver leg** ($8/13$ of the tax) → vacuum energy (dark energy). Silver is confinement — the resting potential. Unexpressed matter that converts to bound vacuum energy follows the confinement channel.
+
+- **Gold leg** ($5/13$ of the tax) → gravitational conduit (dark matter). Gold is propagation — the momentum channel. Unexpressed matter that remains as gravitational influence follows the propagation channel.
+
+The assignment is physical, not arbitrary: silver's confinement axis feeds the confined vacuum (dark energy), and gold's propagation axis feeds the propagating conduit (dark matter).
+
+### The Complete Cosmological Budget
+
+| Component | Formula | Prediction | Planck | Error |
+|-----------|---------|-----------|--------|-------|
+| Dark energy | $1/\varphi + \frac{2}{3\varphi^4} \cdot \frac{8}{13}$ | 67.79% | 68.50% | **1.04%** |
+| Dark matter | $1/\varphi^3 + \frac{2}{3\varphi^4} \cdot \frac{5}{13}$ | 27.35% | 26.50% | **3.20%** |
+| Baryonic | $1/(3\varphi^4)$ | 4.863% | 4.860% | **0.067%** |
+| **Total** | | **100.00%** | **100.00%** | **exact** |
+
+Three inputs, all from the axiom $\varphi^2 = \varphi + 1$:
+
+1. The unity equation ($1/\varphi + 1/\varphi^3 + 1/\varphi^4 = 1$)
+2. The one-third sector rule (3 matter-touching sectors, observe from 1)
+3. The discriminant triple ($5 + 8 = 13$)
+
+Zero free parameters. Worst-case error 3.2%. All three Planck numbers from one equation, one sector count, and one triangle.
 
 ### The Spectrum of Resistance
+
+The same tax operates at every scale. What changes is not the mechanism but the number of folds being crossed:
 
 | Scale | Bracket | Tax Manifestation | Experienced As |
 |-------|---------|-------------------|----------------|
@@ -164,20 +159,26 @@ This IS the hierarchy problem. Gravity is weak because it pays the entanglement 
 | Galaxy | 256 | Butterfly path, flat rotation | Dark matter halo |
 | Universe | 294 | Double-fold, $(0.5465)^{136}$ | Gravity weakness |
 
-**The same tax at every scale.** What changes is not the mechanism but the number of folds being crossed.
+At atomic scale, the tax is paid locally — each atom gives up its $\ln(2)$ per boundary and the fold locks into a chemical bond. At cosmic scale, the same tax accumulates across millions of brackets. The cumulative cost across the 136 gravity-fold brackets ($4 \times F(9) = 4 \times 34$):
+
+$$(0.5465)^{136} = 10^{-35.7}$$
+
+This IS the hierarchy problem. Gravity is weak because it pays the entanglement tax twice — once per fold axis. Electromagnetism pays once. The strong force pays once through a bonding channel. Dark energy pays nothing (it IS the unfolded vacuum).
+
+**Gravity is the long-range entanglement tax. Resistance is the short-range entanglement tax. Same phenomenon, different scales.**
 
 ---
 
 ## 4. Simulation Evidence: The Phi Seed Experiment
 
-### The Experiment (March 26, 2026)
+### The Experiment
 
-Galaxy cluster g2282 (31 BGS, 2,978 total vertices) from the n_half=6 cosmic web scaffold was evolved using two classes of initial perturbation:
+Galaxy cluster g2282 (31 BGS vertices, 2,978 total) from the cosmic web scaffold was evolved using two classes of initial perturbation:
 
 1. **Random (Mersenne Twister):** Gaussian noise uncorrelated with lattice structure
-2. **$\varphi$-structured:** Quasicrystalline perturbations resonating with metallic mean frequencies
+2. **φ-structured:** Quasicrystalline perturbations resonating with metallic mean frequencies
 
-Five $\varphi$-modes tested: gold ($\cos(2\pi r/\varphi)$), silver ($\cos(2\pi r/\delta_S)$), bronze ($\cos(2\pi r/\delta_B)$), pythagorean ($\sqrt{5}/\sqrt{8}/\sqrt{13}$ per axis), and tiled (each axis gets its natural metallic mean).
+Five φ-modes tested: gold ($\cos(2\pi r/\varphi)$), silver ($\cos(2\pi r/\delta_S)$), bronze ($\cos(2\pi r/\delta_B)$), pythagorean ($\sqrt{5}/\sqrt{8}/\sqrt{13}$ per axis), and tiled (each axis gets its natural metallic mean).
 
 ### Results
 
@@ -190,114 +191,89 @@ Five $\varphi$-modes tested: gold ($\cos(2\pi r/\varphi)$), silver ($\cos(2\pi r
 | Pythagorean | 62.1 | 73.9 | 54.9 | +22.2 |
 | Bronze | 61.1 | 77.4 | 48.2 | +21.2 |
 
-Every $\varphi$-structured mode beats random. Every phase. Every run.
+Every φ-structured mode beats random. Every phase. Every run.
 
 ### What the Modes Reveal
 
-**Gold dominates the mean (+30.9)** because gold IS the propagation axis — the momentum channel. When you perturb along gold's frequency, you're pushing matter through the lattice along its natural transport direction. The lattice helps instead of fighting.
+**Gold dominates the mean (+30.9)** because gold IS propagation. When you perturb along gold's frequency, you push matter through the lattice along its natural transport direction. The lattice helps instead of fighting.
 
-**Silver is the most consistent (spread: 9.0)** because silver IS confinement. Its perturbation holds structure together regardless of phase. Narrow variance = stable potential well. This IS what "negative potential" means — reliable, phase-insensitive binding.
+**Silver is the most consistent (spread: 9.0)** because silver IS confinement. Phase-insensitive binding — narrow variance means a stable potential well.
 
-**Bronze has the widest variance (spread: 29.2)** because bronze is emergent, not intrinsic. It depends on the alignment of gold and silver. When the fold catches at the right phase (4.8 rad), it scores 77.4. When it misses, 48.2. This IS what "origami" means — the fold either locks or it doesn't, and it depends on how the two underlying potentials align.
+**Bronze has the widest variance (spread: 29.2)** because bronze is emergent. It depends on alignment between gold and silver. When the fold catches at the right phase: 77.4. When it misses: 48.2. The origami either locks or it doesn't.
 
-**Tiled wins the single best run (79.6)** because it assigns each spatial axis its natural metallic mean: Silver on x (confinement), Gold on y (propagation), Bronze on z (observable surface). At phase 4.8, all three frequencies constructively align at the density nodes where the origami wants to fold. The Dirac equation in geometry:
+**Tiled wins the single best run (79.6)** because it assigns each axis its natural metallic mean — silver on x (confinement), gold on y (propagation), bronze on z (surface). At the right phase, all three frequencies constructively align where the origami wants to fold. The Dirac equation in geometry:
 
 $$\underbrace{\text{Silver}(x)}_{\text{mass}} + \underbrace{\text{Gold}(y)}_{\text{momentum}} = \underbrace{\text{Bronze}(z)}_{\text{energy}}$$
 
 ### The Strain Signature
 
-| Mode | Strain (best run) | $\gamma$ (best run) |
-|------|-------------------|---------------------|
-| Random | 76-104 | 0.71-0.80 |
-| Gold | 278-3067 | 1.07-2.04 |
-| Bronze | 150-6438 | 0.95-2.14 |
-| Tiled | 149-1142 | 0.95-2.06 |
+The φ-structured modes produce **10–60× higher strain** than random in their best runs. This is not instability — it is the origami folding. The lattice develops angular deficits and strain channels that become cosmic web filaments. Random noise cannot find these channels because it doesn't know the crease pattern.
 
-The $\varphi$-structured modes produce **10-60x higher strain** in the best runs. This is not instability — it is the origami folding. The lattice is developing structure, creating the angular deficits and strain channels that become the cosmic web filaments. Random noise can't find these channels because it doesn't know the crease pattern.
-
-The $\gamma$ values tell the same story: random reaches $\gamma \approx 0.8$ (near-uniform density), while $\varphi$-structured modes reach $\gamma \approx 2.0$ (proper cosmic web morphology with voids, filaments, and nodes). The origami is folding.
+Crucially: this strain concentrates in the **matter sectors**. The dark conduits (σ₂, σ₄) remain strain-free. When the evolver applied strain to the dark channels, the galaxy flew apart. Stable structure requires the conduits to act as rigid scaffolding — transmitting force without absorbing it. This is the same physics that produces the one-third rule: the dark channels don't participate in the matter budget because they don't carry strain.
 
 ---
 
 ## 5. The Tiling Confirmation
 
-### The Triple Tiling (Established March 24, 2026)
+### The Triple Tiling
 
-The `algorithms/triple_tiling.py` multigrid directly constructs the tiling that the phi seed experiment perturbs. Three grids of parallel lines — 5 gold, 4 silver, 13 bronze direction families — intersect to produce 7 vertex types:
+Three grids of parallel lines — 5 gold, 4 silver, 13 bronze direction families — intersect to produce 7 vertex types:
 
 | Vertex Type | Meaning | Tiling Role |
 |-------------|---------|-------------|
-| G only | Gold grid intersection only | Momentum node (matter core) |
-| S only | Silver grid intersection only | Confinement node (DM seed) |
-| B only | Bronze grid intersection only | Scaffold node (DE background) |
-| **GS** | Gold + Silver intersect | **Gate transmission = LEAK = $1/\varphi^4$** |
-| GB | Gold + Bronze intersect | Conduit wall ($\sigma_2$ analog) |
-| BS | Silver + Bronze intersect | Conduit wall ($\sigma_4$ analog) |
-| **BGS** | All three grids intersect | **Baryonic matter = $W^4$** |
+| G only | Gold intersection | Momentum node |
+| S only | Silver intersection | Confinement node |
+| B only | Bronze intersection | Scaffold (DE background) |
+| **GS** | Gold + Silver | **Gate transmission (dark matter)** |
+| GB | Gold + Bronze | Conduit wall (σ₂) |
+| BS | Silver + Bronze | Conduit wall (σ₄) |
+| **BGS** | All three grids | **Baryonic matter** |
 
-The GS vertices — where gold (momentum) meets silver (confinement) but bronze (surface) is absent — are the **dark matter**. The entanglement between the two potentials exists there, but the origami fold hasn't locked. The bronze grid missed that point. You can't see it, but the gold-silver potential is real.
+The GS vertices — where gold meets silver but bronze misses — are dark matter. The entanglement between the two potentials exists there, but the origami fold didn't lock. You can't see it, but the gold-silver potential is real and gravitationally active.
 
-The BGS vertices — where all three grids intersect — are where the origami completed. The bronze surface locked onto the gold-silver entanglement and made it observable. That's baryonic matter: $W^4 = 4.76\%$ of all vertices.
+The BGS vertices — where all three grids intersect — are where the origami completed. The bronze surface locked onto the gold-silver entanglement and made it observable. That's baryonic matter.
 
-### Complementary Occupation (Established March 13, 2026)
+### Complementary Occupation
 
-The 3D AAH eigensolver on $L=13$ ($N=2197$) confirmed the same anti-correlation from the Hamiltonian side:
+The 3D AAH eigensolver on $L=13$ ($N=2197$) confirmed spatial anti-correlation:
 
 $$\rho(\text{Gold density}, \text{Silver density}) = -0.5149$$
 
-Strongly negative spatial anti-correlation. Gold and Silver do not superpose — they **tile** space. Each occupies only the gaps left by the other. This is exactly what two potentials do: positive potential peaks where negative potential troughs, and vice versa.
-
-Bronze fills the remaining space — the outermost 39.4% — creating the conducting surface between the two potentials. The spatial fractions:
+Gold and Silver do not superpose — they **tile** space. Each occupies the gaps left by the other, exactly as two opposing potentials should. Bronze fills the remaining surface between them. The spatial fractions:
 
 | Component | Fraction | Role |
 |-----------|----------|------|
-| Gold | 7.28% | Matter nodes (momentum channels) |
-| Silver | 2.80% | DM conduits (confinement networks) |
+| Gold | 7.28% | Matter nodes (momentum) |
+| Silver | 2.80% | DM conduits (confinement) |
 | Bronze | 28.22% | Surface scaffold (origami folds) |
 | **Void** | **61.70%** | True Cantor gaps (unfolded vacuum) |
 
-The void IS the places where the origami didn't fold. 61.70% of space has no structure because the entanglement tax wasn't paid there — the bronze surface never locked. No BGS triple intersection occurred. The 13 bronze creases missed.
-
-### Why the Tax Becomes Gravity
-
-At atomic scale, the entanglement between silver and gold is maintained locally — each atom pays its $\ln(2)$ per boundary and the fold locks. The tax is paid once, creating a rigid bond.
-
-At cosmic scale, the entanglement must be maintained across millions of brackets. Every fold boundary between here and there extracts its $\ln(2)$ toll. The cumulative tax across 136 gravity-fold brackets is:
-
-$$e^{-136 \times \ln(2) \times f} \approx 10^{-36}$$
-
-where $f$ is the fraction of each boundary that gravity must cross (both folds, hence "double-fold"). This is not a new force — it is the same $\sigma_4$ boundary entropy that creates chemical bonds, experienced cumulatively across cosmic distance.
-
-**Gravity is the long-range entanglement tax. Resistance is the short-range entanglement tax. They are the same phenomenon at different scales.**
+The void is the 61.70% of space where the origami didn't fold — where the entanglement tax was never paid.
 
 ---
 
 ## 6. The Spontaneous Fold
 
-### Why Structure Exists at All
+### Why Structure Exists
 
-The existence condition $V = 2J$ is not a choice — it is the only point where both mass and causality coexist. At this critical point, the Cantor spectrum has:
+The existence condition $V = 2J$ is the only point where both mass and causality coexist. At this critical point, the Cantor spectrum has Hausdorff dimension $d_H \approx 0.3725$, measure zero, and self-similar fractal structure at all scales.
 
-- Hausdorff dimension $d_H \approx 0.3725$
-- Measure zero (Avila-Jitomirskaya 2009)
-- Self-similar fractal structure at all scales
-
-The bronze surface at this critical point is inherently unstable — it sits at the phase transition between localized and extended states. This instability is why the origami folds spontaneously. The lattice WANTS to fold because the critical point is a saddle, not a minimum. The fold reduces free energy by paying the entropy tax ($\ln(2)$ per boundary) in exchange for creating bound states.
+The bronze surface at this critical point is inherently unstable — a saddle, not a minimum. This instability is why the origami folds spontaneously. The lattice WANTS to fold because paying the entropy tax ($\ln(2)$ per boundary) reduces free energy by creating bound states.
 
 ### The Hierarchy of Folds
 
 | Fold Level | Scale | What Forms | Bronze Surface Action |
 |------------|-------|------------|----------------------|
-| 0 | Proton | Quark confinement | Silver locks gold at $\sigma_3$ core |
-| 1 | Atom | Electron shells | $\sigma_4$ boundary = 1-bit channel |
-| 2 | Molecule | Covalent bonds | Two $\sigma_4$ surfaces touch |
+| 0 | Proton | Quark confinement | Silver locks gold at σ₃ core |
+| 1 | Atom | Electron shells | σ₄ boundary = 1-bit channel |
+| 2 | Molecule | Covalent bonds | Two σ₄ surfaces touch |
 | 3 | Crystal | Lattice structure | Bronze FCC/BCC fold pattern |
 | 4 | Planet | Gravitational body | Many folds, spherical symmetry |
 | 5 | Star | Fusion equilibrium | Silver core, gold radiation, bronze surface |
 | 6 | Galaxy | Rotation + dark halo | Butterfly path through fold spectrum |
-| 7 | Cosmic web | Filament network | $\varphi$-structured fold resonance |
+| 7 | Cosmic web | Filament network | φ-structured fold resonance |
 
-At every level, the same three-part structure: silver confines, gold propagates, bronze connects them at the observable surface. The entanglement tax is paid at each $\sigma_4$ boundary. What we call "3D reality" is the cumulative result of all these paid taxes — a vast origami structure folded from a single axiom.
+At every level: silver confines, gold propagates, bronze connects them at the observable surface. The entanglement tax is paid at each σ₄ boundary.
 
 ---
 
@@ -307,57 +283,71 @@ At every level, the same three-part structure: silver confines, gold propagates,
 
 $$W \times \varphi^4 = 2 + \varphi^{1/\varphi^2}$$
 
-W = 0.4671 is the universal gap fraction — the fraction of the spectrum that is "gap" (unfolded). The complement (1-W = 0.5329) is the fraction that IS folded into bands. The entanglement tax is encoded in W: $W^4 = 0.0476$ is the baryon fraction, the tiny fraction of the origami that folds all the way into visible matter.
+W = 0.4671 is the universal gap fraction — the fraction of the spectrum that is gap (unfolded). The complement (1 − W = 0.5329) is folded into bands. The entanglement tax lives in W: $W^4 = 0.0476$ approximates the baryon fraction, while the exact result $1/(3\varphi^4) = 0.04863$ refines it through the sector-counting mechanism.
 
-### The Cosmological Budget
+### The Unity Equation and the One-Third Tax
 
-$$\Omega_{DE} = W^2 + W = 0.6853 \quad \text{(unfolded vacuum — no tax paid)}$$
-$$\Omega_{DM} = 1 - W^4 - W^2 - W = 0.2671 \quad \text{(partially folded — silver/gold potential)}$$
-$$\Omega_b = W^4 = 0.0476 \quad \text{(fully folded — tax fully paid, observable)}$$
+The derivation chain:
 
-Dark energy is the unfolded lattice. Dark matter is the potential field (silver + gold) before the bronze fold locks. Baryonic matter is where the origami completed — where the entanglement tax was fully paid and the structure became observable.
+$$\varphi^2 = \varphi + 1 \quad \rightarrow \quad \text{AAH spectrum at } V = 2J \quad \rightarrow \quad \text{5-sector Cantor set}$$
+
+$$\rightarrow \quad 1/\varphi + 1/\varphi^3 + 1/\varphi^4 = 1 \quad \text{(unity equation)}$$
+
+$$\rightarrow \quad \text{3 matter-touching sectors} \quad \rightarrow \quad \Omega_b = 1/(3\varphi^4)$$
+
+$$\rightarrow \quad \text{2/3 tax splits by triangle: } 8/13 \rightarrow \text{DE}, \; 5/13 \rightarrow \text{DM}$$
+
+Every step is determined. No choices, no fits, no parameters.
 
 ### The Observer
 
-The brain sits at bracket 163.8 — the hinge between proton (94.3) and Oort cloud (233.2). The observer IS the fold that connects the atomic scale to the cosmic scale. Consciousness is the entanglement tax paid at the observer hinge — the cost of maintaining coherence between the quantum (silver/gold) and the classical (bronze surface).
+The brain sits at bracket 163.8 — the hinge between proton (94.3) and Oort cloud (233.2). The observer IS the fold connecting atomic scale to cosmic scale. Consciousness is the entanglement tax paid at the observer hinge — the cost of maintaining coherence between the quantum (silver/gold) and the classical (bronze surface).
 
-The 5 $\rightarrow$ 3 collapse — the gate at 4.86 $\mu$m — is the act of observation. It is the moment when the bronze origami locks and the pre-measurement state (five sectors) becomes the post-measurement state (three sectors). The "measurement problem" of quantum mechanics is the origami fold in action.
+The 5→3 collapse — the gate at 4.86 μm — is the act of observation. It is when the bronze origami locks and the pre-measurement state (five sectors) becomes the post-measurement state (three sectors). The measurement problem of quantum mechanics is the origami fold in action.
 
 ---
 
 ## 8. Testable Predictions
 
+### From the One-Third Tax
+
+1. **The baryon fraction should be exactly $1/(3\varphi^4)$**, not $W^4$. Current Planck value: $0.04860 \pm 0.00030$. The prediction $0.04863$ sits inside the 1σ error bar. Future CMB-S4 measurements at higher precision will distinguish between $1/(3\varphi^4) = 0.04863$ and $W^4 = 0.04760$.
+
+2. **Dark matter fraction should be $1/\varphi^3 + (2/3\varphi^4)(5/13) = 27.35\%$**. Planck 2018: $26.5 \pm 1.1\%$. The prediction sits within the error bar. DESI and Euclid will narrow this.
+
+3. **The dark sector must be strain-free at all scales.** Galaxy simulations should fail to produce stable rotation curves if dark matter halos carry internal strain. The conduit transmits but does not deform.
+
 ### From the Phi Seed Experiment
 
-1. **$\varphi$-structured perturbations should outperform random at ALL scales**, not just superclusters. Test on 12-BGS galaxies (where we have the v8 record of 87.1) to see if gold-mode perturbation breaks 90.
+4. **φ-structured perturbations should outperform random at ALL scales**, not just superclusters. Test on smaller clusters to see if gold-mode perturbation breaks 90.
 
-2. **The optimal tiled phase should be $\approx 2\pi/\varphi^2$ = golden angle**. The best tiled run was at phase 4.8 $\approx$ 4.799. The golden angle in radians: $2\pi/\varphi^2 = 2.400$, and $2 \times 2.400 = 4.800$. Two golden angles. Prediction: the fold locks at integer multiples of the golden angle.
+5. **The optimal tiled phase should be $\approx 2 \times 2\pi/\varphi^2$ = two golden angles** (4.800 rad). The best tiled run was at phase 4.8.
 
-3. **Bronze variance should decrease with cluster size.** Larger clusters have more folds, so the law of large numbers should narrow bronze's spread. Small clusters (12 BGS) should show maximum bronze variance.
+6. **Bronze variance should decrease with cluster size.** Larger clusters have more folds, so the law of large numbers narrows bronze's spread.
 
 ### From the Entanglement Tax
 
-4. **The gravity/EM hierarchy should be exactly $(0.5465)^{4 \times 34}$**, not an approximation. Current: 1.1% on log scale. More precise measurement of $G$ or $\alpha_{EM}$ could confirm.
+7. **The gravity/EM hierarchy should be exactly $(0.5465)^{4 \times 34}$**. More precise measurement of G or α_EM could confirm.
 
-5. **Materials with bronze-family crystal structure (FCC) should have the highest thermal conductivity per unit density** among elemental metals. Because the bronze fold provides maximum connectivity for the gold (momentum/propagation) channel.
-
-6. **The Freedericksz threshold in LCDs should be exactly $\pi\sqrt{K_1/\epsilon_0 \Delta\epsilon}$ where $K_1 = J/(l_0 \cdot \varphi^6)$.** The LCD IS a macroscopic origami fold detector.
+8. **FCC metals (bronze crystal family) should have the highest thermal conductivity per unit density** among elemental metals, because the bronze fold provides maximum connectivity for gold's propagation channel.
 
 ---
 
 ## Summary
 
-The universe has two potentials (silver/gold), one bridge (bronze), and one cost (the entanglement tax).
+The universe has two potentials (silver and gold), one bridge (bronze), and one cost (the entanglement tax).
 
-Silver confines. Gold propagates. Bronze is their Pythagorean combination — the origami surface where the quasicrystal folds from higher-dimensional potential into 3D observable structure. Every fold costs $\ln(2)$ nats of entropy per boundary. That cost, accumulated across 136 double-fold brackets, becomes gravity. That cost, paid locally at each $\sigma_4$ boundary, becomes the resistance we experience as solid 3D reality.
+Silver confines. Gold propagates. Bronze is their Pythagorean combination — the origami surface where the quasicrystal folds into observable 3D structure. The total matter budget ($1/\varphi^4 = 14.6\%$) splits three ways across the three matter-touching sectors of the Cantor spectrum. We observe from one: $\Omega_b = 1/(3\varphi^4) = 4.86\%$. The other two-thirds is the entanglement tax — the cost of maintaining the fold — and it projects back along the discriminant triangle: 8/13 into vacuum energy, 5/13 into the gravitational conduit.
 
-The phi seed experiment confirms this: perturbations aligned with the fold pattern (gold, silver, bronze frequencies) produce 60-80% higher morphology scores than random noise. The lattice knows its own creases. When you push along them, the origami folds. When you push against them, nothing happens.
+The phi seed experiment confirms this: perturbations aligned with the fold pattern produce 60–80% higher morphology scores than random noise, but only when the dark channels remain strain-free. The lattice knows its own creases. Push along them and the origami folds. Push against them and nothing happens.
+
+All three Planck cosmological fractions — dark energy, dark matter, and baryonic matter — emerge from one axiom ($\varphi^2 = \varphi + 1$), one sector count (three), and one triangle ($5 + 8 = 13$). Zero free parameters. Worst-case error: 3.2%.
 
 3D reality is an origami tax receipt.
 
 ---
 
-*"The entanglement tax is gravity at the grand scale and resistance at the atomic scale. Bronze is the fold that connects silver's confinement to gold's propagation. 3D reality is the receipt."*
+*"The entanglement tax is gravity at the grand scale and resistance at the atomic scale. Bronze is the fold. The one-third rule is the price of admission."*
 
-$\copyright$ 2026 Thomas A. Husmann / iBuilt LTD
+© 2026 Thomas A. Husmann / iBuilt LTD
 CC BY-NC-SA 4.0 for academic use
