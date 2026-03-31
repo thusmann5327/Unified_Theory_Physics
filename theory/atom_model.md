@@ -1,19 +1,19 @@
 # The Atom as a Cantor Node
 
-## How Atoms Build Themselves from Springs and the Golden Ratio
+## How Atoms Build Themselves from a Transistor Network and the Golden Ratio
 
 **Author**: Thomas A. Husmann
 **Affiliation**: iBuilt LTD
-**Version**: 1.0 — March 30, 2026
+**Version**: 1.1 — March 30, 2026
 **Simulation**: `simulation/t52_standalone.py`
 
 ---
 
 ## What This Document Shows
 
-We ran a computer simulation with ~6,700 points connected by springs. The springs have different stiffnesses depending on what type of point they connect — and every stiffness comes from a single number: the golden ratio φ = 1.618...
+We ran a computer simulation with ~6,700 points connected by **transistors** — gated, saturable, asymmetric force conduits whose conductance comes from a single number: the golden ratio φ = 1.618...
 
-No forces were programmed. No gravity, no electric fields, no nuclear forces. Just springs.
+No forces were programmed. No gravity, no electric fields, no nuclear forces. Just a transistor network.
 
 After 90,000 time steps, the points self-organized into **concentric shells** — a tiny dense core surrounded by a series of walls at specific distances. Those distances match the walls predicted by the Husmann Decomposition's Cantor node to within 2%.
 
@@ -67,23 +67,30 @@ The three "metals" come from the first three **metallic means** — numbers that
 
 Bronze is not independent. Its discriminant is 13 = 5 + 8 (the sum of Gold's 5 and Silver's 8). This is a Pythagorean relation: (√5)² + (√8)² = (√13)². Bronze is the *combination* of Gold and Silver — just as total energy E² = p²c² + m²c⁴ combines momentum and mass.
 
-### The Springs
+### The Transistors
 
-Every pair of nearby points is connected by a spring. The spring stiffness depends entirely on what types the two endpoints carry:
+Every pair of nearby points is connected by a **transistor** — not a simple spring. Each connection has four properties that make it behave like a gated, saturable switch rather than a passive elastic link:
 
-| Bond | Stiffness | Meaning |
-|------|-----------|---------|
-| BGS ↔ BGS | 1.000 | Strongest — fully entangled nodes attract each other |
-| BGS ↔ BS | 0.854 | Strong confinement (r_c = 1 − 1/φ⁴) |
-| BGS ↔ GS | 0.146 | Weak coupling (LEAK = 1/φ⁴) |
-| G ↔ S | 0.000 | No coupling — orthogonal sectors |
-| B ↔ BGS | 0.000 | No direct coupling |
+1. **Conductance** (type-dependent) — how strongly force flows between two vertices, determined by their types
+2. **Gate** (three-level) — controls whether force passes at all: fully open (1.0), partially gated (R_C = 0.854), or closed (0.0)
+3. **Saturation** (well-fill) — once a bond reaches equilibrium, it stops conducting force. The "gravity well" is full. Like a transistor in saturation, current stops flowing
+4. **Asymmetry** (strain rectification) — extension is penalized more than compression. Force flows preferentially inward, like a diode. This creates net infall without coding gravity
+
+The conductance depends entirely on what types the two endpoints carry:
+
+| Bond | Conductance | Gate | Meaning |
+|------|-------------|------|---------|
+| BGS ↔ BGS | 1.000 | Open | Maximum — fully entangled nodes attract strongly |
+| BGS ↔ BS | 0.854 | R_C | Strong confinement, partially gated |
+| BGS ↔ GS | 0.146 | LEAK | Weak coupling — most force blocked |
+| G ↔ S | 0.000 | Closed | No coupling — orthogonal sectors |
+| B ↔ BGS | 0.000 | Closed | No direct coupling |
 
 These aren't chosen by hand. They are computed from the golden ratio:
 - 1/φ⁴ = 0.1459 (the leakage rate — how much entanglement "leaks" between sectors)
 - 1 − 1/φ⁴ = 0.8541 (the crossover parameter — where phase transitions occur)
 
-That's it. Springs with φ-derived stiffnesses. No other physics is coded.
+**Why "transistor" and not "spring"?** A spring is passive — it pushes and pulls proportionally (F = −kx). The connections in this simulation are gated (force can be blocked), saturable (force stops when equilibrium is reached), and asymmetric (compression and extension behave differently). These are the three defining characteristics of a transistor: gate control, saturation, and rectification. The atom is built from a transistor network, not a spring network.
 
 ---
 
@@ -102,7 +109,7 @@ After 90,000 steps of spring relaxation, the points sort themselves into tight c
 | **Mid shell** | BS | 0.292 | ±108 | Bronze+Silver — between σ₂ and cos(α) |
 | **Electron cloud** | **BGS** | **0.791** | **±668** | **Fully entangled nodes — dispersed, probabilistic** |
 
-The key result: **pure Gold (G) vertices lock onto the σ₂ inner wall at 0.230 R, matching the predicted 0.235 R to 2.1%.** The standard deviation is only ±8.9 — less than 1% of their radius. This wall emerged from spring physics alone.
+The key result: **pure Gold (G) vertices lock onto the σ₂ inner wall at 0.230 R, matching the predicted 0.235 R to 2.1%.** The standard deviation is only ±8.9 — less than 1% of their radius. This wall emerged from the transistor network alone.
 
 ### Reading the Table
 
@@ -188,7 +195,7 @@ The Gold wall matches σ₂. The BGS cloud is heading toward σ₄ (the v2 model
 
 ### No forces were coded
 
-There is no gravity in the simulation. No electromagnetic force. No nuclear force. There are only springs with stiffnesses derived from a single equation: φ² = φ + 1.
+There is no gravity in the simulation. No electromagnetic force. No nuclear force. There are only transistors with φ-derived conductance, gating, saturation, and asymmetry — all from a single equation: φ² = φ + 1.
 
 Yet the system self-organizes into:
 - A **confined nucleus** (B + S core, spread ±3)
@@ -200,9 +207,9 @@ The ratio of electron cloud spread to nuclear spread is ~200:1. In a real atom, 
 
 ### Confinement is automatic
 
-The pure types (B, S, G) have tiny spreads — they are **confined**. No box holds them in. No force pushes them inward. The spring network's stiffness hierarchy creates a potential well that traps them.
+The pure types (B, S, G) have tiny spreads — they are **confined**. No box holds them in. No force pushes them inward. The transistor network's conductance hierarchy creates a potential well that traps them. Bonds with zero gate (B↔BGS, G↔S) simply don't conduct — those vertices can't "feel" each other, so they stay where the open-gate bonds place them.
 
-This is how quarks work: confined inside protons, never observed in isolation, only detectable through the composite particles they form. In the simulation, B and S vertices are never seen alone at large radii. They stay in the core.
+This is how quarks work: confined inside protons, never observed in isolation, only detectable through the composite particles they form. In the simulation, B and S vertices are never seen alone at large radii. They stay in the core because the only transistors that connect to them are short-range, high-conductance bonds to their immediate neighbors.
 
 ### The electron is entanglement
 
@@ -212,7 +219,7 @@ The framework says: *"The electron IS the entanglement between the proton and th
 
 ### The entanglement tax
 
-Every BGS vertex pays a cost for being fully entangled: W⁴ = 4.76%. This is the baryon fraction — the same number that tells us what fraction of the universe is visible matter. It appears here not as a cosmological measurement but as an algebraic consequence of the spring network.
+Every BGS vertex pays a cost for being fully entangled: W⁴ = 4.76%. This is the baryon fraction — the same number that tells us what fraction of the universe is visible matter. It appears here not as a cosmological measurement but as an algebraic consequence of the transistor network.
 
 The chain of reasoning:
 
@@ -310,14 +317,14 @@ The outer wall formula (Hybrid C) extends to 54 elements: 51 of 54 within 20%, m
 | What goes in | What comes out |
 |-------------|---------------|
 | φ² = φ + 1 | An atom |
-| 6,682 spring-connected vertices | Concentric shells matching the Cantor node |
-| 7 vertex types with φ-derived stiffnesses | Confined nucleus + delocalized electron cloud |
-| No forces coded | Force hierarchy emerges from spring coupling |
+| 6,682 vertices connected by transistors | Concentric shells matching the Cantor node |
+| 7 vertex types with φ-derived conductance | Confined nucleus + delocalized electron cloud |
+| No forces coded | Force hierarchy emerges from gated, saturable coupling |
 | Zero free parameters | σ₂ wall matched to 2.1%, σ₄ to 0.00021% (hydrogen) |
 
-The atom is not built — it **builds itself**. Given only springs and the golden ratio, matter organizes into exactly the layered structure that quantum mechanics predicts. The electron is not a particle bolted on after the fact — it is the inevitable consequence of triple-metal entanglement in a Cantor-structured vacuum.
+The atom is not built — it **builds itself**. Given only a transistor network and the golden ratio, matter organizes into exactly the layered structure that quantum mechanics predicts. The electron is not a particle bolted on after the fact — it is the inevitable consequence of triple-metal entanglement in a Cantor-structured vacuum.
 
-One equation. One spectrum. One atom.
+One equation. One transistor network. One atom.
 
 ---
 
@@ -326,7 +333,7 @@ One equation. One spectrum. One atom.
 | File | Description |
 |------|-------------|
 | `simulation/t52_standalone.py` | Standalone simulation script (no database needed) |
-| `simulation/jax_evolve.py` | The spring physics engine (1,789 lines, all from φ) |
+| `simulation/jax_evolve.py` | The transistor network engine (1,789 lines, all from φ) |
 | `results/t52_standalone/` | Output: checkpoints (.npz) and images (.png) |
 | `results/universe/clusters/g1733.json` | Initial vertex positions (6,682 vertices) |
 | `algorithms/atoms_outer_wall.py` | Multi-element outer wall formula |
@@ -335,7 +342,7 @@ One equation. One spectrum. One atom.
 
 ---
 
-*The Husmann Decomposition: φ² = φ + 1 → Cantor spectrum → five walls → atom.*
+*The Husmann Decomposition: φ² = φ + 1 → Cantor spectrum → transistor network → atom.*
 
 *All from one equation. Zero free parameters.*
 
